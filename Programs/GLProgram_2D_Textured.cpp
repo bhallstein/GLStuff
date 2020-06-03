@@ -9,8 +9,8 @@
 #include "GLProgram_2D_Textured.h"
 #include "GLHelpers.h"
 
-GLProgram_2D_Textured::GLProgram_2D_Textured() :
-	GLProgram("2D_Textured.vsh", "2D_Textured.fsh")
+GLProgram_2D_Textured::GLProgram_2D_Textured(const char *fragsh) :
+	GLProgram("2D_Textured.vsh", fragsh)
 {
 	vao = vao_create();
 	vao_bind(vao);

@@ -13,7 +13,7 @@
 
 class GLProgram_2D_Textured : public GLProgram {
 public:
-	GLProgram_2D_Textured();
+	GLProgram_2D_Textured(const char *fragsh = "2D_Textured.fsh");
 	
 	bool ok;
 	

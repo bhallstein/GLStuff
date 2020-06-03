@@ -42,6 +42,14 @@ void fb_attachTexture(unsigned int tex_id) {
 						   0);
 }
 
+void fb_attachTexture_AsDepth(unsigned int tex_id) {
+	glFramebufferTexture2D(GL_FRAMEBUFFER,
+						   GL_DEPTH_ATTACHMENT,
+						   GL_TEXTURE_2D,
+						   tex_id,
+						   0);
+}
+
 void fb_attachFaceOfCubeMap(unsigned int cubemap_id, unsigned int face) {
 	glFramebufferTexture2D(GL_FRAMEBUFFER,
 						   GL_COLOR_ATTACHMENT0,
@@ -75,16 +83,30 @@ void tx_bindAsCubeMap(unsigned int cm_id) {
 	glBindTexture(GL_TEXTURE_CUBE_MAP, cm_id);
 }
 
-void tx_upload(int w, int h, void *data, enum tx_filtering filtering) {
-	GLenum gl_filt = (filtering == TX_FILTER_LINEAR ? GL_LINEAR : GL_NEAREST);
+void tx_setFiltering(enum tx_filtering f) {
+	GLenum gl_filt = (f == TX_FILTER_LINEAR ? GL_LINEAR : GL_NEAREST);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, gl_filt);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, gl_filt);
+}
+
+void tx_upload(int w, int h, void *data, enum tx_filtering filtering) {
+	tx_setFiltering(filtering);
 	glTexImage2D(GL_TEXTURE_2D,
 				 0,
 				 GL_RGBA,
 				 w, h,
 				 0,
 				 GL_BGRA, GL_UNSIGNED_INT_8_8_8_8_REV,
+				 data);
+}
+void tx_uploadDepth(int w, int h, void *data) {
+	tx_setFiltering(TX_FILTER_NEAREST);
+	glTexImage2D(GL_TEXTURE_2D,
+				 0,
+				 GL_DEPTH_COMPONENT,
+				 w, h,
+				 0,
+				 GL_DEPTH_COMPONENT, GL_UNSIGNED_INT,
 				 data);
 }
 void tx_uploadCubeMapFace(int w, int h, void *data, enum tx_cubemapface face) {

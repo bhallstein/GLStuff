@@ -16,6 +16,10 @@
 
 #define bufOffset(i) ((void*)(i))
 
+#ifndef SWAP_TEX
+#define SWAP_TEX(x, y) do { unsigned int temp = x; x = y; y = temp; } while (0)
+#endif
+
 #ifdef __cplusplus
 extern "C" {
 #endif
@@ -44,6 +48,10 @@ enum attrib_type {
 	ATTRTYPE_FLOAT,
 	ATTRTYPE_INT
 };
+enum fbo_attachment {
+	ATTACH_COLOR,
+	ATTACH_DEPTH
+};
 
 
 int fb_create();
@@ -56,6 +64,7 @@ void fb_attachTexture(unsigned int tex_id);
 	// The texture does NOT need to be bound to TEXTURE_2D.
 	// To detach, use tex_id of 0.
 
+void fb_attachTexture_AsDepth(unsigned int tex_id);
 void fb_attachFaceOfCubeMap(unsigned int tex_id, unsigned int face);
 
 int fb_checkOK();
@@ -69,7 +78,10 @@ unsigned int tx_create();
 void tx_bind(unsigned int tex_id);
 void tx_bindAsCubeMap(unsigned int cm_id);
 
+void tx_setFiltering(enum tx_filtering);
+
 void tx_upload(int w, int h, void *data, enum tx_filtering filtering);
+void tx_uploadDepth(int w, int h, void *data);
 void tx_uploadCubeMapFace(int w, int h, void *data, enum tx_cubemapface face);
 	// Use data = NULL to allocate empty texture
 

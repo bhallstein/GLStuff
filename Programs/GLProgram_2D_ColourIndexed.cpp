@@ -20,10 +20,14 @@ GLProgram_2D_ColourIndexed::GLProgram_2D_ColourIndexed() :
 	
 	std::vector<AttribInfo> attribsDefinition = {
 		{ Attribs::VertPos,  buffers.vertexPos, "inVPos",   ATTRTYPE_FLOAT, 2, false },
-		{ Attribs::Colour,   buffers.colour,    "inColour", ATTRTYPE_FLOAT, 3, false }
+		{ Attribs::Colour,   buffers.colour,    "inColour", ATTRTYPE_FLOAT, 4, false }
 	};
 	
-	bool compiled = compile(attribsDefinition, { });
+	std::vector<UniformInfo> uniformsDefinition = {
+		{ Uniforms::OrthoMatrix, "ortho_matrix" }
+	};
+	
+	bool compiled = compile(attribsDefinition, uniformsDefinition);
 	if (!compiled)
 		printf("Failed to compile program\n");
 	

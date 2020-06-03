@@ -22,6 +22,11 @@ public:
 		enum { VertPos, Colour };
 	};
 	
+	class Uniforms {
+	public:
+		enum { OrthoMatrix };
+	};
+	
 	unsigned int vao;
 	struct {
 		unsigned int

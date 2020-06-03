@@ -29,7 +29,9 @@ extern Rectangle unitSquare;
 
 struct Rectangle2D {
 	v2 vertices[6];
+	Rectangle2D() { };
 	Rectangle2D(const Rectangle &);
+	Rectangle2D operator+ (const v2 &);
 };
 
 
