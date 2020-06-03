@@ -10,43 +10,42 @@
 
 
 struct Triangle {
-	v3f vertices[3];
+	v3 vertices[3];
 };
 extern Triangle unitTriangle_Equil;	 // Side length = 1
 
 struct Triangle2D {
-	v2f vertices[3];
+	v2 vertices[3];
 	Triangle2D(const Triangle &);
 };
 
 
 struct Rectangle {
-	v3f vertices[6];
+	v3 vertices[6];
 	Rectangle operator* (float);
-	Rectangle operator* (const v2f &);
+	Rectangle operator* (const v2 &);
 };
 extern Rectangle unitSquare;
 
 struct Rectangle2D {
-	v2f vertices[6];
+	v2 vertices[6];
 	Rectangle2D(const Rectangle &);
 };
 
 
 struct Cube {
-	v3f vertices[36];
+	v3 vertices[36];
 };
 extern Cube unitCube_vert;
 extern Cube unitCube_norm;
 
 
 struct SquarePyramid {
-	v3f vertices[18];
-	v3f normals[18];
+	v3 vertices[18];
+	v3 normals[18];
 	
 	SquarePyramid operator* (float);
-	SquarePyramid operator* (const v2f &);
-	SquarePyramid operator* (const v3f &);
+	SquarePyramid operator* (const v2 &);
 	
 private:
 	struct __Init;
@@ -54,6 +53,20 @@ private:
 };
 extern SquarePyramid unitSqPyramid;
 
+
+struct Jewel {
+	v3 vertices[30];
+	v3 normals[30];
+	
+	Jewel operator* (float);
+	Jewel operator* (const v2 &);
+	
+private:
+	struct __Init;
+	static __Init *__init;
+};
+extern Jewel unitJewel;
+	// The unit jewel has a width and depth of 1 and a height of 1
 
 #endif
 

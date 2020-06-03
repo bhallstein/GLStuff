@@ -73,14 +73,14 @@ ObjFile loadObjFile(const char *filename) {
 	std::ifstream file(filename);
 	
 	std::vector<unsigned int> elements;
-	std::vector<v3f> vertex_attrib_vec;
-	std::vector<v3f> normal_attrib_vec;
-	std::vector<v2f> texcoord_attrib_vec;
+	std::vector<v3> vertex_attrib_vec;
+	std::vector<v3> normal_attrib_vec;
+	std::vector<v2> texcoord_attrib_vec;
 	
 	std::map<Triple, int> triple_to_index_map;	// Store indices of our built attributes here
 	
-	std::vector<v3f> v_store, n_store;
-	std::vector<v2f> t_store;				// We assume the obj file specifies all "data" (v/vn/vt) before
+	std::vector<v3> v_store, n_store;
+	std::vector<v2> t_store;				// We assume the obj file specifies all "data" (v/vn/vt) before
 											// embarking on specifying faces, so our "stores" will be
 											// complete at that point.
 	
@@ -111,7 +111,7 @@ ObjFile loadObjFile(const char *filename) {
 					break;
 				}
 				
-				v_store.push_back((v3f) { v[0], v[1], v[2] });
+				v_store.push_back((v3) { v[0], v[1], v[2] });
 			}
 			
 			// vn designates a normal
@@ -128,7 +128,7 @@ ObjFile loadObjFile(const char *filename) {
 					break;
 				}
 				
-				n_store.push_back((v3f) { v[0], v[1], v[2] });
+				n_store.push_back((v3) { v[0], v[1], v[2] });
 			}
 			
 			// vt designates a texcoord
@@ -145,7 +145,7 @@ ObjFile loadObjFile(const char *filename) {
 					break;
 				}
 				
-				t_store.push_back((v2f) { v[0], v[1] });
+				t_store.push_back((v2) { v[0], v[1] });
 			}
 			
 		}
@@ -214,9 +214,9 @@ ObjFile loadObjFile(const char *filename) {
 	objFile.nVerticesImported = (int) vertex_attrib_vec.size();
 	objFile.nElements = (int) elements.size();
 	
-	objFile.vertices  = (v3f*) malloc(sizeof(v3f) * objFile.nVerticesImported);
-	objFile.normals   = (v3f*) malloc(sizeof(v3f) * objFile.nVerticesImported);
-	objFile.texcoords = (v2f*) malloc(sizeof(v2f) * objFile.nVerticesImported);
+	objFile.vertices  = (v3*) malloc(sizeof(v3) * objFile.nVerticesImported);
+	objFile.normals   = (v3*) malloc(sizeof(v3) * objFile.nVerticesImported);
+	objFile.texcoords = (v2*) malloc(sizeof(v2) * objFile.nVerticesImported);
 	for (int i=0; i < objFile.nVerticesImported; ++i) {
 		objFile.vertices[i]  = vertex_attrib_vec[i];
 		objFile.normals[i]   = normal_attrib_vec[i];

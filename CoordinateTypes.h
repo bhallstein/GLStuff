@@ -9,14 +9,15 @@
 #ifndef __COORDINATE_TYPES_H
 #define __COORDINATE_TYPES_H
 
+struct v2  {  float x, y;  };
 struct v2i {  int x, y;    };
-struct v2f {  float x, y;  };
 
+
+struct v3  {  float x, y, z;  };
 struct v3i {  int x, y, z;    };
-struct v3f {  float x, y, z;  };
 
-struct v4f {  float x, y, z, t;  };
+struct v4  {  float x, y, z, t;  };
 
-struct col3f {  float r, g, b;  };
+struct col3 {  float r, g, b;  };
 
 #endif

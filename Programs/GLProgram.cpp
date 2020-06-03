@@ -74,7 +74,7 @@ bool GLProgram::_getUniformLocations(
 		unsigned int loc = prog_uniformLocation(programID, u_name);
 		uniform_id_transl_map[u.userlandID] = loc;
 		if (loc == -1) {
-			printf("uniform \"%s\" not found in shader program\n", u_name);
+			printf("uniform '%s' not found in shader program\n", u_name);
 			success = false;
 		}
 	}

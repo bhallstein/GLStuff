@@ -23,9 +23,9 @@ typedef struct ObjFile {
 	int nVerticesImported,
 		nElements;
 	
-	v3f *vertices;		// free() these when deleting
-	v3f *normals;
-	v2f *texcoords;
+	v3 *vertices;		// free() these when deleting
+	v3 *normals;
+	v2 *texcoords;
 	unsigned int *elements;
 } ObjFile;
 

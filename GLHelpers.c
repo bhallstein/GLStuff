@@ -132,7 +132,7 @@ void vbo_bind(unsigned int vbo_id, enum vbo_type type) {
 	glBindBuffer(gl_target, vbo_id);
 }
 
-void vbo_upload(int n_bytes, void *data, enum vbo_type type, enum vbo_hint hint) {
+void vbo_upload(size_t n_bytes, void *data, enum vbo_type type, enum vbo_hint hint) {
 	GLenum gl_target = (type == VBOTYPE_ARRAY ? GL_ARRAY_BUFFER : GL_ELEMENT_ARRAY_BUFFER);
 	GLenum gl_hint = (hint == VBOHINT_DYNAMIC ? GL_DYNAMIC_DRAW : GL_STATIC_DRAW);
 	glBufferData(gl_target,
@@ -141,7 +141,7 @@ void vbo_upload(int n_bytes, void *data, enum vbo_type type, enum vbo_hint hint)
 				 gl_hint);
 }
 
-void vbo_reupload(int bytes, int offset, void *data, enum vbo_type type) {
+void vbo_reupload(size_t bytes, int offset, void *data, enum vbo_type type) {
 	GLenum gl_target = (type == VBOTYPE_ARRAY ? GL_ARRAY_BUFFER : GL_ELEMENT_ARRAY_BUFFER);
 	glBufferSubData(gl_target,
 					0,

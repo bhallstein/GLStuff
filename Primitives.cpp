@@ -20,10 +20,12 @@ Triangle unitTriangle_Equil = {
 
 Triangle2D::Triangle2D(const Triangle &t) {
 	for (int i=0; i < 3; ++i) {
-		const v3f &v = t.vertices[i];
+		const v3 &v = t.vertices[i];
 		vertices[i] = { v.x, v.y };
 	}
 }
+
+
 
 
 #pragma mark - Square
@@ -41,16 +43,16 @@ Rectangle unitSquare = {
 Rectangle Rectangle::operator*(float x) {
 	Rectangle r;
 	for (int i=0; i < 6; ++i) {
-		const v3f &v = vertices[i];
+		const v3 &v = vertices[i];
 		r.vertices[i] = { v.x*x, v.y*x, v.z };
 	}
 	return r;
 }
 
-Rectangle Rectangle::operator*(const v2f &x) {
+Rectangle Rectangle::operator*(const v2 &x) {
 	Rectangle r;
 	for (int i=0; i < 6; ++i) {
-		const v3f &v = vertices[i];
+		const v3 &v = vertices[i];
 		r.vertices[i] = { x.x*v.x, x.y*v.y, v.z };
 	}
 	return r;
@@ -60,7 +62,7 @@ Rectangle Rectangle::operator*(const v2f &x) {
 Rectangle2D::Rectangle2D(const Rectangle &r)
 {
 	for (int i=0; i < 6; ++i) {
-		const v3f &v = r.vertices[i];
+		const v3 &v = r.vertices[i];
 		vertices[i] = { v.x, v.y };
 	}
 }
@@ -206,7 +208,7 @@ void __sqpyr_set_normals(float w, float h, SquarePyramid &p) {
 	float nHoriz = w / modT;
 	float nVert  = h / modT;
 	
-	v3f normals[] = {
+	v3 normals[] = {
 		0.0, -1.0, 0.0,		// Base
 		0.0, -1.0, 0.0,
 		0.0, -1.0, 0.0,
@@ -245,22 +247,19 @@ SquarePyramid::__Init *SquarePyramid::__init = new SquarePyramid::__Init;
 SquarePyramid SquarePyramid::operator*(float x) {
 	SquarePyramid p;
 	for (int i=0; i < 18; ++i) {
-		const v3f &v = vertices[i];
+		const v3 &v = vertices[i];
 		p.vertices[i] = { v.x*x, v.y*x, v.z*x };
 		p.normals[i] = normals[i];
 	}
 	return p;
 }
 
-SquarePyramid SquarePyramid::operator*(const v2f &x) {
-	return (*this) * (v3f) { x.x, x.y, x.x };
-}
-
-SquarePyramid SquarePyramid::operator*(const v3f &x) {
+SquarePyramid SquarePyramid::operator*(const v2 &x) {
 	SquarePyramid p;
+	
 	for (int i=0; i < 18; ++i) {
-		const v3f &v = vertices[i];
-		p.vertices[i] = { v.x*x.x, v.y*x.y, v.z*x.z };
+		const v3 &v = vertices[i];
+		p.vertices[i] = { v.x*x.x, v.y*x.y, v.z*x.x };
 	}
 	__sqpyr_set_normals(p.vertices[2].x * 2.0,
 						p.vertices[7].y,
@@ -268,3 +267,58 @@ SquarePyramid SquarePyramid::operator*(const v3f &x) {
 	return p;
 }
 
+
+#pragma mark - Jewel
+
+Jewel unitJewel;
+
+void __jewel_set_normals(float width, float height, Jewel &jwl) {
+	SquarePyramid pyr = unitSqPyramid * (v2){ width, height };
+	
+	for (int i=0; i < 18; ++i)
+		jwl.normals[i] = pyr.normals[i];
+	
+	for (int i=0; i < 12; ++i) {
+		const v3 &n = pyr.normals[i * 6];
+		jwl.normals[i+18] = (v3) { n.x, -n.y, n.z };
+	}
+}
+
+struct Jewel::__Init {
+	__Init() {
+		for (int i=0; i < 18; ++i)
+			unitJewel.vertices[i] = unitSqPyramid.vertices[i];
+		
+		for (int i=0; i < 12; ++i) {
+			const v3 &v = unitSqPyramid.vertices[i+6];
+			unitJewel.vertices[i+18] = (v3) { v.x, -v.y, v.z };
+		}
+
+		__jewel_set_normals(1.0, 1.0, unitJewel);
+	}
+};
+Jewel::__Init *Jewel::__init = new Jewel::__Init;
+
+Jewel Jewel::operator*(float x) {
+	Jewel p;
+	for (int i=0; i < 30; ++i) {
+		const v3 &v = vertices[i];
+		p.vertices[i] = { v.x*x, v.y*x, v.z*x };
+		p.normals[i] = normals[i];
+	}
+	return p;
+}
+
+Jewel Jewel::operator*(const v2 &x) {
+	Jewel p;
+	for (int i=0; i < 30; ++i) {
+		const v3 &v = vertices[i];
+		p.vertices[i] = { v.x*x.x, v.y*x.y, v.z*x.x };
+	}
+	
+	__jewel_set_normals(p.vertices[2].x * 2.0,
+						p.vertices[7].y,
+						p);
+	
+	return p;
+}
