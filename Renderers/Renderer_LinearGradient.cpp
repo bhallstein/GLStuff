@@ -9,7 +9,7 @@
 #include "Renderer_LinearGradient.h"
 #include "Renderer_2D_ColourIndexed.h"
 
-#include "GLProgram.h"
+#include "GLProg.h"
 
 #include "glm_include.h"
 //#include <OpenGL/gl3.h>

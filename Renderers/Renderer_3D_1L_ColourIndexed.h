@@ -6,8 +6,8 @@
 //  Copyright (c) 2014 Ben. All rights reserved.
 //
 
-#ifndef __GLStuff_Renderer_3D_1L_ColourIndexed_h
-#define __GLStuff_Renderer_3D_1L_ColourIndexed_h
+#ifndef __GLStuff_Renderer_3D_1L_ColourIndexed
+#define __GLStuff_Renderer_3D_1L_ColourIndexed
 
 #include "CoordinateTypes.h"
 

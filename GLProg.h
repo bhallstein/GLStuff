@@ -43,9 +43,7 @@ struct GLProg {
 	unsigned int programID;
 	struct State {
 		enum T {
-			Vestal = 0,
-			    OK = 1,
-			 NotOK = 2
+			Vestal, OK, NotOK
 		};
 	};
 	State::T state = State::Vestal;
@@ -62,56 +60,6 @@ void setAttribLocations(unsigned int progID, const std::vector<AttribInfo> &);
 void setAttachentLocations(unsigned int progID, const std::vector<ColorAttachmentInfo> &);
 bool getUniformLocations(unsigned int programID, std::vector<UniformInfo> &uniforms);
 void setAttribsToUseVBOs(const std::vector<AttribInfo> &attribs);
-
-
-class GLProgram {
-public:
-	GLProgram(
-		const std::string &vertShPath,
-		const std::string &fragShPath
-	);
-	~GLProgram();
-		// 0. Create the VBOs used for the program's attribs
-	
-	bool compile(
-		const std::vector<AttribInfo> &attribs,
-		const std::vector<UniformInfo> &uniforms,
-		const std::vector<ColorAttachmentInfo> &attachments = { }
-	);
-		// 1. Compile the program
-		//    (also sets attrib locatiotns, creates a private map of user => gl uniform IDs,
-		//     and binds attrib locations to VBOs.)
-		//    (also sets attachment locations, if any)
-	
-	bool validate();
-	
-	unsigned int id() { return programID; }
-	
-	bool isOK() { return ok; }
-	
-	void setUniform_int(unsigned int id, int val);
-	void setUniform_float(unsigned int id, float value);
-	void setUniform_mat4(unsigned int id, float *value);
-	void setUniform_mat3(unsigned int id, float *value);
-	void setUniform_vec3(unsigned int id, float *value);
-	
-protected:
-	bool ok;
-	
-private:
-	std::string _vshPath, _fshPath;
-	unsigned int programID;
-	
-	std::vector<AttribInfo> attribs;
-	std::map<unsigned int, unsigned int> uniform_id_transl_map;
-	std::vector<ColorAttachmentInfo> attachments;
-	
-	void _setAttribLocations(const std::vector<AttribInfo> &attribs);
-	bool _getUniformLocations(const std::vector<UniformInfo> &uniforms);
-	void _setAttachentLocations(const std::vector<ColorAttachmentInfo> &attachments);
-	void _setUpAttribsForDrawing();
-	
-};
 
 
 #endif

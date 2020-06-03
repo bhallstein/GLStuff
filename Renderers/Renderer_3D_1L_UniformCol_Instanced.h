@@ -39,7 +39,7 @@ public:
 	};
 	
 	struct {
-		unsigned int vertexPos, normal, translation, quaternion;
+		unsigned int vertexPos, normal, quaternion, translation;
 	} buffers;
 	
 	int n_vertices_per_model;

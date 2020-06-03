@@ -7,7 +7,7 @@
 //
 
 #include "Renderer_3D_1L_Textured.h"
-#include "GLProgram.h"
+#include "GLProg.h"
 #include "ObjImport.h"
 
 #include <OpenGL/gl3.h>

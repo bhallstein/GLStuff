@@ -7,7 +7,7 @@
 //
 
 #include "Renderer_3D_1L_ColourIndexed.h"
-#include "GLProgram.h"
+#include "GLProg.h"
 #include "GLHelpers.h"
 #include <OpenGL/gl.h>
 #include "CoordinateTypes.h"
@@ -45,9 +45,9 @@ bool Renderer_3D_1L_ColourIndexed::setUp() {
 	prog->vsh_path = bundledFilePath("Shaders/3D_ColourIndexed.vsh");
 	prog->fsh_path = bundledFilePath("Shaders/3D_ColourIndexed.fsh");
 	prog->attribs = {
-		{ Attribs::VertPos, buffers.vertexPos, "inVPos",    ATTRTYPE_FLOAT, 3 },
-		{ Attribs::Normal,  buffers.normal,    "inVNormal", ATTRTYPE_FLOAT, 3 },
-		{ Attribs::Colour,  buffers.colour,    "inColour",  ATTRTYPE_FLOAT, 3 }
+		{ Attribs::VertPos, buffers.vertexPos, "inVPos",    ATTRTYPE_FLOAT, 3, false },
+		{ Attribs::Normal,  buffers.normal,    "inVNormal", ATTRTYPE_FLOAT, 3, false },
+		{ Attribs::Colour,  buffers.colour,    "inColour",  ATTRTYPE_FLOAT, 3, false },
 	};
 	prog->uniforms = {
 		{ Uniforms::MVPMtx,          "mvpMtx"           },

@@ -6,12 +6,14 @@ uniform mat3 normalMtx;
 
 in vec3 inVPos;
 in vec3 inVNormal;
+in vec3 inColour;
 
 in vec4 inQuaternion;   // Rotation to apply to model (quaternion)
 in vec3 inTranslation;	// Translation to apply after rotating
 
 out vec3 normal_world;
 out vec3 fragpos_world;
+out vec3 outColour;
 
 /* Rotate using quaternion */
 vec3 quat_rotate(vec3 v, vec4 q) {
@@ -25,5 +27,6 @@ void main(void) {
 	
 	normal_world = normalMtx * quat_rotate(inVNormal, inQuaternion);
 	fragpos_world = p_world;
+	outColour = inColour;
 }
 

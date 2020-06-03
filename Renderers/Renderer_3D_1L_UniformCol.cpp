@@ -10,7 +10,7 @@
 
 #include <OpenGL/gl3.h>
 #include "GLHelpers.h"
-#include "GLProgram.h"
+#include "GLProg.h"
 #include "Camera.h"
 #include "Lights.h"
 #include "Primitives.h"

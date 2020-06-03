@@ -7,7 +7,7 @@
 //
 
 #include "Renderer_2D_Textured.h"
-#include "GLProgram.h"
+#include "GLProg.h"
 #include <OpenGL/gl3.h>
 
 #include "CoordinateTypes.h"

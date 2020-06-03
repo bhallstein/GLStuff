@@ -7,7 +7,7 @@
 //
 
 #include "Renderer_3D_1L_ReflectionMapped.h"
-#include "GLProgram.h"
+#include "GLProg.h"
 #include "GLHelpers.h"
 #include <OpenGL/gl.h>
 #include "CoordinateTypes.h"
