@@ -1,6 +1,7 @@
-
 #ifndef __CAMERA_H
 #define __CAMERA_H
+
+#include "CoordinateTypes.h"
 
 
 class Camera {
@@ -11,8 +12,9 @@ public:
 	float* getViewMatrix();
 	float* getProjMatrix();
 	
-	void setPosition(float x, float y, float z);
+	void setPosition(v3);
 	void setOrientation(float angle, float vx, float vy, float vz);
+	void setViewMatrix(float*);
 	void setLookFromTo(float aX, float aY, float aZ, float bX, float bY, float bZ);
 	
 	float *pos;
@@ -23,10 +25,8 @@ public:
 	void setPixel(float winW, float winH);
 	
 private:
-	bool using_orientation;
 	void *mtx_view;
 	void *mtx_proj;
-	void *mtx_invrot;
 };
 
 #endif
