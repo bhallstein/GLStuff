@@ -13,25 +13,25 @@
 struct TexImage null_tex_image = { NULL, -1, -1 };
 
 struct TexImage loadPngTexture(const char *filepath) {
-	
-//    CFURLRef textureURL = CFBundleCopyResourceURL(CFBundleGetMainBundle(),
-//												  (__bridge CFStringRef)fileName,
-//												  CFSTR("png"),
-//												  NULL);
 	CFURLRef texURL = CFBridgingRetain([NSURL fileURLWithPath:[NSString stringWithFormat:@"%s", filepath]]);
 	if (!texURL) {
-		NSLog(@"Texture name invalid");
+		NSLog(@"TexImage: Texture name invalid -- %s", filepath);
 		return null_tex_image;
 	}
 	
 	CGImageSourceRef imageSource = CGImageSourceCreateWithURL(texURL, NULL);
 	if (!imageSource) NSLog(@"Invalid image path");
-	if (CGImageSourceGetCount(imageSource) <= 0)
-		NSLog(@"No image in image source");
+	if (CGImageSourceGetCount(imageSource) <= 0) {
+		NSLog(@"TexImage: No image in image source");
+		return null_tex_image;
+	}
 	CFRelease(texURL);
 	
 	CGImageRef image = CGImageSourceCreateImageAtIndex(imageSource, 0, NULL);
-	if (!image)	NSLog(@"Image not created");
+	if (!image)	{
+		NSLog(@"Image not created");
+		return null_tex_image;
+	}
 	CFRelease(imageSource);
 	
 	GLuint width = (GLuint) CGImageGetWidth(image);
@@ -40,7 +40,11 @@ struct TexImage loadPngTexture(const char *filepath) {
 	void *data = malloc(width * height * 4);
 	
 	CGColorSpaceRef colorSpace = CGColorSpaceCreateDeviceRGB();
-	if (!colorSpace) NSLog(@"Colorspace not created");
+	if (!colorSpace) {
+		NSLog(@"TexImage: Colorspace not created");
+		free(data);
+		return null_tex_image;
+	}
 	
 	CGContextRef context = CGBitmapContextCreate(data,
 												 width,
@@ -49,10 +53,14 @@ struct TexImage loadPngTexture(const char *filepath) {
 												 width * 4,
 												 colorSpace,
 												 kCGImageAlphaPremultipliedFirst | kCGBitmapByteOrder32Host);
-	if (!context) NSLog(@"Context not created");
+	if (!context) {
+		NSLog(@"TexImage: Context not created");
+		free(data);
+		return null_tex_image;
+	}
 	
 	CGColorSpaceRelease(colorSpace);
-
+	
 	// Flip so that it isn't upside-down
 	CGContextTranslateCTM(context, 0, height);
 	CGContextScaleCTM(context, 1.0f, -1.0f);
@@ -61,6 +69,5 @@ struct TexImage loadPngTexture(const char *filepath) {
 	CGImageRelease(image);
 	CGContextRelease(context);
 	
-	struct TexImage t = { data, width, height };
-	return t;
+	return (struct TexImage) { data, width, height };
 }
