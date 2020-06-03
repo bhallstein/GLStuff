@@ -63,12 +63,8 @@ bool Renderer_3D_1L_UniformCol_Instanced::setUp() {
 		printf("oh dear");
 		return false;
 	}
-	
-	vbo_bind(buffers.vertexPos, VBOTYPE_ARRAY);
-	vbo_upload(sizeof(v3)*36, unitCube_vert.vertices, VBOTYPE_ARRAY, VBOHINT_STATIC);
-	
-	vbo_bind(buffers.normal, VBOTYPE_ARRAY);
-	vbo_upload(sizeof(v3)*36, unitCube_norm.vertices, VBOTYPE_ARRAY, VBOHINT_STATIC);
+
+	setPrimitive(unitCube_vert.vertices, unitCube_norm.vertices, 36);
 	
 	v3 t[] = { {1.0, 0.0, 0.0}, {-1.0, 0.0, 0.0 } };
 	vbo_bind(buffers.translation, VBOTYPE_ARRAY);
@@ -80,11 +76,22 @@ bool Renderer_3D_1L_UniformCol_Instanced::setUp() {
 	vbo_bind(buffers.quaternion, VBOTYPE_ARRAY);
 	vbo_upload(sizeof(v4)*2, qs, VBOTYPE_ARRAY, VBOHINT_STATIC);
 	
-	n_vertices_per_model = 36;
 	n_models = 2;
 	
 	vao_bind(0);
 	return true;
+}
+void Renderer_3D_1L_UniformCol_Instanced::setCol(v3 c) {
+	colour = c;
+}
+void Renderer_3D_1L_UniformCol_Instanced::setPrimitive(v3 *vertices, v3 *normals, int _n_vertices) {
+	n_vertices_per_model = _n_vertices;
+	
+	vbo_bind(buffers.vertexPos, VBOTYPE_ARRAY);
+	vbo_upload(sizeof(v3)*_n_vertices, vertices, VBOTYPE_ARRAY, VBOHINT_STATIC);
+	
+	vbo_bind(buffers.normal, VBOTYPE_ARRAY);
+	vbo_upload(sizeof(v3)*_n_vertices, normals, VBOTYPE_ARRAY, VBOHINT_STATIC);
 }
 
 void Renderer_3D_1L_UniformCol_Instanced::render(Camera *cam, DirectionalLight *light, glm::mat3 &m_model) {

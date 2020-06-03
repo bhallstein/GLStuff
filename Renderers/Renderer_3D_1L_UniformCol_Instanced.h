@@ -23,6 +23,10 @@ public:
 	~Renderer_3D_1L_UniformCol_Instanced();
 	
 	bool setUp();
+	void setCol(v3);
+	void setPrimitive(v3 *vertices,
+					  v3 *normals,
+					  int n_vertices);
 	void render(Camera*, DirectionalLight*, glm::mat3 &mtx_model);
 	
 	struct Attribs {

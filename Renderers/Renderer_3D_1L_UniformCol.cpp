@@ -62,16 +62,25 @@ bool Renderer_3D_1L_UniformCol::setUp() {
 		return false;
 	}
 	
-	vbo_bind(buffers.vertexPos, VBOTYPE_ARRAY);
-	vbo_upload(sizeof(v3)*36, unitCube_vert.vertices, VBOTYPE_ARRAY, VBOHINT_STATIC);
-	
-	vbo_bind(buffers.normal, VBOTYPE_ARRAY);
-	vbo_upload(sizeof(v3)*36, unitCube_norm.vertices, VBOTYPE_ARRAY, VBOHINT_STATIC);
-	
-	n_vertices = 36;
+	setPrimitive(unitCube_vert.vertices, unitCube_norm.vertices, 36);
 	
 	vao_bind(0);
 	return true;
+}
+
+void Renderer_3D_1L_UniformCol::setCol(v3 c) {
+	colour = c;
+}
+void Renderer_3D_1L_UniformCol::setPrimitive(v3 *vertices, v3 *normals, int _n_vertices) {
+	n_vertices = _n_vertices;
+	
+	vbo_bind(buffers.vertexPos, VBOTYPE_ARRAY);
+	vbo_upload(sizeof(v3)*n_vertices, vertices, VBOTYPE_ARRAY, VBOHINT_STATIC);
+	
+	vbo_bind(buffers.normal, VBOTYPE_ARRAY);
+	vbo_upload(sizeof(v3)*n_vertices, normals, VBOTYPE_ARRAY, VBOHINT_STATIC);
+	
+	vbo_bind(0, VBOTYPE_ARRAY);
 }
 
 void Renderer_3D_1L_UniformCol::render(Camera *cam, DirectionalLight *light, glm::mat4 &m_model) {
