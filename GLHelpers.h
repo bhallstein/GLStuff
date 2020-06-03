@@ -110,13 +110,14 @@ void prog_setUniformValue_Mat4(int uniform_loc, float *values);
 void prog_setAttribToUseVBO(unsigned int attrib_loc,
 							unsigned int vbo_id,
 							int attrib_components,
-							enum attrib_type attrtype);
+							enum attrib_type attrtype,
+							int instanced);
 	// This binds the vbo, enabled the attrib atrray & sets its pointer
 	// NB attrib array enabling is per-VAO, or global if no VAO is bound.
 	// So when not using VAOs, you should disable it after use with:
 void prog_disableAttrib(unsigned int attrib_loc);
 	// ...but only when not using VAOs.
-
+	
 #ifdef __cplusplus
 }
 #endif

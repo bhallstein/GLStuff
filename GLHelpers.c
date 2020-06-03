@@ -272,7 +272,8 @@ void prog_setUniformValue_Mat4(int uniform_loc, float *values) { glUniformMatrix
 void prog_setAttribToUseVBO(unsigned int attrib_loc,
 							unsigned int vbo_id,
 							int attrib_components,
-							enum attrib_type attrtype) {
+							enum attrib_type attrtype,
+							int instanced) {
 	GLenum gl_attrib_type = (attrtype == ATTRTYPE_FLOAT ? GL_FLOAT : GL_INT);
 	glBindBuffer(GL_ARRAY_BUFFER, vbo_id);
 	glEnableVertexAttribArray(attrib_loc);
@@ -282,6 +283,8 @@ void prog_setAttribToUseVBO(unsigned int attrib_loc,
 						  GL_FALSE,             // normalized
 						  0,                    // stride
 						  0);                   // offset/pointer
+	if (instanced)
+		glVertexAttribDivisor(attrib_loc, 1);
 }
 
 void prog_disableAttrib(unsigned int attrib_loc) {

@@ -20,9 +20,9 @@ GLProgram_3D_1L_CI::GLProgram_3D_1L_CI() :
 	buffers.colour = vbo_create();
 	
 	std::vector<AttribInfo> attribsDefinition = {
-		{ Attribs::VertPos, buffers.vertexPos, "inVPos",    ATTRTYPE_FLOAT, 3 },
-		{ Attribs::Normal,  buffers.normal,    "inVNormal", ATTRTYPE_FLOAT, 3 },
-		{ Attribs::Colour,  buffers.colour,    "inColour",  ATTRTYPE_FLOAT, 3 }
+		{ Attribs::VertPos, buffers.vertexPos, "inVPos",    ATTRTYPE_FLOAT, 3, false },
+		{ Attribs::Normal,  buffers.normal,    "inVNormal", ATTRTYPE_FLOAT, 3, false },
+		{ Attribs::Colour,  buffers.colour,    "inColour",  ATTRTYPE_FLOAT, 3, false }
 	};
 	std::vector<UniformInfo> uniformsDefinition = {
 		{ Uniforms::MVPMtx, "mvpMtx" },

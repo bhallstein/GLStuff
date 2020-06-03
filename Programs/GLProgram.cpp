@@ -86,7 +86,8 @@ void GLProgram::_setUpAttribsForDrawing() {
 		prog_setAttribToUseVBO(a.glID,
 							   a.vboID,
 							   a.n_components,
-							   a.float_or_int);
+							   a.float_or_int,
+							   a.instanced);
 }
 
 void GLProgram::setUniform_int(unsigned int userland_id, int x) {

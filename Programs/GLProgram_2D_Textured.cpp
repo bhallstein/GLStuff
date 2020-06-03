@@ -19,8 +19,8 @@ GLProgram_2D_Textured::GLProgram_2D_Textured() :
 	buffers.texCoord  = vbo_create();
 	
 	std::vector<AttribInfo> attribsDefinition = {
-		{ Attribs::VertPos, buffers.vertexPos, "inVPos",     ATTRTYPE_FLOAT, 2 },
-		{ Attribs::TexCoord,  buffers.texCoord,  "inTexCoord", ATTRTYPE_FLOAT, 2 }
+		{ Attribs::VertPos,   buffers.vertexPos, "inVPos",     ATTRTYPE_FLOAT, 2, false },
+		{ Attribs::TexCoord,  buffers.texCoord,  "inTexCoord", ATTRTYPE_FLOAT, 2, false }
 	};
 	std::vector<UniformInfo> uniformsDefinition = {
 		{ Uniforms::Sampler, "uTex" }

@@ -19,8 +19,8 @@ GLProgram_2D_ColourIndexed::GLProgram_2D_ColourIndexed() :
 	buffers.colour    = vbo_create();
 	
 	std::vector<AttribInfo> attribsDefinition = {
-		{ Attribs::VertPos,  buffers.vertexPos, "inVPos",   ATTRTYPE_FLOAT, 2 },
-		{ Attribs::Colour,   buffers.colour,    "inColour", ATTRTYPE_FLOAT, 3 }
+		{ Attribs::VertPos,  buffers.vertexPos, "inVPos",   ATTRTYPE_FLOAT, 2, false },
+		{ Attribs::Colour,   buffers.colour,    "inColour", ATTRTYPE_FLOAT, 3, false }
 	};
 	
 	bool compiled = compile(attribsDefinition, { });

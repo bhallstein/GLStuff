@@ -20,6 +20,7 @@ struct AttribInfo {
 	std::string name;
 	attrib_type float_or_int;
 	int n_components;
+	bool instanced;
 };
 struct UniformInfo {
 	unsigned int userlandID;		// Uniform locs are determined by GL, & are

@@ -18,8 +18,8 @@ GLProgram_3D_1L_UniformCol::GLProgram_3D_1L_UniformCol() :
 	buffers.normal    = vbo_create();
 	
 	std::vector<AttribInfo> attribsDefinition = {
-		{ Attribs::VertPos, buffers.vertexPos, "inVPos",    ATTRTYPE_FLOAT, 3 },
-		{ Attribs::Normal,  buffers.normal,    "inVNormal", ATTRTYPE_FLOAT, 3 }
+		{ Attribs::VertPos, buffers.vertexPos, "inVPos",    ATTRTYPE_FLOAT, 3, false },
+		{ Attribs::Normal,  buffers.normal,    "inVNormal", ATTRTYPE_FLOAT, 3, false }
 	};
 	std::vector<UniformInfo> uniformsDefinition = {
 		{ Uniforms::MVPMtx, "mvpMtx" },
