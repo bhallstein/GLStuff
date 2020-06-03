@@ -32,7 +32,7 @@ const float* Camera::getViewMatrix() {
 								 -rotationAngle,
 								 glm::vec3(rotationVec[0], rotationVec[1], rotationVec[2]));
 	glm::mat4 invT = glm::translate(glm::mat4(1.0),
-									glm::vec3(pos[0], pos[1], pos[2]));
+									glm::vec3(-pos[0], -pos[1], -pos[2]));
 	if (mtx_view) delete (glm::mat4*) mtx_view;
 	mtx_view = new glm::mat4(invR * invT);
 	

@@ -15,17 +15,28 @@ class GLProgram_2D_Textured : public GLProgram {
 public:
 	GLProgram_2D_Textured();
 	
-	void setBuffersForAttribs(unsigned int vert_vboID, unsigned int tex_vboID);
-	void setUpAttribsForDrawing();
-	void setTextureUnit(int);
+	bool ok;
 	
-protected:
-	void setAttribLocations();
-	bool getUniformLocations();
+	class Attribs {
+	public:
+		enum { VertPos, TexCoord };
+	};
 	
-	int samplerUniformLoc;
-	int vboID_vertexPos;
-	int vboID_texcoords;
+	class Uniforms {
+	public:
+		enum { Sampler };
+	};
+	
+	unsigned int vao;
+	struct {
+		unsigned int
+			vertexPos,
+			texCoord;
+	} buffers;
+	
+	// To use, bind the texture, and set the tex unit via
+	// the uniform.
+	
 };
 
 #endif

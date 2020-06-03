@@ -8,6 +8,7 @@
 
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 #include "GLHelpers.h"
 #include <OpenGL/gl3.h>
 
@@ -131,14 +132,22 @@ void vbo_bind(unsigned int vbo_id, enum vbo_type type) {
 	glBindBuffer(gl_target, vbo_id);
 }
 
-void vbo_upload(int bytes, void *data, enum vbo_type type) {
+void vbo_upload(int n_bytes, void *data, enum vbo_type type, enum vbo_hint hint) {
 	GLenum gl_target = (type == VBOTYPE_ARRAY ? GL_ARRAY_BUFFER : GL_ELEMENT_ARRAY_BUFFER);
+	GLenum gl_hint = (hint == VBOHINT_DYNAMIC ? GL_DYNAMIC_DRAW : GL_STATIC_DRAW);
 	glBufferData(gl_target,
-				 bytes,
+				 n_bytes,
 				 data,
-				 GL_STATIC_DRAW);	// May want to make this explicit
+				 gl_hint);
 }
 
+void vbo_reupload(int bytes, int offset, void *data, enum vbo_type type) {
+	GLenum gl_target = (type == VBOTYPE_ARRAY ? GL_ARRAY_BUFFER : GL_ELEMENT_ARRAY_BUFFER);
+	glBufferSubData(gl_target,
+					0,
+					bytes,
+					data);
+}
 
 
 #pragma mark - Programs
@@ -192,7 +201,6 @@ int prog_compileAndLink(unsigned int prog, const char *v_src, const char *f_src)
 		return 0;
 	}
 	
-	
 	// Link program
 	glAttachShader(prog, vSh);
 	glAttachShader(prog, fSh);
@@ -233,12 +241,26 @@ int prog_compileAndLink(unsigned int prog, const char *v_src, const char *f_src)
 
 void prog_use(unsigned int program) { glUseProgram(program); }
 
+char* prog_validate(unsigned int program) {
+	int logLength, linkStatus;
+
+	glValidateProgram(program);
+	glGetProgramiv(program, GL_INFO_LOG_LENGTH, &logLength);
+	if (logLength > 0) {
+		char *msg = (char*) malloc(logLength);
+		glGetProgramInfoLog(program, logLength, &logLength, msg);
+		return msg;
+	}
+	
+	glGetProgramiv(program, GL_VALIDATE_STATUS, &linkStatus);
+	if (linkStatus == 0)
+		return strdup("Failed to validate program (no log found)!\n");
+	
+	return NULL;
+}
 
 int prog_uniformLocation(unsigned int prog, const char *uniform_name) {
-	int loc = glGetUniformLocation(prog, uniform_name);
-	if (loc == -1)
-		printf("sampler uniform \"%s\" not found in shader program", uniform_name);
-	return loc;
+	return glGetUniformLocation(prog, uniform_name);
 }
 void prog_setUniformValue_Int(int uniform_loc, int value) {      glUniform1i(uniform_loc, value); }
 void prog_setUniformValue_Float(int uniform_loc, float value) {  glUniform1f(uniform_loc, value); }

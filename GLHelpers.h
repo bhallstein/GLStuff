@@ -36,6 +36,10 @@ enum vbo_type {
 	VBOTYPE_ARRAY,
 	VBOTYPE_ELEMENT_ARRAY
 };
+enum vbo_hint {
+	VBOHINT_STATIC,
+	VBOHINT_DYNAMIC
+};
 enum attrib_type {
 	ATTRTYPE_FLOAT,
 	ATTRTYPE_INT
@@ -80,7 +84,8 @@ void vao_bind(unsigned int vao_id);
 
 unsigned int vbo_create();
 void vbo_bind(unsigned int vbo_id, enum vbo_type type);
-void vbo_upload(int bytes, void *data, enum vbo_type type);
+void vbo_upload(int n_bytes, void *data, enum vbo_type type, enum vbo_hint hint);
+void vbo_reupload(int n_bytes, int offset, void *data, enum vbo_type type);
 
 
 // Programs:
@@ -91,6 +96,9 @@ int prog_compileAndLink(unsigned int prog, const char *v_src, const char *f_src)
 	// Strings MUST be null-terminated
 void prog_use(unsigned int program);
 
+char* prog_validate(unsigned int program);
+	// Returns NULL if passed validation, otherwise a malloc'd string
+	
 int prog_uniformLocation(unsigned int program, const char *uniform_name);
 void prog_setUniformValue_Int(int uniform_loc, int value);
 void prog_setUniformValue_Float(int uniform_loc, float value);

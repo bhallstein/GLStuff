@@ -13,12 +13,12 @@
 extern "C" {
 #endif
 
-typedef struct {
+struct TexImage {
 	void *data;
 	float w, h;
-} TexImage;
+};
 
-TexImage loadPngTexture(const char *fileName);
+struct TexImage loadPngTexture(const char *fileName);
 	// Pass the full file path
 	// - get with bundledFilePath()
 

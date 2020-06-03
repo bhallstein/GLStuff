@@ -7,12 +7,12 @@
 //
 
 #include "TexImage.h"
-//#include <stdio.h>
 #import <Foundation/Foundation.h>
 #import <OpenGL/gl.h>
 
+struct TexImage null_tex_image = { NULL, -1, -1 };
 
-TexImage loadPngTexture(const char *filepath) {
+struct TexImage loadPngTexture(const char *filepath) {
 	
 //    CFURLRef textureURL = CFBundleCopyResourceURL(CFBundleGetMainBundle(),
 //												  (__bridge CFStringRef)fileName,
@@ -21,7 +21,7 @@ TexImage loadPngTexture(const char *filepath) {
 	CFURLRef texURL = CFBridgingRetain([NSURL fileURLWithPath:[NSString stringWithFormat:@"%s", filepath]]);
 	if (!texURL) {
 		NSLog(@"Texture name invalid");
-		return (TexImage) { NULL, -1, -1 };
+		return null_tex_image;
 	}
 	
 	CGImageSourceRef imageSource = CGImageSourceCreateWithURL(texURL, NULL);
@@ -61,5 +61,6 @@ TexImage loadPngTexture(const char *filepath) {
 	CGImageRelease(image);
 	CGContextRelease(context);
 	
-    return (TexImage){ data, width, height };
+	struct TexImage t = { data, width, height };
+	return t;
 }

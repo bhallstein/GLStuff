@@ -1,20 +1,15 @@
 #version 140
 
-// Light uniforms
-uniform vec3 uLightVector;
-	// Our light points in this direction, from an infinite
-	// distance away
-uniform vec3 uLightProperties;
-	// (ambient, diffuse, specular)
+uniform vec3 uLightVector;			// Light dir. from inf. dist
+uniform vec3 uLightProperties;		// Ambient, diffuse, specular
 
 uniform vec3 uCamPosition;
 
-uniform sampler2D uTexture;
-uniform samplerCube uCubeMapTex;
-uniform float texToLightRatio;
+uniform vec3 uColour;
+uniform float uColToLightRatio;
 
-in vec3 normal_world, fragpos_world;
-in vec2 outTexCoord;
+in vec3 normal_world;
+in vec3 fragpos_world;
 out vec4 fragOutColour;
 
 void main(void) {
@@ -37,21 +32,11 @@ void main(void) {
 	vec3 r = reflect(-uLightVector, normal);
 	float exp = 7.0;
 	float spec = 0.7 * l_Specular * pow(max(dot(r,v),0), exp);
+	
+	
+	// 2. Combine
 
-
-	// 2. Texturing
-
-	vec4 texCol = texture(uTexture, outTexCoord, 0.0);
-
-
-	// 3. Combine the two
-
-	fragOutColour =
-		texToLightRatio * texCol +
-		(1.0 - texToLightRatio) * vec4(
-			l_Ambient + diff + spec,
-			l_Ambient + diff + spec,
-			l_Ambient + diff + spec,
-			1.0
-		);
+	float light_combined = l_Ambient + diff + spec;
+	fragOutColour = vec4(uColour, 1.0) * (light_combined + 0.1) + uColToLightRatio - uColToLightRatio;
 }
+

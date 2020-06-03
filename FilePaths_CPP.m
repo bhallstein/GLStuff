@@ -9,7 +9,7 @@
 #import <Foundation/Foundation.h>
 #import "FilePaths_CPP.h"
 
-const char* bundledFilePath(const char *f) {
+char* bundledFilePath(const char *f) {
 	NSString *path = [NSString stringWithFormat:@"%@/%s", [[NSBundle mainBundle] resourcePath], f];
 	return strdup([path UTF8String]);
 }

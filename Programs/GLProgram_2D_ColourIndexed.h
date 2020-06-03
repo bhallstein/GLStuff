@@ -15,15 +15,20 @@ class GLProgram_2D_ColourIndexed : public GLProgram {
 public:
 	GLProgram_2D_ColourIndexed();
 	
-	void setBuffersForAttribs(unsigned int vert_vboID, unsigned int col_vboID);
-	void setUpAttribsForDrawing();
+	bool ok;
 	
-protected:
-	void setAttribLocations();
-	bool getUniformLocations();
+	class Attribs {
+	public:
+		enum { VertPos, Colour };
+	};
 	
-	int vboID_vertexPos;
-	int vboID_colours;
+	unsigned int vao;
+	struct {
+		unsigned int
+			vertexPos,
+			colour;
+	} buffers;
+	
 };
 
 #endif

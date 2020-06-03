@@ -15,7 +15,7 @@
 extern "C" {
 #endif
 	
-	const char* bundledFilePath(const char *filepath);
+	char* bundledFilePath(const char *filepath);
 	
 #ifdef __cplusplus
 }

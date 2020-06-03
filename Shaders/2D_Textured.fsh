@@ -8,3 +8,4 @@ uniform sampler2D uTex;
 void main(void) {
 	fragOutColour = texture(uTex, outTexCoord.st, 0.0);
 }
+
