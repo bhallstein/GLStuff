@@ -1,0 +1,267 @@
+//
+//  GLHelpers.c
+//  OpenGL3_2_Render_to_Tex
+//
+//  Created by Ben on 28/06/2014.
+//  Copyright (c) 2014 Ben. All rights reserved.
+//
+
+#include <stdio.h>
+#include <stdlib.h>
+#include "GLHelpers.h"
+#include <OpenGL/gl3.h>
+
+
+#pragma mark Framebuffers
+
+int fb_create() {
+	GLuint fboName;
+	glGenFramebuffers(1, &fboName);
+	return fboName;
+}
+
+void fb_bind(unsigned int fb) {
+	glBindFramebuffer(GL_FRAMEBUFFER, fb);
+}
+
+void fb_enableTextureAttachment() {
+	unsigned int att = GL_COLOR_ATTACHMENT0;
+	glDrawBuffers(1, &att);
+}
+void fb_disableTextureAttachment() {
+	unsigned int att = GL_NONE;
+	glDrawBuffers(1, &att);
+}
+
+void fb_attachTexture(unsigned int tex_id) {
+	glFramebufferTexture2D(GL_FRAMEBUFFER,
+						   GL_COLOR_ATTACHMENT0,
+						   GL_TEXTURE_2D,
+						   tex_id,
+						   0);
+}
+
+void fb_attachFaceOfCubeMap(unsigned int cubemap_id, unsigned int face) {
+	glFramebufferTexture2D(GL_FRAMEBUFFER,
+						   GL_COLOR_ATTACHMENT0,
+						   GL_TEXTURE_CUBE_MAP,
+						   cubemap_id,
+						   0);
+}
+
+int fb_checkOK() {
+	if (glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE) {
+		printf("Error: RTT framebuffer incomplete");
+		return 0;
+	}
+	return 1;
+}
+
+
+
+#pragma mark - Textures
+
+unsigned int tx_create() {
+	unsigned int texID;
+	glGenTextures(1, &texID);
+	return texID;
+}
+
+void tx_bind(unsigned int tex_id) {
+	glBindTexture(GL_TEXTURE_2D, tex_id);
+}
+void tx_bindAsCubeMap(unsigned int cm_id) {
+	glBindTexture(GL_TEXTURE_CUBE_MAP, cm_id);
+}
+
+void tx_upload(int w, int h, void *data, enum tx_filtering filtering) {
+	GLenum gl_filt = (filtering == TX_FILTER_LINEAR ? GL_LINEAR : GL_NEAREST);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, gl_filt);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, gl_filt);
+	glTexImage2D(GL_TEXTURE_2D,
+				 0,
+				 GL_RGBA,
+				 w, h,
+				 0,
+				 GL_BGRA, GL_UNSIGNED_INT_8_8_8_8_REV,
+				 data);
+}
+void tx_uploadCubeMapFace(int w, int h, void *data, enum tx_cubemapface face) {
+	GLenum gl_face = GL_TEXTURE_CUBE_MAP_POSITIVE_X + (int)face;
+	glTexImage2D(
+				 gl_face,
+				 0,
+				 GL_RGBA,
+				 w, h,
+				 0,
+				 GL_BGRA, GL_UNSIGNED_INT_8_8_8_8_REV,
+				 data
+				 );
+	glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+	glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+	glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+	glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+		// Technically we only need to do this once for the entire cube map.
+}
+
+
+#pragma mark - VAOs
+
+unsigned int vao_create() {
+	unsigned int vao_id;
+	glGenVertexArrays(1, &vao_id);
+	return vao_id;
+}
+void vao_bind(unsigned int id) {
+	glBindVertexArray(id);
+}
+
+
+
+#pragma mark - VBOs
+
+unsigned int vbo_create() {
+	unsigned int vbo_id;
+	glGenBuffers(1, &vbo_id);
+	return vbo_id;
+}
+
+void vbo_bind(unsigned int vbo_id, enum vbo_type type) {
+	GLenum gl_target = (type == VBOTYPE_ARRAY ? GL_ARRAY_BUFFER : GL_ELEMENT_ARRAY_BUFFER);
+	glBindBuffer(gl_target, vbo_id);
+}
+
+void vbo_upload(int bytes, void *data, enum vbo_type type) {
+	GLenum gl_target = (type == VBOTYPE_ARRAY ? GL_ARRAY_BUFFER : GL_ELEMENT_ARRAY_BUFFER);
+	glBufferData(gl_target,
+				 bytes,
+				 data,
+				 GL_STATIC_DRAW);	// May want to make this explicit
+}
+
+
+
+#pragma mark - Programs
+
+unsigned int prog_create() {
+	return glCreateProgram();
+}
+
+void prog_setAttribLocation(unsigned int program, unsigned int location, const char *name) {
+	glBindAttribLocation(program, location, name);
+}
+
+int prog_compileAndLink(unsigned int prog, const char *v_src, const char *f_src) {
+	GLint logLength, compileStatus, linkStatus;
+	
+	// Compile vertex shader
+	GLuint vSh = glCreateShader(GL_VERTEX_SHADER);
+	glShaderSource(vSh, 1, (const GLchar **) &v_src, NULL);
+	glCompileShader(vSh);
+	
+	// Check compiled
+	glGetShaderiv(vSh, GL_INFO_LOG_LENGTH, &logLength);
+	if (logLength > 0) {
+		GLchar *log = (GLchar*) malloc(logLength);
+		glGetShaderInfoLog(vSh, logLength, &logLength, log);
+		printf("Vertex shader compile log: %s\n", log);
+		free(log);
+	}
+	glGetShaderiv(vSh, GL_COMPILE_STATUS, &compileStatus);
+	if (compileStatus == 0) {
+		printf("Failed to compile vertex shader:\n%s\n", v_src);
+		return 0;
+	}
+		
+	// Compile fragment shader
+	GLuint fSh = glCreateShader(GL_FRAGMENT_SHADER);
+	glShaderSource(fSh, 1, (const GLchar **) &f_src, NULL);
+	glCompileShader(fSh);
+		
+	// Check compiled
+	glGetShaderiv(fSh, GL_INFO_LOG_LENGTH, &logLength);
+	if (logLength > 0) {
+		GLchar *log = (GLchar*) malloc(logLength);
+		glGetShaderInfoLog(fSh, logLength, &logLength, log);
+		printf("Fragment shader compile log: %s\n", log);
+		free(log);
+	}
+	glGetShaderiv(fSh, GL_COMPILE_STATUS, &compileStatus);
+	if (compileStatus == 0) {
+		printf("Failed to compile fragment shader:\n%s\n", f_src);
+		return 0;
+	}
+	
+	
+	// Link program
+	glAttachShader(prog, vSh);
+	glAttachShader(prog, fSh);
+	glLinkProgram(prog);
+		
+	// Check linked OK
+	glGetProgramiv(prog, GL_INFO_LOG_LENGTH, &logLength);
+	if (logLength > 0) {
+		GLchar *log = (GLchar*)malloc(logLength);
+		glGetProgramInfoLog(prog, logLength, &logLength, log);
+		printf("Program link log:\n%s\n", log);
+		free(log);
+	}
+		
+	glGetProgramiv(prog, GL_LINK_STATUS, &linkStatus);
+	if (linkStatus == 0) {
+		printf("Failed to link program");
+		return 0;
+	}
+		
+		glValidateProgram(prog);
+//		glGetProgramiv(programName, GL_INFO_LOG_LENGTH, &logLength);
+//		if (logLength > 0) {
+//			GLchar *log = (GLchar*)malloc(logLength);
+//			glGetProgramInfoLog(programName, logLength, &logLength, log);
+//			NSLog(@"Program validate log:\n%s\n", log);
+//			free(log);
+//		}
+	
+	glGetProgramiv(prog, GL_VALIDATE_STATUS, &linkStatus);
+	if (linkStatus == 0) {
+		printf("Program failed to validate, continuing...");
+		return 0;
+	}
+	
+	return 1;
+}
+
+void prog_use(unsigned int program) { glUseProgram(program); }
+
+
+int prog_uniformLocation(unsigned int prog, const char *uniform_name) {
+	int loc = glGetUniformLocation(prog, uniform_name);
+	if (loc == -1)
+		printf("sampler uniform \"%s\" not found in shader program", uniform_name);
+	return loc;
+}
+void prog_setUniformValue_Int(int uniform_loc, int value) {      glUniform1i(uniform_loc, value); }
+void prog_setUniformValue_Float(int uniform_loc, float value) {  glUniform1f(uniform_loc, value); }
+void prog_setUniformValue_Vec3(int uniform_loc, float *values) { glUniform3fv(uniform_loc, 1, values); }
+void prog_setUniformValue_Vec4(int uniform_loc, float *values) { glUniform4fv(uniform_loc, 1, values); }
+void prog_setUniformValue_Mat3(int uniform_loc, float *values) { glUniformMatrix3fv(uniform_loc, 1, GL_FALSE, values); }
+void prog_setUniformValue_Mat4(int uniform_loc, float *values) { glUniformMatrix4fv(uniform_loc, 1, GL_FALSE, values); }
+
+void prog_setAttribToUseVBO(unsigned int attrib_loc,
+							unsigned int vbo_id,
+							int attrib_components,
+							enum attrib_type attrtype) {
+	GLenum gl_attrib_type = (attrtype == ATTRTYPE_FLOAT ? GL_FLOAT : GL_INT);
+	glBindBuffer(GL_ARRAY_BUFFER, vbo_id);
+	glEnableVertexAttribArray(attrib_loc);
+	glVertexAttribPointer(attrib_loc,			// index
+						  attrib_components,		// size (components per vertex)
+						  gl_attrib_type,		// type
+						  GL_FALSE,				// normalized
+						  0,						// stride
+						  0);					// offset/pointer
+}
+
+void prog_disableAttrib(unsigned int attrib_loc) {
+	glDisableVertexAttribArray(attrib_loc);
+}
