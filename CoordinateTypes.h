@@ -19,5 +19,6 @@ struct v3i {  int x, y, z;    };
 struct v4  {  float x, y, z, t;  };
 
 struct col3 {  float r, g, b;  };
+struct col4 {  float r, g, b, a; };
 
 #endif

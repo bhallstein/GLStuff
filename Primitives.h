@@ -33,8 +33,11 @@ struct Rectangle2D {
 	Rectangle2D() { };
 	Rectangle2D(const Rectangle &);
 	Rectangle2D operator+ (const v2 &);
+	Rectangle2D operator+ (float);
 	Rectangle2D operator* (const v2 &);
 };
+extern Rectangle2D unitSquare_2D;
+extern Rectangle2D unitSquare_texcoords_2D;
 
 
 struct Cube {

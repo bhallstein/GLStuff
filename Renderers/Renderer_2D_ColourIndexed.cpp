@@ -89,7 +89,7 @@ bool Renderer_2D_ColourIndexed::setUp() {
 	}
 	
 	Rectangle2D r = unitSquare * 2.0;
-	v4 colours[] = {
+	col4 colours[] = {
 		{ 1.0, 0.0, 0.0, 1.0 }, { 0.0, 1.0, 0.0, 1.0 }, { 0.0, 0.0, 1.0, 1.0 },
 		{ 1.0, 0.0, 0.0, 1.0 }, { 0.0, 0.0, 1.0, 1.0 }, { 1.0, 1.0, 0.0, 1.0 }
 	};
@@ -97,7 +97,7 @@ bool Renderer_2D_ColourIndexed::setUp() {
 	vbo_bind(buffers.vertexPos, VBOTYPE_ARRAY);
 	vbo_upload(sizeof(v2)*6, r.vertices, VBOTYPE_ARRAY, VBOHINT_STATIC);
 	vbo_bind(buffers.colour, VBOTYPE_ARRAY);
-	vbo_upload(sizeof(v4)*6, colours, VBOTYPE_ARRAY, VBOHINT_STATIC);
+	vbo_upload(sizeof(col4)*6, colours, VBOTYPE_ARRAY, VBOHINT_STATIC);
 	
 	n_vertices = 6;
 	

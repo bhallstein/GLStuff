@@ -49,6 +49,9 @@ Rectangle unitSquare_texcoords {
 	1.0,  1.0,  0.0,
 };
 
+Rectangle2D unitSquare_2D = unitSquare;
+Rectangle2D unitSquare_texcoords_2D = unitSquare_texcoords;
+
 Rectangle Rectangle::operator*(float x) {
 	Rectangle r;
 	for (int i=0; i < 6; ++i) {
@@ -84,6 +87,14 @@ Rectangle2D Rectangle2D::operator+(const v2 &r) {
 	}
 	return out;
 }
+Rectangle2D Rectangle2D::operator+(float x) {
+	Rectangle2D out;
+	for (int i=0; i < 6; ++i) {
+		const v2 &p = vertices[i];
+		out.vertices[i] = { p.x + x, p.y + x };
+	}
+	return out;
+}
 
 Rectangle2D Rectangle2D::operator*(const v2 &r) {
 	Rectangle2D out;
@@ -93,6 +104,7 @@ Rectangle2D Rectangle2D::operator*(const v2 &r) {
 	}
 	return out;
 }
+
 
 
 #pragma mark - Cube
