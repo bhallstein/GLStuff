@@ -25,7 +25,7 @@ Camera::~Camera()
 }
 
 
-const float* Camera::getViewMatrix() {
+float* Camera::getViewMatrix() {
 	// The view transform V is the inverse of the camera transitioning transform, C
 	// Since C = R · T,
 	//       V = inv(T) · inv(R)
@@ -41,7 +41,7 @@ const float* Camera::getViewMatrix() {
 	
 	return mptr(V);
 }
-const float *Camera::getProjMatrix() {
+float *Camera::getProjMatrix() {
 	glm::mat4 &P = *(glm::mat4*)mtx_proj;
 	return mptr(P);
 }
@@ -84,3 +84,15 @@ void Camera::setOrthographic(float l, float r, float b, float t, float zN, float
 	glm::mat4 &P = *(glm::mat4*)mtx_proj;
 	P = glm::mat4(glm::ortho(l, r, b, t, zN, zF));
 }
+
+void Camera::setPixel(float winW, float winH) {
+	glm::mat4 &P = *(glm::mat4*)mtx_proj;
+	P = glm::ortho(0.f, float(winW), float(winH), 0.f, 1.f, -1.f);
+}
+
+
+
+
+
+
+

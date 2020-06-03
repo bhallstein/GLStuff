@@ -34,7 +34,6 @@ Renderer_2D_ColourIndexed::~Renderer_2D_ColourIndexed()
 }
 	
 bool Renderer_2D_ColourIndexed::setUp() {
-	// VAO
 	vao = vao_create();
 	vao_bind(vao);
 	
@@ -49,11 +48,11 @@ bool Renderer_2D_ColourIndexed::setUp() {
 		{ Attribs::Colour,  buffers.colour,    "inColour", ATTRTYPE_FLOAT, 4, false },
 	};
 	prog->uniforms = {
-		{ Uniforms::OrthoMatrix, 0, "ortho_matrix" },
+		{ Uniforms::OrthoMatrix, "ortho_matrix" },
 	};
 	if (dither) {
 		prog->fsh_path = bundledFilePath("Shaders/2D_ColourIndexed_Dithered.fsh");
-		prog->uniforms.push_back({ Uniforms::Sampler_Dithering, 0, "uTex" });
+		prog->uniforms.push_back({ Uniforms::Sampler_Dithering, "uTex" });
 
 		tex_dither = tx_create();
 		tx_bind(tex_dither);
@@ -105,12 +104,12 @@ bool Renderer_2D_ColourIndexed::setUp() {
 	vao_bind(0);
 	return true;
 }
-void Renderer_2D_ColourIndexed::render(float *mtx) {
+void Renderer_2D_ColourIndexed::render(float *ortho_mtx) {
 	glDisable(GL_DEPTH_TEST);
 	vao_bind(vao);
 	
 	prog_use(prog->programID);
-	prog_setUniformValue_Mat4(prog->uniformID(Uniforms::OrthoMatrix), mtx);
+	prog_setUniformValue_Mat4(prog->uniformID(Uniforms::OrthoMatrix), ortho_mtx);
 	
 	if (dither) {
 		tx_bind(tex_dither);

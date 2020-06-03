@@ -8,8 +8,8 @@ public:
 	Camera();
 	virtual ~Camera();
 	
-	const float* getViewMatrix();
-	const float* getProjMatrix();
+	float* getViewMatrix();
+	float* getProjMatrix();
 	
 	void setPosition(float x, float y, float z);
 	void setOrientation(float angle, float vx, float vy, float vz);
@@ -27,6 +27,7 @@ public:
 	
 	void setPerspective(float fov, float w, float h, float zN, float zF);
 	void setOrthographic(float left, float right, float bottom, float top, float zN, float zF);
+	void setPixel(float winW, float winH);
 	
 private:
 	bool using_orientation;

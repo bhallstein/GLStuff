@@ -25,8 +25,8 @@ struct AttribInfo {
 
 struct UniformInfo {
 	unsigned int userlandID;    // Uniform locs are determined by GL, & are
-	unsigned int glID;          // diff. from the userland IDs used to refer
-	std::string name;           // to them
+	std::string name;           // diff. from the userland IDs used to refer
+	unsigned int glID;          // to them
 };
 
 struct ColorAttachmentInfo {

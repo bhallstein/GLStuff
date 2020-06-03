@@ -1,49 +1,53 @@
 //
-//  Renderer.cpp
-//  ComponentTest
+//  Renderer-BG.cpp
+//  IsometricOGLGame
 //
-//  Created by Ben on 02/02/2015.
-//  Copyright (c) 2015 Ben. All rights reserved.
+//  Created by Ben on 09/07/2014.
+//  Copyright (c) 2014 Ben. All rights reserved.
 //
 
-#include "Renderer_3D_1L_UniformCol.h"
-
-#include <OpenGL/gl3.h>
-#include "GLHelpers.h"
+#include "Renderer_3D_1L_ColourIndexed.h"
 #include "GLProgram.h"
+#include "GLHelpers.h"
+#include <OpenGL/gl.h>
+#include "CoordinateTypes.h"
+#include "glm_include.h"
 #include "Camera.h"
 #include "Lights.h"
 #include "Primitives.h"
 #include "FilePaths_CPP.h"
 
 
-Renderer_3D_1L_UniformCol::Renderer_3D_1L_UniformCol() :
+Renderer_3D_1L_ColourIndexed::Renderer_3D_1L_ColourIndexed() :
 	prog(NULL),
 	vao(0),
-	colour{ 1.0, 0.75, 0.25 },
+	n_vertices(0),
 	colToLightRatio(0.75)
 {
 	
 }
 
-Renderer_3D_1L_UniformCol::~Renderer_3D_1L_UniformCol()
+Renderer_3D_1L_ColourIndexed::~Renderer_3D_1L_ColourIndexed()
 {
 	if (prog) delete prog;
 }
 
-bool Renderer_3D_1L_UniformCol::setUp() {
+
+bool Renderer_3D_1L_ColourIndexed::setUp() {
 	vao = vao_create();
 	vao_bind(vao);
 	
 	buffers.vertexPos = vbo_create();
 	buffers.normal    = vbo_create();
+	buffers.colour    = vbo_create();
 	
 	prog = new GLProg;
-	prog->vsh_path = bundledFilePath("Shaders/3D_UniformColour.vsh");
-	prog->fsh_path = bundledFilePath("Shaders/3D_UniformColour.fsh");
+	prog->vsh_path = bundledFilePath("Shaders/3D_ColourIndexed.vsh");
+	prog->fsh_path = bundledFilePath("Shaders/3D_ColourIndexed.fsh");
 	prog->attribs = {
-		{ Attribs::VertPos, buffers.vertexPos, "inVPos",    ATTRTYPE_FLOAT, 3, false },
-		{ Attribs::Normal,  buffers.normal,    "inVNormal", ATTRTYPE_FLOAT, 3, false }
+		{ Attribs::VertPos, buffers.vertexPos, "inVPos",    ATTRTYPE_FLOAT, 3 },
+		{ Attribs::Normal,  buffers.normal,    "inVNormal", ATTRTYPE_FLOAT, 3 },
+		{ Attribs::Colour,  buffers.colour,    "inColour",  ATTRTYPE_FLOAT, 3 }
 	};
 	prog->uniforms = {
 		{ Uniforms::MVPMtx,          "mvpMtx"           },
@@ -52,8 +56,7 @@ bool Renderer_3D_1L_UniformCol::setUp() {
 		{ Uniforms::LightVec,        "uLightVector"     },
 		{ Uniforms::LightProperties, "uLightProperties" },
 		{ Uniforms::CamPos,          "uCamPosition"     },
-		{ Uniforms::Colour,          "uColour"          },
-		{ Uniforms::ColToLightRatio, "uColToLightRatio" },
+		{ Uniforms::ColToLightRatio, "uColToLightRatio" }
 	};
 	
 	prog->compile();
@@ -61,20 +64,37 @@ bool Renderer_3D_1L_UniformCol::setUp() {
 		printf("oh dear");
 		return false;
 	}
-	
+
 	vbo_bind(buffers.vertexPos, VBOTYPE_ARRAY);
 	vbo_upload(sizeof(v3)*36, unitCube_vert.vertices, VBOTYPE_ARRAY, VBOHINT_STATIC);
 	
 	vbo_bind(buffers.normal, VBOTYPE_ARRAY);
 	vbo_upload(sizeof(v3)*36, unitCube_norm.vertices, VBOTYPE_ARRAY, VBOHINT_STATIC);
 	
+	// Colours
+	v3 colours[36];
+	std::vector<v3> side_colours = {
+		{ 1.0, 0.0, 0.0 },
+		{ 0.0, 1.0, 0.0 },
+		{ 0.0, 0.0, 1.0 },
+		{ 1.0, 1.0, 0.0 },
+		{ 0.0, 1.0, 1.0 },
+		{ 1.0, 0.0, 1.0 }
+	};
+	for (int side=0; side < 6; ++side) {
+		const v3 &col = side_colours[side];
+		for (int i=0; i < 6; ++i)
+			colours[side*6 + i] = col;
+	}
+	vbo_bind(buffers.colour, VBOTYPE_ARRAY);
+	vbo_upload(sizeof(v3)*36, colours, VBOTYPE_ARRAY, VBOHINT_STATIC);
+	
 	n_vertices = 36;
 	
-	vao_bind(0);
 	return true;
 }
 
-void Renderer_3D_1L_UniformCol::render(Camera *cam, DirectionalLight *light, glm::mat4 &m_model) {
+void Renderer_3D_1L_ColourIndexed::render(Camera *cam, DirectionalLight *light, glm::mat4 &m_model) {
 	prog_use(prog->programID);
 	vao_bind(vao);
 	
@@ -93,10 +113,9 @@ void Renderer_3D_1L_UniformCol::render(Camera *cam, DirectionalLight *light, glm
 	prog_setUniformValue_Vec3(prog->uniformID(Uniforms::LightVec), light->lightVector);
 	prog_setUniformValue_Vec3(prog->uniformID(Uniforms::LightProperties), light->lightProperties);
 	
-	// colour
-	prog_setUniformValue_Vec3(prog->uniformID(Uniforms::Colour), (float*) &colour);
+	// colour	
 	prog_setUniformValue_Float(prog->uniformID(Uniforms::ColToLightRatio), colToLightRatio);
-
+	
 	// camera
 	prog_setUniformValue_Vec3(prog->uniformID(Uniforms::CamPos), cam->pos);
 	
@@ -104,4 +123,6 @@ void Renderer_3D_1L_UniformCol::render(Camera *cam, DirectionalLight *light, glm
 	
 	vao_bind(0);
 }
+
+void Renderer_3D_1L_ColourIndexed::setRatio(float x) { colToLightRatio = x; }
 

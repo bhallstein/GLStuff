@@ -119,15 +119,13 @@ void tx_uploadDepth(int w, int h, void *data) {
 }
 void tx_uploadCubeMapFace(int w, int h, void *data, enum tx_cubemapface face) {
 	GLenum gl_face = GL_TEXTURE_CUBE_MAP_POSITIVE_X + (int)face;
-	glTexImage2D(
-				 gl_face,
+	glTexImage2D(gl_face,
 				 0,
 				 GL_RGBA,
 				 w, h,
 				 0,
 				 GL_BGRA, GL_UNSIGNED_INT_8_8_8_8_REV,
-				 data
-				 );
+				 data);
 	glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 	glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 	glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
@@ -165,7 +163,7 @@ void vbo_bind(unsigned int vbo_id, enum vbo_type type) {
 	glBindBuffer(gl_target, vbo_id);
 }
 
-void vbo_upload(size_t n_bytes, void *data, enum vbo_type type, enum vbo_hint hint) {
+void vbo_upload(unsigned int n_bytes, void *data, enum vbo_type type, enum vbo_hint hint) {
 	GLenum gl_target = (type == VBOTYPE_ARRAY ? GL_ARRAY_BUFFER : GL_ELEMENT_ARRAY_BUFFER);
 	GLenum gl_hint = (hint == VBOHINT_DYNAMIC ? GL_DYNAMIC_DRAW : GL_STATIC_DRAW);
 	glBufferData(gl_target,
@@ -174,7 +172,7 @@ void vbo_upload(size_t n_bytes, void *data, enum vbo_type type, enum vbo_hint hi
 				 gl_hint);
 }
 
-void vbo_reupload(size_t bytes, int offset, void *data, enum vbo_type type) {
+void vbo_reupload(unsigned int bytes, int offset, void *data, enum vbo_type type) {
 	GLenum gl_target = (type == VBOTYPE_ARRAY ? GL_ARRAY_BUFFER : GL_ELEMENT_ARRAY_BUFFER);
 	glBufferSubData(gl_target,
 					0,
@@ -331,6 +329,10 @@ void prog_setAttribToUseVBO(unsigned int attrib_loc,
 						  0);                   // offset/pointer
 	if (instanced)
 		glVertexAttribDivisor(attrib_loc, 1);
+}
+
+void prog_setAttrbDivisor(unsigned int attrib_loc, unsigned int divisor) {
+	glVertexAttribDivisor(attrib_loc, divisor);
 }
 
 void prog_disableAttrib(unsigned int attrib_loc) {

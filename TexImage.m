@@ -7,6 +7,7 @@
 //
 
 #include "TexImage.h"
+#include "GLHelpers.h"
 #import <Foundation/Foundation.h>
 #import <OpenGL/gl.h>
 
@@ -75,4 +76,17 @@ struct TexImage loadPngTexture(const char *filepath) {
 	CGContextRelease(context);
 	
 	return (struct TexImage) { data, width, height };
+}
+
+
+int loadCubeMap(unsigned int tex, const char *fnames[]) {
+	glActiveTexture(GL_TEXTURE0);
+	tx_bindAsCubeMap(tex);
+	for (int i=0; i < 6; ++i) {
+		struct TexImage texImage = loadPngTexture(fnames[i]);
+		if (texImage.data == NULL) return false;
+		tx_uploadCubeMapFace(texImage.w, texImage.h, texImage.data, (enum tx_cubemapface)(TX_CM_RIGHT + i));
+		free(texImage.data);
+	}
+	return true;
 }

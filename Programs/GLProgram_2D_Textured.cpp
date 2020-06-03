@@ -23,7 +23,7 @@ GLProgram_2D_Textured::GLProgram_2D_Textured(const char *fragsh) :
 		{ Attribs::TexCoord,  buffers.texCoord,  "inTexCoord", ATTRTYPE_FLOAT, 2, false }
 	};
 	std::vector<UniformInfo> uniformsDefinition = {
-		{ Uniforms::Sampler, 0, "uTex" }
+		{ Uniforms::Sampler, "uTex" }
 	};
 	
 	bool compiled = compile(attribsDefinition, uniformsDefinition);

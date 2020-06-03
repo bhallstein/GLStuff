@@ -29,15 +29,15 @@ GLProgram_3D_1L_Textured::GLProgram_3D_1L_Textured() :
 		{ Attribs::Quaternion,  buffers.quaternion,  "inModelRot", ATTRTYPE_FLOAT, 4, true },
 	};
 	std::vector<UniformInfo> uniformsDefinition = {
-		{ Uniforms::ModelMtx,        0, "modelMtx"         },
-		{ Uniforms::ViewMtx,         0, "viewMtx"          },
-		{ Uniforms::ProjMtx,         0, "projMtx"          },
-		{ Uniforms::NormalMtx,       0, "normalMtx"        },
-		{ Uniforms::Sampler,         0, "uTex"             },
-		{ Uniforms::LightVec,        0, "uLightVector"     },
-		{ Uniforms::LightProperties, 0, "uLightProperties" },
-		{ Uniforms::ColToLightRatio, 0, "uColToLightRatio" },
-		{ Uniforms::CamPos,          0, "uCamPosition"     },
+		{ Uniforms::ModelMtx,        "modelMtx"         },
+		{ Uniforms::ViewMtx,         "viewMtx"          },
+		{ Uniforms::ProjMtx,         "projMtx"          },
+		{ Uniforms::NormalMtx,       "normalMtx"        },
+		{ Uniforms::Sampler,         "uTex"             },
+		{ Uniforms::LightVec,        "uLightVector"     },
+		{ Uniforms::LightProperties, "uLightProperties" },
+		{ Uniforms::ColToLightRatio, "uColToLightRatio" },
+		{ Uniforms::CamPos,          "uCamPosition"     },
 	};
 	
 	bool compiled = compile(attribsDefinition, uniformsDefinition);

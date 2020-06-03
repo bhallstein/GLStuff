@@ -18,7 +18,7 @@ public:
 	~Renderer_2D_ColourIndexed();
 	
 	bool setUp();
-	void render(float *mtx);
+	void render(float *ortho_mtx);
 	
 	struct Attribs {
 		enum { VertPos, Colour };
@@ -28,7 +28,6 @@ public:
 		enum { OrthoMatrix, Sampler_Dithering };
 	};
 	
-	unsigned int vao;
 	struct {
 		unsigned int vertexPos, colour;
 	} buffers;
@@ -37,6 +36,8 @@ public:
 	
 private:
 	GLProg *prog;
+	unsigned int vao;
+	
 	bool dither;
 	unsigned int tex_dither;
 };

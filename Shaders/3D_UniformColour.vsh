@@ -9,7 +9,6 @@ in vec3 inVNormal;
 
 out vec3 normal_world;
 out vec3 fragpos_world;
-out vec3 outColour;
 
 void main(void) {
 	vec4 p = vec4(inVPos, 1.0);

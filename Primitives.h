@@ -26,6 +26,7 @@ struct Rectangle {
 	Rectangle operator* (const v2 &);
 };
 extern Rectangle unitSquare;
+extern Rectangle unitSquare_texcoords;
 
 struct Rectangle2D {
 	v2 vertices[6];

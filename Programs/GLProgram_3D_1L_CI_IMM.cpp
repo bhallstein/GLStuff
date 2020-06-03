@@ -28,14 +28,14 @@ GLProgram_3D_1L_CI_IMM::GLProgram_3D_1L_CI_IMM() :
 		{ Attribs::Quaternion,  buffers.quaternion,  "inModelRot", ATTRTYPE_FLOAT, 4, true },
 	};
 	std::vector<UniformInfo> uniformsDefinition = {
-		{ Uniforms::ModelMtx,        0, "modelMtx"         },
-		{ Uniforms::ViewMtx,         0, "viewMtx"          },
-		{ Uniforms::ProjMtx,         0, "projMtx"          },
-		{ Uniforms::NormalMtx,       0, "normalMtx"        },
-		{ Uniforms::LightVec,        0, "uLightVector"     },
-		{ Uniforms::LightProperties, 0, "uLightProperties" },
-		{ Uniforms::CamPos,          0, "uCamPosition"     },
-		{ Uniforms::ColToLightRatio, 0, "uColToLightRatio" }
+		{ Uniforms::ModelMtx,        "modelMtx"         },
+		{ Uniforms::ViewMtx,         "viewMtx"          },
+		{ Uniforms::ProjMtx,         "projMtx"          },
+		{ Uniforms::NormalMtx,       "normalMtx"        },
+		{ Uniforms::LightVec,        "uLightVector"     },
+		{ Uniforms::LightProperties, "uLightProperties" },
+		{ Uniforms::CamPos,          "uCamPosition"     },
+		{ Uniforms::ColToLightRatio, "uColToLightRatio" }
 	};
 	
 	bool compiled = compile(attribsDefinition, uniformsDefinition);

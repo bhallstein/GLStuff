@@ -22,10 +22,10 @@ GLProgram_3D_1L_UniformCol_Def::GLProgram_3D_1L_UniformCol_Def() :
 		{ Attribs::Normal,  buffers.normal,    "inVNormal", ATTRTYPE_FLOAT, 3, false }
 	};
 	std::vector<UniformInfo> uniformsDefinition = {
-		{ Uniforms::MVPMtx,    0, "mvpMtx"       },
-		{ Uniforms::ModelMtx,  0, "modelMtx"     },
-		{ Uniforms::NormalMtx, 0, "normalMtx"    },
-		{ Uniforms::CamPos,    0, "uCamPosition" },
+		{ Uniforms::MVPMtx,    "mvpMtx"       },
+		{ Uniforms::ModelMtx,  "modelMtx"     },
+		{ Uniforms::NormalMtx, "normalMtx"    },
+		{ Uniforms::CamPos,    "uCamPosition" },
 	};
 	std::vector<ColorAttachmentInfo> attachmentsDefinition = {
 		{ Attachments::Normal, "fragOutNormal" }

@@ -25,7 +25,7 @@ GLProgram_2D_ColourIndexed::GLProgram_2D_ColourIndexed() :
 	};
 	
 	std::vector<UniformInfo> uniformsDefinition = {
-		{ Uniforms::OrthoMatrix, 0, "ortho_matrix" },
+		{ Uniforms::OrthoMatrix, "ortho_matrix" },
 	};
 	
 	bool compiled = compile(attribsDefinition, uniformsDefinition);

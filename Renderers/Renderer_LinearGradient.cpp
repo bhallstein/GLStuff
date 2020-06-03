@@ -12,7 +12,7 @@
 #include "GLProgram.h"
 
 #include "glm_include.h"
-#include <OpenGL/gl3.h>
+//#include <OpenGL/gl3.h>
 #include "Primitives.h"
 
 #include "FilePaths_CPP.h"

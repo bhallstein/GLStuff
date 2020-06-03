@@ -27,7 +27,6 @@ Triangle2D::Triangle2D(const Triangle &t) {
 
 
 
-
 #pragma mark - Square
 
 Rectangle unitSquare = {
@@ -38,6 +37,16 @@ Rectangle unitSquare = {
 	-0.5,   0.5,  0.0,
 	 0.5,  -0.5,  0.0,
 	 0.5,   0.5,  0.0,
+};
+
+Rectangle unitSquare_texcoords {
+	0.0,  1.0,  0.0,
+	0.0,  0.0,  0.0,
+	1.0,  0.0,  0.0,
+	
+	0.0,  1.0,  0.0,
+	1.0,  0.0,  0.0,
+	1.0,  1.0,  0.0,
 };
 
 Rectangle Rectangle::operator*(float x) {

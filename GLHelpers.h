@@ -12,8 +12,6 @@
 #ifndef __GL_HELPERS_H
 #define __GL_HELPERS_H
 
-#include <stdio.h>
-
 #define bufOffset(i) ((void*)(i))
 
 #ifndef SWAP_TEX
@@ -99,8 +97,8 @@ void vao_delete(unsigned int vao_id);
 
 unsigned int vbo_create();
 void vbo_bind(unsigned int vbo_id, enum vbo_type type);
-void vbo_upload(size_t n_bytes, void *data, enum vbo_type type, enum vbo_hint hint);
-void vbo_reupload(size_t n_bytes, int offset, void *data, enum vbo_type type);
+void vbo_upload(unsigned int n_bytes, void *data, enum vbo_type type, enum vbo_hint hint);
+void vbo_reupload(unsigned int n_bytes, int offset, void *data, enum vbo_type type);
 void vbo_delete(unsigned int vbo_id);
 
 
@@ -132,7 +130,9 @@ void prog_setAttribToUseVBO(unsigned int attrib_loc,
 							int instanced);
 	// This binds the vbo, enabled the attrib atrray & sets its pointer
 	// NB attrib array enabling is per-VAO, or global if no VAO is bound.
-	// So when not using VAOs, you should disable it after use with:
+	// So when not using VAOs, you should disable it after use with prog_disableAttrib()
+	
+void prog_setAttrbDivisor(unsigned int attrib_loc, unsigned int divisor);
 void prog_disableAttrib(unsigned int attrib_loc);
 	// ...but only when not using VAOs.
 	

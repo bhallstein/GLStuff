@@ -9,9 +9,8 @@
 #ifndef __GLStuff_Renderer_3D_1L_UniformCol
 #define __GLStuff_Renderer_3D_1L_UniformCol
 
-#include "TightlyPackedArray.h"
-#include "CoordinateTypes.h"
 #include "glm_include.h"
+#include "CoordinateTypes.h"
 
 class GLProg;
 class Camera;
@@ -39,7 +38,6 @@ public:
 		};
 	};
 	
-	unsigned int vao;
 	struct {
 		unsigned int vertexPos, normal;
 	} buffers;
@@ -48,6 +46,7 @@ public:
 	
 private:
 	GLProg *prog;
+	unsigned int vao;
 	
 	float colToLightRatio;
 	v3 colour;
