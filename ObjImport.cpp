@@ -49,8 +49,8 @@ void splitToIntVec(const std::string &s, std::vector<int> &v, char delim = ' ') 
 struct Triple {
 	Triple(int _a, int _b, int _c) : a(_a), b(_b), c(_c) { }
 	unsigned int a, b, c;
-	bool operator< (const Triple& t) const {				// Will cope with values up to 2^20 (about 1 million)
-		unsigned long x1 = a,   y1 = b,   z1 = c;		// in each field
+	bool operator< (const Triple& t) const {            // Will cope with values up to 2^20 (about 1 million)
+		unsigned long x1 = a,   y1 = b,   z1 = c;       // in each field
 		unsigned long x2 = t.a, y2 = t.b, z2 = t.c;
 		x1 <<= 40, x2 <<= 40;
 		y1 <<= 20, y2 <<= 20;

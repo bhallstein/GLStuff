@@ -117,8 +117,6 @@ void Renderer_2D_ColourIndexed::render(float *ortho_mtx) {
 	}
 	
 	glDrawArrays(GL_TRIANGLES, 0, 6);
-	
-	glEnable(GL_DEPTH_TEST);
 	vao_bind(0);
 }
 

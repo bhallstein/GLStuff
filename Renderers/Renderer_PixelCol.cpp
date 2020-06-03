@@ -22,6 +22,8 @@ void Renderer_PixelCol::setRect(const v2 &pos, const v2 &size ) {
 	Rectangle2D r = (unitSquare_2D + 0.5) * size + pos;
 	vbo_bind(rend->buffers.vertexPos, VBOTYPE_ARRAY);
 	vbo_upload(sizeof(v2) * 6, r.vertices, VBOTYPE_ARRAY, VBOHINT_STATIC);
+	_pos = pos;
+	_size = size;
 }
 void Renderer_PixelCol::setColour(const col4 &c) {
 	col4 arr[] = {
@@ -29,6 +31,7 @@ void Renderer_PixelCol::setColour(const col4 &c) {
 	};
 	vbo_bind(rend->buffers.colour, VBOTYPE_ARRAY);
 	vbo_upload(sizeof(col4) * 6, arr, VBOTYPE_ARRAY, VBOHINT_STATIC);
+	_col = c;
 }
 
 void Renderer_PixelCol::render(v2 win_size) {

@@ -13,7 +13,7 @@ public:
 	float* getProjMatrix();
 	
 	void setPosition(v3);
-	void setOrientation(float angle, float vx, float vy, float vz);
+	void setOrientation(float angle, v3); //float vx, float vy, float vz);
 	void setViewMatrix(float*);
 	void setLookFromTo(float aX, float aY, float aZ, float bX, float bY, float bZ);
 	

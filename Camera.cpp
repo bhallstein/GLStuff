@@ -36,10 +36,10 @@ void Camera::setPosition(v3 p) {
 	pos[1] = p.y;
 	pos[2] = p.z;
 }
-void Camera::setOrientation(float angle, float vx, float vy, float vz) {
+void Camera::setOrientation(float angle, v3 v) { //float vx, float vy, float vz) {
 	glm::mat4 invR = glm::rotate(glm::mat4(1.0),
 								 -RAD(angle),
-								 glm::vec3(vx, vy, vz));
+								 glm::vec3(v.x, v.y, v.z));
 	
 	// The view transform V is the inverse of the camera transitioning transform, C
 	// Since C = R · T,
