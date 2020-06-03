@@ -1,11 +1,3 @@
-//
-//  Renderer-BG.h
-//  IsometricOGLGame
-//
-//  Created by Ben on 09/07/2014.
-//  Copyright (c) 2014 Ben. All rights reserved.
-//
-
 #ifndef __GLStuff_Renderer_2D_Textured
 #define __GLStuff_Renderer_2D_Textured
 

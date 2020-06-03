@@ -1,11 +1,3 @@
-//
-//  GLProgram_3D_1L_UniformCol.h
-//  IsometricOGLGame
-//
-//  Created by Ben on 01/02/2015.
-//  Copyright (c) 2015 Ben. All rights reserved.
-//
-
 #ifndef __Renderer_3D_1L_UniformCol_Instanced
 #define __Renderer_3D_1L_UniformCol_Instanced
 

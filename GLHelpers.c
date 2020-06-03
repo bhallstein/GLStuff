@@ -338,3 +338,4 @@ void prog_setAttrbDivisor(unsigned int attrib_loc, unsigned int divisor) {
 void prog_disableAttrib(unsigned int attrib_loc) {
 	glDisableVertexAttribArray(attrib_loc);
 }
+

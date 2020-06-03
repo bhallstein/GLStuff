@@ -1,11 +1,3 @@
-//
-//  Renderer-BG.cpp
-//  IsometricOGLGame
-//
-//  Created by Ben on 09/07/2014.
-//  Copyright (c) 2014 Ben. All rights reserved.
-//
-
 #include "Renderer_Text.h"
 #include "GLProg.h"
 #include <OpenGL/gl3.h>
