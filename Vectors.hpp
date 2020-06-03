@@ -14,8 +14,8 @@
 float dotProduct(v2, v2);
 float dotProduct(v3, v3);
 
-//float crossProduct(v3, v3);
-//float crossProduct(Triangle);
+//float crossProduct(const v3 &, const v3 &);
+//float crossProduct(const Triangle &);
 
 
 #endif

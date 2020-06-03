@@ -13,19 +13,29 @@
 GLProgram_2D_ColourIndexed::GLProgram_2D_ColourIndexed() :
 	GLProgram("2D_ColourIndexed.vsh", "2D_ColourIndexed.fsh")
 {
+	setUp();
+}
+
+GLProgram_2D_ColourIndexed::GLProgram_2D_ColourIndexed(const char *custom_frag_shader) :
+	GLProgram("2D_ColourIndexed.vsh", custom_frag_shader)
+{
+	setUp();
+}
+
+
+void GLProgram_2D_ColourIndexed::setUp() {
 	vao = vao_create();
 	vao_bind(vao);
 	
 	buffers.vertexPos = vbo_create();
-	buffers.colour    = vbo_create();
 	
 	std::vector<AttribInfo> attribsDefinition = {
-		{ Attribs::VertPos, buffers.vertexPos, "inVPos",   ATTRTYPE_FLOAT, 2, false },
-		{ Attribs::Colour,  buffers.colour,    "inColour", ATTRTYPE_FLOAT, 4, false },
+		{ Attribs::VertPos,  buffers.vertexPos, "inVPos",   ATTRTYPE_FLOAT, 2, false }
 	};
 	
 	std::vector<UniformInfo> uniformsDefinition = {
-		{ Uniforms::OrthoMatrix, 0, "ortho_matrix" },
+		{ Uniforms::InnerColour, "uInnerColour" },
+		{ Uniforms::OuterColour, "uOuterColour" },
 	};
 	
 	bool compiled = compile(attribsDefinition, uniformsDefinition);

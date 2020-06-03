@@ -5,10 +5,11 @@ uniform vec3 uLightProperties;		// Ambient, diffuse, specular
 
 uniform vec3 uCamPosition;
 
-uniform sampler2D uTexture;
-uniform float uTexToLightRatio;
+uniform sampler2D uTex;
+uniform float uColToLightRatio;
 
-in vec3 normal_world, fragpos_world;
+in vec3 normal_world;
+in vec3 fragpos_world;
 in vec2 outTexCoord;
 out vec4 fragOutColour;
 
@@ -36,12 +37,12 @@ void main(void) {
 
 	// 2. Texturing
 
-	vec4 texCol = texture(uTexture, outTexCoord, 0.0);
+	vec4 texCol = texture(uTex, outTexCoord, 0.0);
 
 
 	// 3. Combine the two
 	
 	float light_combined = l_Ambient + diff + spec;
-	fragColour = texCol * (light_combined + 0.1) + uTexToLightRatio - uTexToLightRatio;
+	fragOutColour = texCol * (light_combined + 0.1) + uColToLightRatio - uColToLightRatio;
 }
 

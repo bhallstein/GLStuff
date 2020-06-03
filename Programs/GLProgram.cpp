@@ -13,6 +13,79 @@
 #include "GLHelpers.h"
 #include <cstdlib>
 
+
+
+void GLProg::compile() {
+	state = GLProg::State::NotOK;
+	programID = prog_create();
+	
+	setAttribLocations(programID, attribs);
+	setAttachentLocations(programID, attachments);
+	
+	char *v_src = loadShaderString(vsh_path.c_str());
+	char *f_src = loadShaderString(fsh_path.c_str());
+	
+	int compileRes = prog_compileAndLink(programID, v_src, f_src);
+	free(v_src);
+	free(f_src);
+	if (!compileRes) { return; }
+	
+	prog_use(programID);
+	
+	bool uniformRes = getUniformLocations(programID, uniforms);
+	if (!uniformRes) { return; }
+	
+	setAttribsToUseVBOs(attribs);
+	
+	state = GLProg::State::OK;
+	prog_use(0);
+}
+
+unsigned int GLProg::uniformID(unsigned int internal_id) {
+	for (auto &u : uniforms)
+		if (u.userlandID == internal_id)
+			return u.glID;
+	return 0;	// hmm
+}
+
+
+
+void setAttribLocations(unsigned int programID, const std::vector<AttribInfo> &attribs) {
+	for (auto &a : attribs)
+		if (a.name.length() > 0)
+			prog_setAttribLocation(programID, a.glID, a.name.c_str());
+}
+void setAttachentLocations(unsigned int programID, const std::vector<ColorAttachmentInfo> &attachments) {
+	for (auto &a : attachments)
+		prog_setAttachmentLocation(programID, a.glID, a.name.c_str());
+}
+bool getUniformLocations(unsigned int programID, std::vector<UniformInfo> &uniforms) {
+	bool success = true;
+	for (auto &u : uniforms) {
+		const char *u_name = u.name.c_str();
+		u.glID = prog_uniformLocation(programID, u_name);
+		if (u.glID == -1) {
+			printf("uniform '%s' not found in shader program\n", u_name);
+			success = false;
+		}
+	}
+	return success;
+}
+void setAttribsToUseVBOs(const std::vector<AttribInfo> &attribs) {
+	for (const auto &a : attribs)
+		if (a.name.length() > 0)
+			prog_setAttribToUseVBO(a.glID,
+								   a.vboID,
+								   a.n_components,
+								   a.float_or_int,
+								   a.instanced);
+}
+
+
+
+
+
+
 GLProgram::GLProgram(const std::string &_v, const std::string &_f) :
 	_vshPath(_v),
 	_fshPath(_f)
@@ -27,7 +100,8 @@ GLProgram::~GLProgram()
 
 bool GLProgram::compile(
 	const std::vector<AttribInfo> &attribs,
-	const std::vector<UniformInfo> &uniforms
+	const std::vector<UniformInfo> &uniforms,
+	const std::vector<ColorAttachmentInfo> &attachments
 ) {
 	const char *shadersDir = "Shaders/";
 	const char *vsh = _vshPath.insert(0, shadersDir).c_str();
@@ -40,6 +114,7 @@ bool GLProgram::compile(
 	}
 	programID = prog_create();
 	_setAttribLocations(attribs);
+	_setAttachentLocations(attachments);
 	
 	int compileRes = prog_compileAndLink(programID, vShStr, fShStr);
 	if (!compileRes) return false;
@@ -62,7 +137,8 @@ void GLProgram::_setAttribLocations(
 ) {
 	attribs = _attribs;
 	for (auto &a : attribs)
-		prog_setAttribLocation(programID, a.glID, a.name.c_str());
+		if (a.name.length() > 0)
+			prog_setAttribLocation(programID, a.glID, a.name.c_str());
 }
 
 bool GLProgram::_getUniformLocations(
@@ -81,9 +157,19 @@ bool GLProgram::_getUniformLocations(
 	return success;
 }
 
+void GLProgram::_setAttachentLocations(
+	const std::vector<ColorAttachmentInfo> &_attachments
+) {
+	attachments = _attachments;
+	for (auto &a : attachments)
+		prog_setAttachmentLocation(programID, a.glID, a.name.c_str());
+}
+
+
 void GLProgram::_setUpAttribsForDrawing() {
 	for (const auto &a : attribs)
-		prog_setAttribToUseVBO(a.glID,
+		if (a.name.length() > 0)
+			prog_setAttribToUseVBO(a.glID,
 							   a.vboID,
 							   a.n_components,
 							   a.float_or_int,

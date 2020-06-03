@@ -5,4 +5,4 @@
 #include "gtc/type_ptr.hpp"
 #define mptr(x) glm::value_ptr(x)
 
-#define RAD(deg) (float)(deg * 0.01745329)
+#define RAD(deg) (float)((deg) * 0.01745329)

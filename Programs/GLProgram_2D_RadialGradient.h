@@ -14,6 +14,9 @@
 class GLProgram_2D_ColourIndexed : public GLProgram {
 public:
 	GLProgram_2D_ColourIndexed();
+	GLProgram_2D_ColourIndexed(const char *custom_frag_shader);
+	
+	bool ok;
 	
 	class Attribs {
 	public:
@@ -22,13 +25,15 @@ public:
 	
 	class Uniforms {
 	public:
-		enum { OrthoMatrix, InnerColour, OuterColour };
+		enum { OrthoMatrix };
 	};
 	
 	unsigned int vao;
 	struct {
 		unsigned int vertexPos, colour;
 	} buffers;
+	
+	void setUp();
 };
 
 #endif

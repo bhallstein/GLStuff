@@ -11,9 +11,9 @@
 
 #include "GLProgram.h"
 
-class GLProgram_3D_1L_UniformCol : public GLProgram {
+class GLProgram_3D_1L_UniformCol_Def : public GLProgram {
 public:
-	GLProgram_3D_1L_UniformCol();
+	GLProgram_3D_1L_UniformCol_Def();
 	
 	bool ok;
 	
@@ -25,10 +25,14 @@ public:
 	
 	struct Uniforms {
 		enum {
-			MVPMtx,       ModelMtx,      NormalMtx,
-			LightVec,     LightProperties,
-			Colour,       ColToLightRatio,
+			MVPMtx,     ModelMtx,      NormalMtx,
 			CamPos
+		};
+	};
+	
+	struct Attachments {
+		enum {
+			Normal
 		};
 	};
 	

@@ -32,6 +32,7 @@ struct Rectangle2D {
 	Rectangle2D() { };
 	Rectangle2D(const Rectangle &);
 	Rectangle2D operator+ (const v2 &);
+	Rectangle2D operator* (const v2 &);
 };
 
 

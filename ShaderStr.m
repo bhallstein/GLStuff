@@ -9,7 +9,7 @@
 #include "ShaderStr.h"
 #import <Foundation/Foundation.h>
 
-const char* loadShaderString(const char *filepath) {
+char* loadShaderString(const char *filepath) {
 	NSString *str = [NSString stringWithContentsOfFile:[NSString stringWithFormat:@"%s", filepath]
 											  encoding:NSUTF8StringEncoding error:NULL];
 	if (str == nil) {

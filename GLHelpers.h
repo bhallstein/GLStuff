@@ -79,6 +79,7 @@ void tx_bind(unsigned int tex_id);
 void tx_bindAsCubeMap(unsigned int cm_id);
 
 void tx_setFiltering(enum tx_filtering);
+void tx_setRepeat(int repeat);
 
 void tx_upload(int w, int h, void *data, enum tx_filtering filtering);
 void tx_uploadDepth(int w, int h, void *data);
@@ -104,6 +105,7 @@ void vbo_reupload(size_t n_bytes, int offset, void *data, enum vbo_type type);
 
 unsigned int prog_create();
 void prog_setAttribLocation(unsigned int program, unsigned int location, const char *name);
+void prog_setAttachmentLocation(unsigned int program, unsigned int location, const char *name);
 int prog_compileAndLink(unsigned int prog, const char *v_src, const char *f_src);
 	// Strings MUST be null-terminated
 void prog_use(unsigned int program);

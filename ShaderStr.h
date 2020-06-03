@@ -13,7 +13,7 @@
 extern "C" {
 #endif
 
-const char* loadShaderString(const char *file);
+char* loadShaderString(const char *file);
 	// Takes the full file path
 	// - must get this with bundledFilePath()
 

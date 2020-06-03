@@ -14,7 +14,7 @@ extern "C" {
 #endif
 
 struct TexImage {
-	void *data;
+	void *data;	  // free() when done
 	float w, h;
 };
 

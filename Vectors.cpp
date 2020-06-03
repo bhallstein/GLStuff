@@ -9,14 +9,14 @@
 #include "Vectors.hpp"
 
 
-float dotProduct(v2 a, v2 b) {
+float dotProduct(const v2 &a, const v2 &b) {
 	return a.x * b.x + a.y * b.y;
 }
-float dotProduct(v3 a, v3 b) {
+float dotProduct(const v3 &a, const v3 &b) {
 	return a.x * b.x + a.y * b.y + a.z * b.z;
 }
 
-//float crossProduct(v3, v3) {
+//float crossProduct(v3a , v3 b) {
 //	
 //}
 //float crossProduct(Triangle) {

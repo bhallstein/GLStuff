@@ -204,7 +204,7 @@ ObjFile loadObjFile(const char *filename) {
 	}
 	
 	if (vertex_attrib_vec.size() != normal_attrib_vec.size() || vertex_attrib_vec.size() != texcoord_attrib_vec.size())
-		printf("  WARNING: attrib vec sizes differ! (%lu, %lu, %lu)\n",
+		printf("  WARNING: attrib vec sizes differ! (v:%lu, n:%lu, t:%lu)\n",
 			   vertex_attrib_vec.size(),
 			   normal_attrib_vec.size(),
 			   texcoord_attrib_vec.size()

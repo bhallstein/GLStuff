@@ -76,6 +76,15 @@ Rectangle2D Rectangle2D::operator+(const v2 &r) {
 	return out;
 }
 
+Rectangle2D Rectangle2D::operator*(const v2 &r) {
+	Rectangle2D out;
+	for (int i=0; i < 6; ++i) {
+		const v2 &p = vertices[i];
+		out.vertices[i] = { p.x * r.x, p.y * r.y };
+	}
+	return out;
+}
+
 
 #pragma mark - Cube
 

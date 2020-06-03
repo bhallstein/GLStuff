@@ -88,6 +88,11 @@ void tx_setFiltering(enum tx_filtering f) {
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, gl_filt);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, gl_filt);
 }
+void tx_setRepeat(int repeat) {
+	GLenum gl_repeat = (repeat ? GL_REPEAT : GL_CLAMP_TO_EDGE);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, gl_repeat);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, gl_repeat);
+}
 
 void tx_upload(int w, int h, void *data, enum tx_filtering filtering) {
 	tx_setFiltering(filtering);
@@ -181,6 +186,9 @@ unsigned int prog_create() {
 void prog_setAttribLocation(unsigned int program, unsigned int location, const char *name) {
 	glBindAttribLocation(program, location, name);
 }
+void prog_setAttachmentLocation(unsigned int program, unsigned int location, const char *name) {
+	glBindFragDataLocation(program, location, name);
+}
 
 int prog_compileAndLink(unsigned int prog, const char *v_src, const char *f_src) {
 	GLint logLength, compileStatus, linkStatus;
@@ -203,12 +211,12 @@ int prog_compileAndLink(unsigned int prog, const char *v_src, const char *f_src)
 		printf("Failed to compile vertex shader:\n%s\n", v_src);
 		return 0;
 	}
-		
+	
 	// Compile fragment shader
 	GLuint fSh = glCreateShader(GL_FRAGMENT_SHADER);
 	glShaderSource(fSh, 1, (const GLchar **) &f_src, NULL);
 	glCompileShader(fSh);
-		
+	
 	// Check compiled
 	glGetShaderiv(fSh, GL_INFO_LOG_LENGTH, &logLength);
 	if (logLength > 0) {
@@ -227,7 +235,7 @@ int prog_compileAndLink(unsigned int prog, const char *v_src, const char *f_src)
 	glAttachShader(prog, vSh);
 	glAttachShader(prog, fSh);
 	glLinkProgram(prog);
-		
+	
 	// Check linked OK
 	glGetProgramiv(prog, GL_INFO_LOG_LENGTH, &logLength);
 	if (logLength > 0) {
@@ -236,7 +244,7 @@ int prog_compileAndLink(unsigned int prog, const char *v_src, const char *f_src)
 		printf("Program link log:\n%s\n", log);
 		free(log);
 	}
-		
+	
 	glGetProgramiv(prog, GL_LINK_STATUS, &linkStatus);
 	if (linkStatus == 0) {
 		printf("Failed to link program");
@@ -244,13 +252,13 @@ int prog_compileAndLink(unsigned int prog, const char *v_src, const char *f_src)
 	}
 		
 	glValidateProgram(prog);
-//	glGetProgramiv(programName, GL_INFO_LOG_LENGTH, &logLength);
-//	if (logLength > 0) {
-//		GLchar *log = (GLchar*)malloc(logLength);
-//		glGetProgramInfoLog(programName, logLength, &logLength, log);
-//		NSLog(@"Program validate log:\n%s\n", log);
-//		free(log);
-//	}
+	glGetProgramiv(prog, GL_INFO_LOG_LENGTH, &logLength);
+	if (logLength > 0) {
+		GLchar *log = (GLchar*)malloc(logLength);
+		glGetProgramInfoLog(prog, logLength, &logLength, log);
+		printf("Program validate log:\n%s\n", log);
+		free(log);
+	}
 	
 	glGetProgramiv(prog, GL_VALIDATE_STATUS, &linkStatus);
 	if (linkStatus == 0) {

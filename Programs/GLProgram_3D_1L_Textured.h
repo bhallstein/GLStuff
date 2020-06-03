@@ -6,21 +6,21 @@
 //  Copyright (c) 2015 Ben. All rights reserved.
 //
 
-#ifndef __GLProgram_3D_1L_CI_IMM_h
-#define __GLProgram_3D_1L_CI_IMM_h
+#ifndef __GLProgram_3D_1L_Textured_h
+#define __GLProgram_3D_1L_Textured_h
 
 #include "GLProgram.h"
 
-class GLProgram_3D_1L_CI_IMM : public GLProgram {
+class GLProgram_3D_1L_Textured : public GLProgram {
 public:
-	GLProgram_3D_1L_CI_IMM();
+	GLProgram_3D_1L_Textured();
 	
 	bool ok;
 	
 	class Attribs {
 	public:
 		enum {
-			VertPos,    Normal,    Colour,
+			VertPos,  Normal,  TexCoord, Elements,
 			Translation,
 			Quaternion
 		};
@@ -29,8 +29,9 @@ public:
 	class Uniforms {
 	public:
 		enum {
-			ModelMtx,     ViewMtx,      ProjMtx,    NormalMtx,
-			LightVec,     LightProperties,          ColToLightRatio,
+			ModelMtx,  ViewMtx,  ProjMtx,  NormalMtx,
+			Sampler,
+			LightVec,  LightProperties,  ColToLightRatio,
 			CamPos
 		};
 	};
@@ -40,7 +41,8 @@ public:
 		unsigned int
 			vertexPos,
 			normal,
-			colour,
+			elements,
+		    texcoord,
 			translation,
 			quaternion;
 	} buffers;

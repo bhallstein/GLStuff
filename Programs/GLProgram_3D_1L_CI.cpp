@@ -25,13 +25,13 @@ GLProgram_3D_1L_CI::GLProgram_3D_1L_CI() :
 		{ Attribs::Colour,  buffers.colour,    "inColour",  ATTRTYPE_FLOAT, 3, false }
 	};
 	std::vector<UniformInfo> uniformsDefinition = {
-		{ Uniforms::MVPMtx, "mvpMtx" },
-		{ Uniforms::ModelMtx, "modelMtx" },
-		{ Uniforms::NormalMtx, "normalMtx" },
-		{ Uniforms::LightVec, "uLightVector" },
-		{ Uniforms::LightProperties, "uLightProperties" },
-		{ Uniforms::CamPos, "uCamPosition" },
-		{ Uniforms::ColToLightRatio, "uColToLightRatio" }
+		{ Uniforms::MVPMtx,          0, "mvpMtx"           },
+		{ Uniforms::ModelMtx,        0, "modelMtx"         },
+		{ Uniforms::NormalMtx,       0, "normalMtx"        },
+		{ Uniforms::LightVec,        0, "uLightVector"     },
+		{ Uniforms::LightProperties, 0, "uLightProperties" },
+		{ Uniforms::CamPos,          0, "uCamPosition"     },
+		{ Uniforms::ColToLightRatio, 0, "uColToLightRatio" }
 	};
 	
 	bool compiled = compile(attribsDefinition, uniformsDefinition);

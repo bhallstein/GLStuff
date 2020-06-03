@@ -6,9 +6,9 @@
 //  Copyright (c) 2015 Ben. All rights reserved.
 //
 
-#include "GLProgram_3D_1L_UniformCol.h"
+#include "GLProgram_3D_1L_UniformCol-Def.h"
 
-GLProgram_3D_1L_UniformCol::GLProgram_3D_1L_UniformCol() :
+GLProgram_3D_1L_UniformCol_Def::GLProgram_3D_1L_UniformCol_Def() :
 	GLProgram("3D_UniformColour.vsh", "3D_UniformColour.fsh")
 {
 	vao = vao_create();
@@ -22,17 +22,16 @@ GLProgram_3D_1L_UniformCol::GLProgram_3D_1L_UniformCol() :
 		{ Attribs::Normal,  buffers.normal,    "inVNormal", ATTRTYPE_FLOAT, 3, false }
 	};
 	std::vector<UniformInfo> uniformsDefinition = {
-		{ Uniforms::MVPMtx,          0, "mvpMtx"           },
-		{ Uniforms::ModelMtx,        0, "modelMtx"         },
-		{ Uniforms::NormalMtx,       0, "normalMtx"        },
-		{ Uniforms::LightVec,        0, "uLightVector"     },
-		{ Uniforms::LightProperties, 0, "uLightProperties" },
-		{ Uniforms::CamPos,          0, "uCamPosition"     },
-		{ Uniforms::Colour,          0, "uColour"          },
-		{ Uniforms::ColToLightRatio, 0, "uColToLightRatio" }
+		{ Uniforms::MVPMtx,    0, "mvpMtx"       },
+		{ Uniforms::ModelMtx,  0, "modelMtx"     },
+		{ Uniforms::NormalMtx, 0, "normalMtx"    },
+		{ Uniforms::CamPos,    0, "uCamPosition" },
+	};
+	std::vector<ColorAttachmentInfo> attachmentsDefinition = {
+		{ Attachments::Normal, "fragOutNormal" }
 	};
 	
-	bool compiled = compile(attribsDefinition, uniformsDefinition);
+	bool compiled = compile(attribsDefinition, uniformsDefinition, attachmentsDefinition);
 	if (!compiled)
 		printf("Failed to compile program\n");
 	
