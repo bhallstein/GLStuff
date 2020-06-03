@@ -108,6 +108,7 @@ ObjFile loadObjFile(const char *filename) {
 				if (v.size() != 3) {
 					printf("error on line %d: vertex had wrong number of coords (%lu rather than %d)\n",
 						   objFile.nLines, v.size(), 3);
+					printf("line:\n%s\n", line.c_str());
 					break;
 				}
 				
@@ -125,6 +126,7 @@ ObjFile loadObjFile(const char *filename) {
 				if (v.size() != 3) {
 					printf("error on line %d: normal had wrong number of coords (%lu rather than %d\n)\n",
 						   objFile.nLines, v.size(), 3);
+					printf("line:\n%s\n", line.c_str());
 					break;
 				}
 				
@@ -139,9 +141,10 @@ ObjFile loadObjFile(const char *filename) {
 				std::vector<float> v;
 				splitToFloatVec(line.substr(3, 1000), v);
 				
-				if (v.size() != 2) {
-					printf("error on line %d: texcoord had wrong number of coords (%lu rather than %d)\n",
-						   objFile.nLines, v.size(), 2);
+				if (v.size() < 2) {
+					printf("error on line %d: texcoord had wrong number of coords (%lu)\n",
+						   objFile.nLines, v.size());
+					printf("line:\n%s\n", line.c_str());
 					break;
 				}
 				
@@ -156,9 +159,10 @@ ObjFile loadObjFile(const char *filename) {
 			
 			std::vector<std::string> faceVerts;
 			strSplit(line.substr(2, 1000), faceVerts, ' ');
-			if (faceVerts.size() != 3) {
-				printf("error on line %d: face has wrong number of components (%lu rather than %d)\n",
-					   objFile.nLines, faceVerts.size(), 3);
+			if (faceVerts.size() < 3) {
+				printf("error on line %d: face has wrong number of components (%lu)\n",
+					   objFile.nLines, faceVerts.size());
+				printf("line:\n%s\n", line.c_str());
 				break;
 			}
 			
@@ -193,7 +197,6 @@ ObjFile loadObjFile(const char *filename) {
 					
 					triple_to_index_map[trpl] = index_of_new_attrib;
 				}
-				
 			}
 		}
 		
