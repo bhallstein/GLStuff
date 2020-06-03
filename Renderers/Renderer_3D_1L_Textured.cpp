@@ -28,7 +28,14 @@ Renderer_3D_1L_Textured::Renderer_3D_1L_Textured() :
 
 Renderer_3D_1L_Textured::~Renderer_3D_1L_Textured()
 {
+	vbo_delete(buffers.vertexPos);
+	vbo_delete(buffers.normal);
+	vbo_delete(buffers.texcoord);
+	vbo_delete(buffers.elements);
+	vao_delete(vao);
 	if (prog) delete prog;
+		// NB: The texture is assumed to be managed externally,
+		//     so is not automatically deleted.
 }
 
 bool Renderer_3D_1L_Textured::setUp() {

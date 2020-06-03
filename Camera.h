@@ -6,7 +6,7 @@
 class Camera {
 public:
 	Camera();
-	virtual ~Camera();
+	~Camera();
 	
 	float* getViewMatrix();
 	float* getProjMatrix();

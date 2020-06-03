@@ -30,6 +30,9 @@ Renderer_3D_1L_ReflectionMapped::Renderer_3D_1L_ReflectionMapped() :
 
 Renderer_3D_1L_ReflectionMapped::~Renderer_3D_1L_ReflectionMapped()
 {
+	vbo_delete(buffers.vertexPos);
+	vbo_delete(buffers.normal);
+	vao_delete(vao);
 	if (prog) delete prog;
 }
 

@@ -36,10 +36,8 @@ private:
 	float x, y, w, h;
 	bool dither;
 	bool needs_upload;
-	unsigned int tex_dither;
 	
 	void reupload();
-//	bool create_program();
 	
 };
 

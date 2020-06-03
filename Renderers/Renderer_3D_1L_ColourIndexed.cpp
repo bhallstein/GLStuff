@@ -29,6 +29,10 @@ Renderer_3D_1L_ColourIndexed::Renderer_3D_1L_ColourIndexed() :
 
 Renderer_3D_1L_ColourIndexed::~Renderer_3D_1L_ColourIndexed()
 {
+	vbo_delete(buffers.vertexPos);
+	vbo_delete(buffers.normal);
+	vbo_delete(buffers.colour);
+	vao_delete(vao);
 	if (prog) delete prog;
 }
 

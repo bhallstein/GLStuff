@@ -28,6 +28,9 @@ Renderer_3D_1L_UniformCol::Renderer_3D_1L_UniformCol() :
 
 Renderer_3D_1L_UniformCol::~Renderer_3D_1L_UniformCol()
 {
+	vbo_delete(buffers.vertexPos);
+	vbo_delete(buffers.normal);
+	vao_delete(vao);
 	if (prog) delete prog;
 }
 

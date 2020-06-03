@@ -28,6 +28,12 @@ Renderer_3D_1L_ColourIndexed_Instanced::Renderer_3D_1L_ColourIndexed_Instanced()
 
 Renderer_3D_1L_ColourIndexed_Instanced::~Renderer_3D_1L_ColourIndexed_Instanced()
 {
+	vbo_delete(buffers.vertexPos);
+	vbo_delete(buffers.normal);
+	vbo_delete(buffers.colour);
+	vbo_delete(buffers.quaternion);
+	vbo_delete(buffers.translation);
+	vao_delete(vao);
 	if (prog) delete prog;
 }
 

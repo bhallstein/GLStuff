@@ -29,6 +29,13 @@ Renderer_3D_1L_Textured_Instanced::Renderer_3D_1L_Textured_Instanced() :
 
 Renderer_3D_1L_Textured_Instanced::~Renderer_3D_1L_Textured_Instanced()
 {
+	vbo_delete(buffers.vertexPos);
+	vbo_delete(buffers.normal);
+	vbo_delete(buffers.texcoord);
+	vbo_delete(buffers.elements);
+	vbo_delete(buffers.quaternion);
+	vbo_delete(buffers.translation);
+	vao_delete(vao);
 	if (prog) delete prog;
 }
 
