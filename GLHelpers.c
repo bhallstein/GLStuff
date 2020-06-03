@@ -221,14 +221,14 @@ int prog_compileAndLink(unsigned int prog, const char *v_src, const char *f_src)
 		return 0;
 	}
 		
-		glValidateProgram(prog);
-//		glGetProgramiv(programName, GL_INFO_LOG_LENGTH, &logLength);
-//		if (logLength > 0) {
-//			GLchar *log = (GLchar*)malloc(logLength);
-//			glGetProgramInfoLog(programName, logLength, &logLength, log);
-//			NSLog(@"Program validate log:\n%s\n", log);
-//			free(log);
-//		}
+	glValidateProgram(prog);
+//	glGetProgramiv(programName, GL_INFO_LOG_LENGTH, &logLength);
+//	if (logLength > 0) {
+//		GLchar *log = (GLchar*)malloc(logLength);
+//		glGetProgramInfoLog(programName, logLength, &logLength, log);
+//		NSLog(@"Program validate log:\n%s\n", log);
+//		free(log);
+//	}
 	
 	glGetProgramiv(prog, GL_VALIDATE_STATUS, &linkStatus);
 	if (linkStatus == 0) {

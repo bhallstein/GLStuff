@@ -1,5 +1,5 @@
 //
-//  GLProgram_NEWTEST_CI_IMM.h
+//  GLProgram_3D_1L_UniformCol.h
 //  IsometricOGLGame
 //
 //  Created by Ben on 01/02/2015.
@@ -20,8 +20,7 @@ public:
 	class Attribs {
 	public:
 		enum {
-			VertPos,    Normal,    Colour,
-			UnitPos,    UnitRot
+			VertPos,    Normal
 		};
 	};
 	
@@ -39,10 +38,7 @@ public:
 	struct {
 		unsigned int
 			vertexPos,
-			normal,
-			colour,
-			unitPos,
-			unitRot;
+			normal;
 	} buffers;
 	
 };

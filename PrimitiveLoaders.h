@@ -1,31 +1,15 @@
 //
-//  PrimitivePresets.h
-//  OpenGL3_2_Render_to_Tex
+//  PrimitiveLoaders.h
+//  ComponentTest
 //
-//  Created by Ben on 30/06/2014.
-//  Copyright (c) 2014 Ben. All rights reserved.
+//  Created by Ben on 03/02/2015.
+//  Copyright (c) 2015 Ben. All rights reserved.
 //
 
-#ifndef __PRIMITIVE_PRESETS_H
-#define __PRIMITIVE_PRESETS_H
-
-class v3f;
-class v2f;
-
-struct Primitive {
-	Primitive(int _nVertices);
-	~Primitive();
-	int nVertices;
-	v3f *vertices;
-	v3f *normals;
-};
-
-struct Primitive2D {
-	Primitive2D(int _nVertices);
-	~Primitive2D();
-	int nVertices;
-	v2f *vertices;
-};
+#ifndef ComponentTest_PrimitiveLoaders_h
+#define ComponentTest_PrimitiveLoaders_h
+	
+#include "Primitive.h"
 
 Primitive pr_loadTriangle_Equil(float radius);		// centre at O,
 Primitive pr_loadTriangle_Isosc(float w, float h);	// base at O
@@ -41,4 +25,5 @@ Primitive pr_loadCuboid(float w, float h, float d);	// centre at O
 Primitive pr_loadSquarePyramid(float w, float h);	// base centred at O
 //Primitive pr_loadTriPyramid(float baseRadius, float h);
 
+	
 #endif

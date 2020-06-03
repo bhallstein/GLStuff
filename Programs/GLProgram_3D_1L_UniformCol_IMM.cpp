@@ -6,24 +6,29 @@
 //  Copyright (c) 2015 Ben. All rights reserved.
 //
 
-#include "GLProgram_3D_1L_UniformCol.h"
+#include "GLProgram_3D_1L_UniformCol_IMM.h"
 
-GLProgram_3D_1L_UniformCol::GLProgram_3D_1L_UniformCol() :
-	GLProgram("3D_UniformColour.vsh", "3D_UniformColour.fsh")
+GLProgram_3D_1L_UniformCol_IMM::GLProgram_3D_1L_UniformCol_IMM() :
+	GLProgram("3D_UniformColour_IMM.vsh", "3D_UniformColour_IMM.fsh")
 {
 	vao = vao_create();
 	vao_bind(vao);
 	
-	buffers.vertexPos = vbo_create();
-	buffers.normal    = vbo_create();
+	buffers.vertexPos   = vbo_create();
+	buffers.normal      = vbo_create();
+	buffers.translation = vbo_create();
+	buffers.quaternion  = vbo_create();
 	
 	std::vector<AttribInfo> attribsDefinition = {
 		{ Attribs::VertPos, buffers.vertexPos, "inVPos",    ATTRTYPE_FLOAT, 3 },
-		{ Attribs::Normal,  buffers.normal,    "inVNormal", ATTRTYPE_FLOAT, 3 }
+		{ Attribs::Normal,  buffers.normal,    "inVNormal", ATTRTYPE_FLOAT, 3 },
+		{ Attribs::Translation, buffers.translation, "inModelPos", ATTRTYPE_FLOAT, 3 },
+		{ Attribs::Quaternion,  buffers.quaternion,  "inModelRot", ATTRTYPE_FLOAT, 4 }
 	};
 	std::vector<UniformInfo> uniformsDefinition = {
-		{ Uniforms::MVPMtx, "mvpMtx" },
 		{ Uniforms::ModelMtx, "modelMtx" },
+		{ Uniforms::ViewMtx, "viewMtx" },
+		{ Uniforms::ProjMtx, "projMtx" },
 		{ Uniforms::NormalMtx, "normalMtx" },
 		{ Uniforms::LightVec, "uLightVector" },
 		{ Uniforms::LightProperties, "uLightProperties" },

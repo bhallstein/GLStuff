@@ -1,26 +1,26 @@
 //
-//  GLProgram_NEWTEST_CI_IMM.h
+//  GLProgram_3D_1L_UniformCol.h
 //  IsometricOGLGame
 //
 //  Created by Ben on 01/02/2015.
 //  Copyright (c) 2015 Ben. All rights reserved.
 //
 
-#ifndef __GLProgram_3D_1L_CI_IMM_h
-#define __GLProgram_3D_1L_CI_IMM_h
+#ifndef __GLProgram_3D_1L_UniformCol_IMM_h
+#define __GLProgram_3D_1L_UniformCol_IMM_h
 
 #include "GLProgram.h"
 
-class GLProgram_3D_1L_CI_IMM : public GLProgram {
+class GLProgram_3D_1L_UniformCol_IMM : public GLProgram {
 public:
-	GLProgram_3D_1L_CI_IMM();
+	GLProgram_3D_1L_UniformCol_IMM();
 	
 	bool ok;
 	
 	class Attribs {
 	public:
 		enum {
-			VertPos,    Normal,    Colour,
+			VertPos,    Normal,
 			Translation,
 			Quaternion
 		};
@@ -29,8 +29,9 @@ public:
 	class Uniforms {
 	public:
 		enum {
-			ModelMtx,     ViewMtx,      ProjMtx,    NormalMtx,
-			LightVec,     LightProperties,          ColToLightRatio,
+			ModelMtx,     ViewMtx,           ProjMtx,       NormalMtx,         
+			LightVec,     LightProperties,
+			Colour,       ColToLightRatio,
 			CamPos
 		};
 	};
@@ -40,7 +41,6 @@ public:
 		unsigned int
 			vertexPos,
 			normal,
-			colour,
 			translation,
 			quaternion;
 	} buffers;

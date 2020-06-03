@@ -7,9 +7,9 @@
 //
 
 //#include <stdio.h>
-#include "PrimitivePresets.h"
+#include "PrimitiveLoaders.h"
 #include "CoordinateTypes.h"
-#include "math.h"
+#include <math.h>
 
 //static v3f _zero3f = { 0.0, 0.0, 0.0 };
 
@@ -18,29 +18,6 @@ static v3f _unit_equilateral_triangle[] = {
 	{  0.8142, -0.5806, 0.0  },
 	{ -0.8142, -0.5806, 0.0  }
 };
-
-
-#pragma mark - Primitive struct
-
-Primitive::Primitive(int _nVertices) : nVertices(_nVertices)
-{
-	vertices = new v3f[nVertices];
-	normals = new v3f[nVertices];
-}
-Primitive::~Primitive()
-{
-	delete [] vertices;
-	delete [] normals;
-}
-
-Primitive2D::Primitive2D(int _nVertices) : nVertices(_nVertices)
-{
-	vertices = new v2f[nVertices];
-}
-Primitive2D::~Primitive2D()
-{
-	delete [] vertices;
-}
 
 
 #pragma mark - Loading fns

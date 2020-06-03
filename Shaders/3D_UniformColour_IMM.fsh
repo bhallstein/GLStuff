@@ -5,11 +5,12 @@ uniform vec3 uLightProperties;		// Ambient, diffuse, specular
 
 uniform vec3 uCamPosition;
 
-uniform samplerCube uCubeMapTexUnit;
-uniform float uReflToLightRatio;
+uniform vec3 uColour;
+uniform float uColToLightRatio;
 
-in vec3 normal_world, fragpos_world;
-out vec4 fragColour;
+in vec3 normal_world;
+in vec3 fragpos_world;
+out vec4 fragOutColour;
 
 void main(void) {
 
@@ -31,17 +32,11 @@ void main(void) {
 	vec3 r = reflect(-uLightVector, normal);
 	float exp = 7.0;
 	float spec = 0.7 * l_Specular * pow(max(dot(r,v),0), exp);
-
-
-	// 2. Reflection mapping
-
-	// Look up the reflection map value
-	vec4 reflmapCol = texture(uCubeMapTexUnit, vec3(normal.x, -normal.y, normal.z));
-
 	
-	// 3. Combine
+	
+	// 2. Combine
 
 	float light_combined = l_Ambient + diff + spec;
-	fragColour = reflmapCol * (light_combined + 0.1) + uReflToLightRatio - uReflToLightRatio;
+	fragOutColour = vec4(uColour, 1.0) * (light_combined + 0.1) + uColToLightRatio - uColToLightRatio;
 }
 

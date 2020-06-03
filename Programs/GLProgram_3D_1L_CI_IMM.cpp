@@ -14,18 +14,18 @@ GLProgram_3D_1L_CI_IMM::GLProgram_3D_1L_CI_IMM() :
 	vao = vao_create();
 	vao_bind(vao);
 	
-	buffers.vertexPos  = vbo_create();
-	buffers.normal     = vbo_create();
-	buffers.colour     = vbo_create();
-	buffers.modelPos   = vbo_create();
-	buffers.quaternion = vbo_create();
+	buffers.vertexPos   = vbo_create();
+	buffers.normal      = vbo_create();
+	buffers.colour      = vbo_create();
+	buffers.translation = vbo_create();
+	buffers.quaternion  = vbo_create();
 	
 	std::vector<AttribInfo> attribsDefinition = {
-		{ Attribs::VertPos,  buffers.vertexPos,  "inVPos",    ATTRTYPE_FLOAT, 3 },
-		{ Attribs::Normal,   buffers.normal,     "inVNormal", ATTRTYPE_FLOAT, 3 },
-		{ Attribs::Colour,   buffers.colour,     "inColour",  ATTRTYPE_FLOAT, 3 },
-		{ Attribs::ModelPos, buffers.modelPos,   "inModelPos", ATTRTYPE_FLOAT, 3 },
-		{ Attribs::ModelRot, buffers.quaternion, "inModelRot", ATTRTYPE_FLOAT, 4 },
+		{ Attribs::VertPos,     buffers.vertexPos,   "inVPos",     ATTRTYPE_FLOAT, 3 },
+		{ Attribs::Normal,      buffers.normal,      "inVNormal",  ATTRTYPE_FLOAT, 3 },
+		{ Attribs::Colour,      buffers.colour,      "inColour",   ATTRTYPE_FLOAT, 3 },
+		{ Attribs::Translation, buffers.translation, "inModelPos", ATTRTYPE_FLOAT, 3 },
+		{ Attribs::Quaternion,  buffers.quaternion,  "inModelRot", ATTRTYPE_FLOAT, 4 },
 	};
 	std::vector<UniformInfo> uniformsDefinition = {
 		{ Uniforms::ModelMtx, "modelMtx" },
