@@ -12,7 +12,6 @@
 #include <sstream>
 #include <fstream>
 #include <map>
-#include <iostream>
 
 #pragma mark String & vector helper fns
 
@@ -107,9 +106,8 @@ ObjFile loadObjFile(const char *filename) {
 				splitToFloatVec(line.substr(2, 1000), v);
 				
 				if (v.size() != 3) {
-					std::cout
-						<< "error on line " << objFile.nLines << ": vertex had wrong number of coords ("
-						<< v.size() << " rather than 3)\n";
+					printf("error on line %d: vertex had wrong number of coords (%lu rather than %d)\n",
+						   objFile.nLines, v.size(), 3);
 					break;
 				}
 				
@@ -125,9 +123,8 @@ ObjFile loadObjFile(const char *filename) {
 				splitToFloatVec(line.substr(3, 1000), v);
 				
 				if (v.size() != 3) {
-					std::cout
-						<< "error on line " << objFile.nLines << ": normal had wrong number of coords ("
-						<< v.size() << " rather than 3)\n";
+					printf("error on line %d: normal had wrong number of coords (%lu rather than %d\n)\n",
+						   objFile.nLines, v.size(), 3);
 					break;
 				}
 				
@@ -143,9 +140,8 @@ ObjFile loadObjFile(const char *filename) {
 				splitToFloatVec(line.substr(3, 1000), v);
 				
 				if (v.size() != 2) {
-					std::cout
-						<< "error on line " << objFile.nLines << ": texcoord had wrong number of coords ("
-						<< v.size() << " rather than 2)\n";
+					printf("error on line %d: texcoord had wrong number of coords (%lu rather than %d)\n",
+						   objFile.nLines, v.size(), 2);
 					break;
 				}
 				
@@ -161,9 +157,8 @@ ObjFile loadObjFile(const char *filename) {
 			std::vector<std::string> faceVerts;
 			strSplit(line.substr(2, 1000), faceVerts, ' ');
 			if (faceVerts.size() != 3) {
-				std::cout
-					<< "error on line " << objFile.nLines << ": face has wrong number of components ("
-					<< faceVerts.size() << " rather than 3)\n";
+				printf("error on line %d: face has wrong number of components (%lu rather than %d)\n",
+					   objFile.nLines, faceVerts.size(), 3);
 				break;
 			}
 			
@@ -172,9 +167,8 @@ ObjFile loadObjFile(const char *filename) {
 				splitToIntVec(faceVerts[i], v, '/');
 				
 				if (v.size() != 3) {
-					std::cout
-						<< "error on line " << objFile.nLines << ": face component " << i+1 << " has wrong number of indices ("
-						<< v.size() << " rather than 3)\n";
+					printf("error on line %d: face component %d has wrong number of indices (%lu rather than %d)\n",
+						   objFile.nLines, i+1, v.size(), 3);
 					break;
 				}
 				
@@ -210,10 +204,11 @@ ObjFile loadObjFile(const char *filename) {
 	}
 	
 	if (vertex_attrib_vec.size() != normal_attrib_vec.size() || vertex_attrib_vec.size() != texcoord_attrib_vec.size())
-		std::cout
-			<< "  WARNING: attrib vec sizes differ! "
-			<< "(" << vertex_attrib_vec.size() << ", " << normal_attrib_vec.size() << ", "
-			<< texcoord_attrib_vec.size() << ")\n";
+		printf("  WARNING: attrib vec sizes differ! (%lu, %lu, %lu)\n",
+			   vertex_attrib_vec.size(),
+			   normal_attrib_vec.size(),
+			   texcoord_attrib_vec.size()
+			   );
 	
 	// Copy vectors into C-style arrays in ObjFile
 	objFile.nVerticesImported = (int) vertex_attrib_vec.size();
@@ -235,15 +230,27 @@ ObjFile loadObjFile(const char *filename) {
 }
 
 void printObjFileSummary(ObjFile *f, const char *filename) {
-	std::cout
-		<< "ObjFile '" << filename << "':\n"
-		<< "  nLines:         " << f->nLines               << "\n"
-		<< "  nLinesComment:  " << f->nLinesComment        << "\n"
-		<< "  nLinesVertex:   " << f->nLinesVertex         << "\n"
-		<< "  nLinesNormal:   " << f->nLinesNormal         << "\n"
-		<< "  nLinesTexcoord: " << f->nLinesTexcoord       << "\n"
-		<< "  nLinesFace:     " << f->nLinesFace           << "\n"
-		<< "  nLinesEmpty:    " << f->nLinesEmpty          << "\n\n"
-		<< "  nVerticesImported: " << f->nVerticesImported << "\n"
-		<< "  nElements:         " << f->nElements << "\n\n";
+	printf(
+		"ObjFile '%s'':\n"
+		"  nLines:             %d  \n"
+		"  nLinesComment:      %d  \n"
+		"  nLinesVertex:       %d  \n"
+		"  nLinesNormal:       %d  \n"
+		"  nLinesTexcoord:     %d  \n"
+		"  nLinesFace:         %d  \n"
+		"  nLinesEmpty:        %d  \n"
+		"  nVerticesImported:  %d  \n"
+		"  nElements:          %d  \n\n",
+		filename,
+		f->nLines,
+		f->nLinesComment,
+    	f->nLinesVertex,
+    	f->nLinesNormal,
+    	f->nLinesTexcoord,
+    	f->nLinesFace,
+    	f->nLinesEmpty,
+    	f->nVerticesImported,
+    	f->nElements
+	);
 }
+

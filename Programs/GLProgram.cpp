@@ -11,7 +11,7 @@
 #include "ShaderStr.h"
 #include <string>
 #include "GLHelpers.h"
-#include <iostream>
+#include <cstdlib>
 
 GLProgram::GLProgram(const std::string &_v, const std::string &_f) :
 	_vshPath(_v),
@@ -29,8 +29,9 @@ bool GLProgram::compile(
 	const std::vector<AttribInfo> &attribs,
 	const std::vector<UniformInfo> &uniforms
 ) {
-	const char *vsh = _vshPath.c_str();
-	const char *fsh = _fshPath.c_str();
+	const char *shadersDir = "Shaders/";
+	const char *vsh = _vshPath.insert(0, shadersDir).c_str();
+	const char *fsh = _fshPath.insert(0, shadersDir).c_str();
 	const char *vShStr = loadShaderString(bundledFilePath(vsh));
 	const char *fShStr = loadShaderString(bundledFilePath(fsh));
 	
