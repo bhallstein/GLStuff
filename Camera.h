@@ -17,13 +17,6 @@ public:
 	
 	float *pos;
 		// The default position is (0,0,0)
-
-//	float rotationAngle;
-//	float *rotationVec;
-		// The default orientation looks down the -z axis.
-		// This corresponds to an identity transf. in OGL.
-		// You can rotate from here x° about v.
-		// v is (1, 0, 0) by default
 	
 	void setPerspective(float fov, float w, float h, float zN, float zF);
 	void setOrthographic(float left, float right, float bottom, float top, float zN, float zF);

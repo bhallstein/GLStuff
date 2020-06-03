@@ -7,8 +7,6 @@
 Camera::Camera()
 {
 	pos = new float[3] { 0.0, 0.0, 0.0 };
-//	rotationAngle = 0.0;
-//	rotationVec = new float[3] { 1.0, 0.0, 0.0 };
 	mtx_view = new glm::mat4;
 	mtx_proj = new glm::mat4;
 	
@@ -18,7 +16,6 @@ Camera::Camera()
 Camera::~Camera()
 {
 	delete [] pos;
-//	delete [] rotationVec;
 	delete (glm::mat4*) mtx_view;
 	delete (glm::mat4*) mtx_proj;
 	delete (glm::mat4*) mtx_invrot;
@@ -60,10 +57,6 @@ void Camera::setOrientation(float angle, float vx, float vy, float vz) {
 					glm::vec3(vx, vy, vz));
 	
 	using_orientation = true;
-//	rotationAngle = angle;
-//	rotationVec[0] = vx;
-//	rotationVec[1] = vy;
-//	rotationVec[2] = vz;
 }
 void Camera::setLookFromTo(float aX, float aY, float aZ, float bX, float bY, float bZ) {
 	glm::vec3 A = glm::vec3(aX, aY, aZ);
@@ -89,10 +82,4 @@ void Camera::setPixel(float winW, float winH) {
 	glm::mat4 &P = *(glm::mat4*)mtx_proj;
 	P = glm::ortho(0.f, float(winW), float(winH), 0.f, 1.f, -1.f);
 }
-
-
-
-
-
-
 
