@@ -20,9 +20,14 @@ struct TexImage loadPngTexture(const char *filepath) {
 	}
 	
 	CGImageSourceRef imageSource = CGImageSourceCreateWithURL(texURL, NULL);
-	if (!imageSource) NSLog(@"Invalid image path");
+	if (!imageSource) {
+		NSLog(@"TexImage: Invalid image path");
+		CFRelease(texURL);
+		return null_tex_image;
+	}
 	if (CGImageSourceGetCount(imageSource) <= 0) {
 		NSLog(@"TexImage: No image in image source");
+		CFRelease(texURL);
 		return null_tex_image;
 	}
 	CFRelease(texURL);
