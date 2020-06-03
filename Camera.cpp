@@ -40,7 +40,6 @@ const float* Camera::getViewMatrix() {
 	}
 	
 	return mptr(V);
-	
 }
 const float *Camera::getProjMatrix() {
 	glm::mat4 &P = *(glm::mat4*)mtx_proj;
