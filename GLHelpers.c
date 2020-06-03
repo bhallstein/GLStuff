@@ -276,12 +276,12 @@ void prog_setAttribToUseVBO(unsigned int attrib_loc,
 	GLenum gl_attrib_type = (attrtype == ATTRTYPE_FLOAT ? GL_FLOAT : GL_INT);
 	glBindBuffer(GL_ARRAY_BUFFER, vbo_id);
 	glEnableVertexAttribArray(attrib_loc);
-	glVertexAttribPointer(attrib_loc,			// index
-						  attrib_components,		// size (components per vertex)
-						  gl_attrib_type,		// type
-						  GL_FALSE,				// normalized
-						  0,						// stride
-						  0);					// offset/pointer
+	glVertexAttribPointer(attrib_loc,           // index
+						  attrib_components,    // size (components per vertex)
+						  gl_attrib_type,       // type
+						  GL_FALSE,             // normalized
+						  0,                    // stride
+						  0);                   // offset/pointer
 }
 
 void prog_disableAttrib(unsigned int attrib_loc) {

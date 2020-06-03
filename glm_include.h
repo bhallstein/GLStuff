@@ -1,4 +1,8 @@
-#include <glm.hpp>
+#define GLM_FORCE_RADIANS
+
+#include "glm.hpp"
 #include "gtc/matrix_transform.hpp"
-#include <gtc/type_ptr.hpp>
+#include "gtc/type_ptr.hpp"
 #define mptr(x) glm::value_ptr(x)
+
+#define RAD(deg) (float)(deg * 0.01745329)

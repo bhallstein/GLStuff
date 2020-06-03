@@ -2,6 +2,7 @@
 #ifndef __CAMERA_H
 #define __CAMERA_H
 
+
 class Camera {
 public:
 	Camera();
@@ -12,12 +13,13 @@ public:
 	
 	void setPosition(float x, float y, float z);
 	void setOrientation(float angle, float vx, float vy, float vz);
+	void setLookFromTo(float aX, float aY, float aZ, float bX, float bY, float bZ);
 	
 	float *pos;
 		// The default position is (0,0,0)
 
-	float rotationAngle;
-	float *rotationVec;
+//	float rotationAngle;
+//	float *rotationVec;
 		// The default orientation looks down the -z axis.
 		// This corresponds to an identity transf. in OGL.
 		// You can rotate from here x° about v.
@@ -27,9 +29,10 @@ public:
 	void setOrthographic(float left, float right, float bottom, float top, float zN, float zF);
 	
 private:
+	bool using_orientation;
 	void *mtx_view;
 	void *mtx_proj;
-	
+	void *mtx_invrot;
 };
 
 #endif

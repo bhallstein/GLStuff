@@ -7,18 +7,21 @@
 Camera::Camera()
 {
 	pos = new float[3] { 0.0, 0.0, 0.0 };
-	rotationAngle = 0.0;
-	rotationVec = new float[3] { 1.0, 0.0, 0.0 };
-	mtx_view = NULL;
-	mtx_proj = NULL;
+//	rotationAngle = 0.0;
+//	rotationVec = new float[3] { 1.0, 0.0, 0.0 };
+	mtx_view = new glm::mat4;
+	mtx_proj = new glm::mat4;
+	
+	mtx_invrot = new glm::mat4;
 }
 
 Camera::~Camera()
 {
 	delete [] pos;
-	delete [] rotationVec;
-	if (mtx_view) delete (glm::mat4*) mtx_view;
-	if (mtx_proj) delete (glm::mat4*) mtx_proj;
+//	delete [] rotationVec;
+	delete (glm::mat4*) mtx_view;
+	delete (glm::mat4*) mtx_proj;
+	delete (glm::mat4*) mtx_invrot;
 }
 
 
@@ -27,20 +30,21 @@ const float* Camera::getViewMatrix() {
 	// Since C = R · T,
 	//       V = inv(T) · inv(R)
 	// In OGL the order is reversed, so we return inv(R) · inv(T)
+
+	glm::mat4 &V = *(glm::mat4*)mtx_view;
 	
-	glm::mat4 invR = glm::rotate(glm::mat4(1.0),
-								 -rotationAngle,
-								 glm::vec3(rotationVec[0], rotationVec[1], rotationVec[2]));
-	glm::mat4 invT = glm::translate(glm::mat4(1.0),
-									glm::vec3(-pos[0], -pos[1], -pos[2]));
-	if (mtx_view) delete (glm::mat4*) mtx_view;
-	mtx_view = new glm::mat4(invR * invT);
+	if (using_orientation) {
+		glm::mat4 invT = glm::translate(glm::mat4(1.0),
+										glm::vec3(-pos[0], -pos[1], -pos[2]));
+		V = glm::mat4(*(glm::mat4*)mtx_invrot * invT);
+	}
 	
-	return mptr(*(glm::mat4*)mtx_view);
+	return mptr(V);
+	
 }
 const float *Camera::getProjMatrix() {
-	if (mtx_proj == NULL) return NULL;
-	return mptr(*(glm::mat4*)mtx_proj);
+	glm::mat4 &P = *(glm::mat4*)mtx_proj;
+	return mptr(P);
 }
 
 
@@ -51,18 +55,33 @@ void Camera::setPosition(float x, float y, float z) {
 }
 
 void Camera::setOrientation(float angle, float vx, float vy, float vz) {
-	rotationAngle = angle;
-	rotationVec[0] = vx;
-	rotationVec[1] = vy;
-	rotationVec[2] = vz;
+	glm::mat4 &R = * (glm::mat4*) mtx_invrot;
+	R = glm::rotate(glm::mat4(1.0),
+					-RAD(angle),
+					glm::vec3(vx, vy, vz));
+	
+	using_orientation = true;
+//	rotationAngle = angle;
+//	rotationVec[0] = vx;
+//	rotationVec[1] = vy;
+//	rotationVec[2] = vz;
+}
+void Camera::setLookFromTo(float aX, float aY, float aZ, float bX, float bY, float bZ) {
+	glm::vec3 A = glm::vec3(aX, aY, aZ);
+	glm::vec3 B = glm::vec3(bX, bY, bZ);
+	
+	glm::mat4 &V = * (glm::mat4*) mtx_view;
+	V = glm::lookAt(A, B, glm::vec3(0, 1, 0));
+	
+	using_orientation = false;
 }
 
 void Camera::setPerspective(float fov, float w, float h, float zN, float zF) {
-	if (mtx_proj) delete (glm::mat4*) mtx_proj;
-	mtx_proj = new glm::mat4(glm::perspective(fov, w/h, zN, zF));
+	glm::mat4 &P = *(glm::mat4*)mtx_proj;
+	P = glm::mat4(glm::perspective(RAD(fov), w/h, zN, zF));
 }
 
 void Camera::setOrthographic(float l, float r, float b, float t, float zN, float zF) {
-	if (mtx_proj) delete (glm::mat4*) mtx_proj;
-	mtx_proj = new glm::mat4(glm::ortho(l, r, b, t, zN, zF));
+	glm::mat4 &P = *(glm::mat4*)mtx_proj;
+	P = glm::mat4(glm::ortho(l, r, b, t, zN, zF));
 }
