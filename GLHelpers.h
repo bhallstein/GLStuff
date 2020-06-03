@@ -75,6 +75,7 @@ int fb_checkOK();
 // Limited to using the default texture unit (0)
 
 unsigned int tx_create();
+void tx_delete(unsigned int tex_id);
 void tx_bind(unsigned int tex_id);
 void tx_bindAsCubeMap(unsigned int cm_id);
 
@@ -91,6 +92,7 @@ void tx_uploadCubeMapFace(int w, int h, void *data, enum tx_cubemapface face);
 
 unsigned int vao_create();
 void vao_bind(unsigned int vao_id);
+void vao_delete(unsigned int vao_id);
 
 
 // VBOs:
@@ -99,11 +101,13 @@ unsigned int vbo_create();
 void vbo_bind(unsigned int vbo_id, enum vbo_type type);
 void vbo_upload(size_t n_bytes, void *data, enum vbo_type type, enum vbo_hint hint);
 void vbo_reupload(size_t n_bytes, int offset, void *data, enum vbo_type type);
+void vbo_delete(unsigned int vbo_id);
 
 
 // Programs:
 
 unsigned int prog_create();
+void prog_delete(unsigned int prog_id);
 void prog_setAttribLocation(unsigned int program, unsigned int location, const char *name);
 void prog_setAttachmentLocation(unsigned int program, unsigned int location, const char *name);
 int prog_compileAndLink(unsigned int prog, const char *v_src, const char *f_src);

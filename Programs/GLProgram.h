@@ -52,6 +52,8 @@ struct GLProg {
 	
 	void compile();
 	unsigned int uniformID(unsigned int internal_id);
+	
+	~GLProg();
 };
 
 // These are called automatically by GLProg::compile(),

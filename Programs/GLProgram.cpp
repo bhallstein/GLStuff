@@ -13,7 +13,10 @@
 #include "GLHelpers.h"
 #include <cstdlib>
 
-
+GLProg::~GLProg()
+{
+	if (state == State::OK) prog_delete(programID);
+}
 
 void GLProg::compile() {
 	state = GLProg::State::NotOK;
@@ -49,7 +52,6 @@ unsigned int GLProg::uniformID(unsigned int internal_id) {
 }
 
 
-
 void setAttribLocations(unsigned int programID, const std::vector<AttribInfo> &attribs) {
 	for (auto &a : attribs)
 		if (a.name.length() > 0)
@@ -80,8 +82,6 @@ void setAttribsToUseVBOs(const std::vector<AttribInfo> &attribs) {
 								   a.float_or_int,
 								   a.instanced);
 }
-
-
 
 
 

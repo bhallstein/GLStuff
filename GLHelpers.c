@@ -75,6 +75,9 @@ unsigned int tx_create() {
 	glGenTextures(1, &texID);
 	return texID;
 }
+void tx_delete(unsigned int tex_id) {
+	glDeleteTextures(1, &tex_id);
+}
 
 void tx_bind(unsigned int tex_id) {
 	glBindTexture(GL_TEXTURE_2D, tex_id);
@@ -143,6 +146,9 @@ unsigned int vao_create() {
 void vao_bind(unsigned int id) {
 	glBindVertexArray(id);
 }
+void vao_delete(unsigned int vao_id) {
+	glDeleteVertexArrays(2, &vao_id);
+}
 
 
 
@@ -176,11 +182,18 @@ void vbo_reupload(size_t bytes, int offset, void *data, enum vbo_type type) {
 					data);
 }
 
+void vbo_delete(unsigned int vbo_id) {
+	glDeleteBuffers(1, &vbo_id);
+}
+
 
 #pragma mark - Programs
 
 unsigned int prog_create() {
 	return glCreateProgram();
+}
+void prog_delete(unsigned int prog_id) {
+	glDeleteProgram(prog_id);
 }
 
 void prog_setAttribLocation(unsigned int program, unsigned int location, const char *name) {
@@ -265,6 +278,9 @@ int prog_compileAndLink(unsigned int prog, const char *v_src, const char *f_src)
 		printf("Program failed to validate, continuing...");
 		return 0;
 	}
+	
+	glDeleteShader(vSh);
+	glDeleteShader(fSh);
 	
 	return 1;
 }
