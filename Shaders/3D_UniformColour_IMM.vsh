@@ -1,7 +1,7 @@
 #version 140
 
-uniform mat4 modelMtx;	// Only to be used for scaling etc,
-uniform mat4 viewMtx;   // since reconstructing indiv. rotations / translations
+uniform mat3 modelMtx;	// Only to be used for scaling etc,
+uniform mat4 viewMtx;   //  since reconstructing indiv. rotations / translations
 uniform mat4 projMtx;
 uniform mat3 normalMtx;
 
@@ -28,10 +28,10 @@ void main(void) {
 		inModelPos.x, inModelPos.y, inModelPos.z, 1.0
 	);
 	
-	vec4 p = vec4(quat_rotate(inVPos, inModelRot), 1.0);
-	gl_Position = projMtx * viewMtx * translMtx * modelMtx * p;
+	vec3 p = quat_rotate(modelMtx * inVPos, inModelRot);
+	gl_Position = projMtx * viewMtx * translMtx * vec4(p, 1.0);
 	
 	normal_world = normalMtx * quat_rotate(inVNormal, inModelRot);
-	fragpos_world = vec3(modelMtx * p);
+	fragpos_world = modelMtx * p;
 }
 

@@ -165,7 +165,7 @@ int prog_compileAndLink(unsigned int prog, const char *v_src, const char *f_src)
 	
 	// Compile vertex shader
 	GLuint vSh = glCreateShader(GL_VERTEX_SHADER);
-	glShaderSource(vSh, 1, (const GLchar **) &v_src, NULL);
+	glShaderSource(vSh, 1, &v_src, NULL);
 	glCompileShader(vSh);
 	
 	// Check compiled
