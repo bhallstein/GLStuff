@@ -119,5 +119,3 @@ void Renderer_3D_1L_UniformCol_Instanced::render(Camera *cam, DirectionalLight *
 	vao_bind(0);
 }
 
-
-
