@@ -27,7 +27,7 @@ float* Camera::getProjMatrix() {
 	return mptr(PROJMATRIX);
 }
 void Camera::setViewMatrix(float *_V) {
-    VIEWMATRIX = *(glm::mat4*)_V;   // This is a terrible idea
+	VIEWMATRIX = *(glm::mat4*)_V;   // This is a terrible idea
 }
 
 
@@ -66,3 +66,4 @@ void Camera::setOrthographic(float l, float r, float b, float t, float zN, float
 void Camera::setPixel(float winW, float winH) {
 	PROJMATRIX = glm::ortho(0.f, float(winW), float(winH), 0.f, 1.f, -1.f);
 }
+

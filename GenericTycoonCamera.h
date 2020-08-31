@@ -22,13 +22,13 @@ public:
 	void setPos(v3 _p) { p = _p; }
 	void setTilt(float _t) { tilt = _t; }
 	
-    void lookAt(v3 x);  // Preserve tilt, move position
+	void lookAt(v3 x);  // Preserve tilt, move position
 	
-    void nudgeX(float x) { p.x += x; updateCamera(); }
+	void nudgeX(float x) { p.x += x; updateCamera(); }
 	void nudgeZ(float x) { p.z += x; updateCamera(); }
 	void nudgeY(float x) { p.y += x; updateCamera(); }
 	
-    void tiltUD(float a) { tilt += a; updateCamera(); }
+	void tiltUD(float a) { tilt += a; updateCamera(); }
 //	void rotateUD(float x) { cam.rotateUD(x); }
 	
 	Camera* getCam() { return &cam; }
@@ -44,9 +44,7 @@ private:
 	float fov = 67.0; // winH / 12; // 67;
 	float zNear = 0.1;
 	float zFar = 1000.;
-	
 };
-
 
 
 #endif
