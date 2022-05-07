@@ -1,0 +1,9 @@
+[submodule "GLStuffDev/GLStuffDev/OGLW"]
+	path = GLStuffDev/GLStuffDev/OGLW
+	url = git@github.com:bhallstein/OGLW.git
+[submodule "GLStuffDev/GLStuffDev/misterheapy"]
+	path = GLStuffDev/GLStuffDev/misterheapy
+	url = git@github.com:bhallstein/misterheapy.git
+[submodule "GLStuffDev/GLStuffDev/glm"]
+	path = GLStuffDev/GLStuffDev/glm
+	url = git@github.com:bhallstein/glm-cpp.git
