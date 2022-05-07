@@ -13,11 +13,11 @@ class Renderer_3D_1L_ReflectionMapped {
 public:
 	Renderer_3D_1L_ReflectionMapped();
 	~Renderer_3D_1L_ReflectionMapped();
-	
+
 	bool setUp();
 	void setTex(unsigned int);
-	void render(Camera*, DirectionalLight*, glm::mat4 &m_model);
-	
+	void render(Camera, DirectionalLight*, glm::mat4 &m_model);
+
 	struct Attribs {
 		enum { VertPos, Normal };
 	};
@@ -30,20 +30,20 @@ public:
 			CubeMapTexUnit
 		};
 	};
-	
+
 	struct {
 		unsigned int vertexPos, normal;
 	} buffers;
-	
+
 	int n_vertices;
-	
+
 private:
 	GLProg *prog;
 	unsigned int vao;
 	unsigned int tex;
-	
+
 	float colToLightRatio;
-	
+
 };
 
 #endif

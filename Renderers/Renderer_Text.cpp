@@ -11,13 +11,13 @@
 
 Renderer_Text::Renderer_Text() : sprite_added(false)
 {
-	
+
 }
 
 
 Renderer_Text::~Renderer_Text()
 {
-	
+
 }
 
 
@@ -30,10 +30,10 @@ bool Renderer_Text::setUp() {
 }
 
 void Renderer_Text::set(const char *s,
-		 v2 containerSize,
-		 float fontSize,
-		 col4 colour,
-		 col4 bgColour) {
+												v2 containerSize,
+												float fontSize,
+												col4 colour,
+												col4 bgColour) {
 	regen(s, containerSize.x, containerSize.y, fontSize, colour, bgColour);
 }
 
@@ -51,14 +51,14 @@ void Renderer_Text::render(v2 win_size) {
 void Renderer_Text::regen(const char *s, float containerW, float containerH, float font_size, col4 c, col4 bg) {
 	TexImage im = get_textTex(s, containerW, containerH, font_size, c, bg);
 	if (im.data == NULL) return;
-	
+
 	if (!sprite_added) {
 		tex = tx_create();
 	}
 	tx_bind(tex);
 	tx_upload(im.w, im.h, im.data, TX_FILTER_LINEAR);
 	free(im.data);
-	
+
 	if (!sprite_added) {
 		sprite_id = Renderer_PixelPerfect::addSprite({
 			tex,

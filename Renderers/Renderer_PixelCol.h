@@ -20,12 +20,12 @@ class Renderer_PixelCol {
 public:
 	Renderer_PixelCol();
 	~Renderer_PixelCol();
-	
+
 	bool setUp();
 	void setRect(const v2 &pos, const v2 &size);
 	void setColour(const col4 &);
 	void render(v2 win_size);
-	
+
 private:
 	Renderer_2D_ColourIndexed *rend;
 	v2 _pos, _size;
@@ -33,3 +33,4 @@ private:
 };
 
 #endif
+

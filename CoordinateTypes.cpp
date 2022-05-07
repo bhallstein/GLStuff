@@ -29,3 +29,4 @@ bool eq(const col3 &a, const col3 &b) {
 bool eq(const col4 &a, const col4 &b) {
 	return a.r == b.r && a.g == b.g && a.b == b.b && a.a == b.a;
 }
+

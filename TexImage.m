@@ -1,16 +1,7 @@
-//
-//  TexImage.c
-//  OpenGL3.2-Mac
-//
-//  Created by Ben on 23/09/2013.
-//  Copyright (c) 2013 Ben. All rights reserved.
-//
-
 #include "TexImage.h"
 #include "GLHelpers.h"
 #import <Foundation/Foundation.h>
 #import <OpenGL/gl.h>
-//#import <CoreGraphics/CoreGraphics.h>
 #import <ImageIO/ImageIO.h>
 
 struct TexImage null_tex_image = { NULL, -1, -1 };

@@ -13,7 +13,7 @@ Renderer_PixelCol::~Renderer_PixelCol()
 {
 	delete rend;
 }
-	
+
 bool Renderer_PixelCol::setUp() {
 	return rend->setUp();
 }

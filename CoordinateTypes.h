@@ -33,3 +33,4 @@ bool eq(const col4 &, const col4 &);
 #endif
 
 #endif
+

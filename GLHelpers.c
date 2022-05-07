@@ -1,11 +1,3 @@
-//
-//  GLHelpers.c
-//  OpenGL3_2_Render_to_Tex
-//
-//  Created by Ben on 28/06/2014.
-//  Copyright (c) 2014 Ben. All rights reserved.
-//
-
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -13,7 +5,8 @@
 #include <OpenGL/gl3.h>
 
 
-#pragma mark Framebuffers
+// Framebuffers
+// --------------------------------------
 
 int fb_create() {
 	GLuint fboName;
@@ -36,26 +29,26 @@ void fb_disableTextureAttachment() {
 
 void fb_attachTexture(unsigned int tex_id) {
 	glFramebufferTexture2D(GL_FRAMEBUFFER,
-						   GL_COLOR_ATTACHMENT0,
-						   GL_TEXTURE_2D,
-						   tex_id,
-						   0);
+												 GL_COLOR_ATTACHMENT0,
+												 GL_TEXTURE_2D,
+												 tex_id,
+												 0);
 }
 
 void fb_attachTexture_AsDepth(unsigned int tex_id) {
 	glFramebufferTexture2D(GL_FRAMEBUFFER,
-						   GL_DEPTH_ATTACHMENT,
-						   GL_TEXTURE_2D,
-						   tex_id,
-						   0);
+												 GL_DEPTH_ATTACHMENT,
+												 GL_TEXTURE_2D,
+												 tex_id,
+												 0);
 }
 
 void fb_attachFaceOfCubeMap(unsigned int cubemap_id, unsigned int face) {
 	glFramebufferTexture2D(GL_FRAMEBUFFER,
-						   GL_COLOR_ATTACHMENT0,
-						   GL_TEXTURE_CUBE_MAP,
-						   cubemap_id,
-						   0);
+												 GL_COLOR_ATTACHMENT0,
+												 GL_TEXTURE_CUBE_MAP,
+												 cubemap_id,
+												 0);
 }
 
 int fb_checkOK() {
@@ -68,7 +61,8 @@ int fb_checkOK() {
 
 
 
-#pragma mark - Textures
+// Textures
+// --------------------------------------
 
 unsigned int tx_create() {
 	unsigned int texID;
@@ -100,41 +94,42 @@ void tx_setRepeat(int repeat) {
 void tx_upload(int w, int h, void *data, enum tx_filtering filtering) {
 	tx_setFiltering(filtering);
 	glTexImage2D(GL_TEXTURE_2D,
-				 0,
-				 GL_RGBA,
-				 w, h,
-				 0,
-				 GL_BGRA, GL_UNSIGNED_INT_8_8_8_8_REV,
-				 data);
+							 0,
+							 GL_RGBA,
+							 w, h,
+							 0,
+							 GL_BGRA, GL_UNSIGNED_INT_8_8_8_8_REV,
+							 data);
 }
 void tx_uploadDepth(int w, int h, void *data) {
 	tx_setFiltering(TX_FILTER_NEAREST);
 	glTexImage2D(GL_TEXTURE_2D,
-				 0,
-				 GL_DEPTH_COMPONENT,
-				 w, h,
-				 0,
-				 GL_DEPTH_COMPONENT, GL_UNSIGNED_INT,
-				 data);
+							 0,
+							 GL_DEPTH_COMPONENT,
+							 w, h,
+							 0,
+							 GL_DEPTH_COMPONENT, GL_UNSIGNED_INT,
+							 data);
 }
 void tx_uploadCubeMapFace(int w, int h, void *data, enum tx_cubemapface face) {
 	GLenum gl_face = GL_TEXTURE_CUBE_MAP_POSITIVE_X + (int)face;
 	glTexImage2D(gl_face,
-				 0,
-				 GL_RGBA,
-				 w, h,
-				 0,
-				 GL_BGRA, GL_UNSIGNED_INT_8_8_8_8_REV,
-				 data);
+							 0,
+							 GL_RGBA,
+							 w, h,
+							 0,
+							 GL_BGRA, GL_UNSIGNED_INT_8_8_8_8_REV,
+							 data);
 	glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 	glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 	glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
 	glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
-		// Technically we only need to do this once for the entire cube map.
+	// Technically we only need to do this once for the entire cube map.
 }
 
 
-#pragma mark - VAOs
+// VAOs
+// --------------------------------------
 
 unsigned int vao_create() {
 	unsigned int vao_id;
@@ -150,7 +145,8 @@ void vao_delete(unsigned int vao_id) {
 
 
 
-#pragma mark - VBOs
+// VBOs
+// --------------------------------------
 
 unsigned int vbo_create() {
 	unsigned int vbo_id;
@@ -167,17 +163,17 @@ void vbo_upload(unsigned int n_bytes, void *data, enum vbo_type type, enum vbo_h
 	GLenum gl_target = (type == VBOTYPE_ARRAY ? GL_ARRAY_BUFFER : GL_ELEMENT_ARRAY_BUFFER);
 	GLenum gl_hint = (hint == VBOHINT_DYNAMIC ? GL_DYNAMIC_DRAW : GL_STATIC_DRAW);
 	glBufferData(gl_target,
-				 n_bytes,
-				 data,
-				 gl_hint);
+							 n_bytes,
+							 data,
+							 gl_hint);
 }
 
 void vbo_reupload(unsigned int bytes, int offset, void *data, enum vbo_type type) {
 	GLenum gl_target = (type == VBOTYPE_ARRAY ? GL_ARRAY_BUFFER : GL_ELEMENT_ARRAY_BUFFER);
 	glBufferSubData(gl_target,
-					0,
-					bytes,
-					data);
+									0,
+									bytes,
+									data);
 }
 
 void vbo_delete(unsigned int vbo_id) {
@@ -185,7 +181,8 @@ void vbo_delete(unsigned int vbo_id) {
 }
 
 
-#pragma mark - Programs
+// Programs
+// --------------------------------------
 
 unsigned int prog_create() {
 	return glCreateProgram();
@@ -203,12 +200,12 @@ void prog_setAttachmentLocation(unsigned int program, unsigned int location, con
 
 int prog_compileAndLink(unsigned int prog, const char *v_src, const char *f_src) {
 	GLint logLength, compileStatus, linkStatus;
-	
+
 	// Compile vertex shader
 	GLuint vSh = glCreateShader(GL_VERTEX_SHADER);
 	glShaderSource(vSh, 1, &v_src, NULL);
 	glCompileShader(vSh);
-	
+
 	// Check compiled
 	glGetShaderiv(vSh, GL_INFO_LOG_LENGTH, &logLength);
 	if (logLength > 0) {
@@ -222,12 +219,12 @@ int prog_compileAndLink(unsigned int prog, const char *v_src, const char *f_src)
 		printf("Failed to compile vertex shader:\n%s\n", v_src);
 		return 0;
 	}
-	
+
 	// Compile fragment shader
 	GLuint fSh = glCreateShader(GL_FRAGMENT_SHADER);
 	glShaderSource(fSh, 1, (const GLchar **) &f_src, NULL);
 	glCompileShader(fSh);
-	
+
 	// Check compiled
 	glGetShaderiv(fSh, GL_INFO_LOG_LENGTH, &logLength);
 	if (logLength > 0) {
@@ -241,12 +238,12 @@ int prog_compileAndLink(unsigned int prog, const char *v_src, const char *f_src)
 		printf("Failed to compile fragment shader:\n%s\n", f_src);
 		return 0;
 	}
-	
+
 	// Link program
 	glAttachShader(prog, vSh);
 	glAttachShader(prog, fSh);
 	glLinkProgram(prog);
-	
+
 	// Check linked OK
 	glGetProgramiv(prog, GL_INFO_LOG_LENGTH, &logLength);
 	if (logLength > 0) {
@@ -255,13 +252,13 @@ int prog_compileAndLink(unsigned int prog, const char *v_src, const char *f_src)
 		printf("Program link log:\n%s\n", log);
 		free(log);
 	}
-	
+
 	glGetProgramiv(prog, GL_LINK_STATUS, &linkStatus);
 	if (linkStatus == 0) {
 		printf("Failed to link program");
 		return 0;
 	}
-		
+
 	glValidateProgram(prog);
 	glGetProgramiv(prog, GL_INFO_LOG_LENGTH, &logLength);
 	if (logLength > 0) {
@@ -270,16 +267,16 @@ int prog_compileAndLink(unsigned int prog, const char *v_src, const char *f_src)
 		printf("Program validate log:\n%s\n", log);
 		free(log);
 	}
-	
+
 	glGetProgramiv(prog, GL_VALIDATE_STATUS, &linkStatus);
 	if (linkStatus == 0) {
 		printf("Program failed to validate, continuing...");
 		return 0;
 	}
-	
+
 	glDeleteShader(vSh);
 	glDeleteShader(fSh);
-	
+
 	return 1;
 }
 
@@ -295,11 +292,11 @@ char* prog_validate(unsigned int program) {
 		glGetProgramInfoLog(program, logLength, &logLength, msg);
 		return msg;
 	}
-	
+
 	glGetProgramiv(program, GL_VALIDATE_STATUS, &linkStatus);
 	if (linkStatus == 0)
 		return strdup("Failed to validate program (no log found)!\n");
-	
+
 	return NULL;
 }
 
@@ -314,19 +311,19 @@ void prog_setUniformValue_Mat3(int uniform_loc, float *values) { glUniformMatrix
 void prog_setUniformValue_Mat4(int uniform_loc, float *values) { glUniformMatrix4fv(uniform_loc, 1, GL_FALSE, values); }
 
 void prog_setAttribToUseVBO(unsigned int attrib_loc,
-							unsigned int vbo_id,
-							int attrib_components,
-							enum attrib_type attrtype,
-							int instanced) {
+														unsigned int vbo_id,
+														int attrib_components,
+														enum attrib_type attrtype,
+														int instanced) {
 	GLenum gl_attrib_type = (attrtype == ATTRTYPE_FLOAT ? GL_FLOAT : GL_INT);
 	glBindBuffer(GL_ARRAY_BUFFER, vbo_id);
 	glEnableVertexAttribArray(attrib_loc);
 	glVertexAttribPointer(attrib_loc,           // index
-						  attrib_components,    // size (components per vertex)
-						  gl_attrib_type,       // type
-						  GL_FALSE,             // normalized
-						  0,                    // stride
-						  0);                   // offset/pointer
+												attrib_components,    // size (components per vertex)
+												gl_attrib_type,       // type
+												GL_FALSE,             // normalized
+												0,                    // stride
+												0);                   // offset/pointer
 	if (instanced)
 		glVertexAttribDivisor(attrib_loc, 1);
 }

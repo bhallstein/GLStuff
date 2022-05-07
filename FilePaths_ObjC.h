@@ -17,11 +17,12 @@
 extern "C" {
 #endif
 
-	NSString* bundledFilePathAsNSString(const char *filepath);
-	
+NSString* bundledFilePathAsNSString(const char *filepath);
+
 #ifdef __cplusplus
 }
 #endif
 
 
 #endif
+
