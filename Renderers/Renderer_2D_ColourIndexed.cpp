@@ -1,21 +1,9 @@
-//
-//  Renderer.cpp
-//  ComponentTest
-//
-//  Created by Ben on 02/02/2015.
-//  Copyright (c) 2015 Ben. All rights reserved.
-//
-
-#include "Renderer_2D_ColourIndexed.h"
-
-#include "GLProg.h"
-
+#include "Renderer_2D_ColourIndexed.hpp"
+#include "GLProg.hpp"
 #include <OpenGL/gl3.h>
-#include "CoordinateTypes.h"
-#include "Primitives.h"
-
-#include "FilePaths_CPP.h"
-
+#include "CoordinateTypes.hpp"
+#include "Primitives.hpp"
+#include "FilePaths_CPP.hpp"
 
 Renderer_2D_ColourIndexed::Renderer_2D_ColourIndexed(bool _dither) :
 prog(NULL),
@@ -119,5 +107,3 @@ void Renderer_2D_ColourIndexed::render(float *ortho_mtx) {
 	glDrawArrays(GL_TRIANGLES, 0, 6);
 	vao_bind(0);
 }
-
-

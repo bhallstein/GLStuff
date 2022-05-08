@@ -1,13 +1,12 @@
-#include "Renderer_3D_1L_ReflectionMapped.h"
-#include "GLProg.h"
-#include "GLHelpers.h"
+#include "Renderer_3D_1L_ReflectionMapped.hpp"
+#include "GLProg.hpp"
+#include "GLHelpers.hpp"
 #include <OpenGL/gl.h>
-#include "CoordinateTypes.h"
-#include "Camera.h"
-#include "Lights.h"
-#include "FilePaths_CPP.h"
-#include "Primitives.h"
-
+#include "CoordinateTypes.hpp"
+#include "Camera.hpp"
+#include "Lights.hpp"
+#include "FilePaths_CPP.hpp"
+#include "Primitives.hpp"
 
 Renderer_3D_1L_ReflectionMapped::Renderer_3D_1L_ReflectionMapped() :
 prog(NULL),
@@ -109,5 +108,3 @@ void Renderer_3D_1L_ReflectionMapped::render(Camera cam, DirectionalLight *light
 
 	vao_bind(0);
 }
-
-

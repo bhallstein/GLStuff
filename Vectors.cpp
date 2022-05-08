@@ -1,13 +1,12 @@
-#include "Vectors.h"
-
+#include "Vectors.hpp"
 
 float dot_product(v2 a, v2 b) {
 	return a.x * b.x + a.y * b.y;
 }
+
 float dot_product(v3 a, v3 b) {
 	return a.x * b.x + a.y * b.y + a.z * b.z;
 }
-
 
 v3 v3_add(v3 a, v3 b) {
 	return {a.x + b.x, a.y + b.y, a.z + b.z};
@@ -19,6 +18,7 @@ v3 v3_subtract(v3 a, v3 b) {
 float v2_mod(v2 v) {
 	return sqrtf(v.x*v.x + v.y*v.y);
 }
+
 float v3_mod(v3 v) {
 	return sqrtf(v.x*v.x + v.y*v.y + v.z*v.z);
 }
@@ -44,16 +44,8 @@ float angleBetweenVecAndXYPlane(v3 v) {
 	float theta = fabsf(v.z) / v3_mod(v);
 	return asinf(theta);
 }
+
 float angleBetweenVecAndYZPlane(v3 v) {
 	float theta = fabsf(v.x) / v3_mod(v);
 	return asinf(theta);
 }
-
-//float crossProduct(v3a , v3 b) {
-//	
-//}
-//float crossProduct(Triangle) {
-//	
-//}
-
-

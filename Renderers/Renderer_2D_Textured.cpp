@@ -1,10 +1,9 @@
-#include "Renderer_2D_Textured.h"
-#include "GLProg.h"
+#include "Renderer_2D_Textured.hpp"
+#include "GLProg.hpp"
 #include <OpenGL/gl3.h>
-
-#include "CoordinateTypes.h"
-#include "GLHelpers.h"
-#include "FilePaths_CPP.h"
+#include "CoordinateTypes.hpp"
+#include "GLHelpers.hpp"
+#include "FilePaths_CPP.hpp"
 
 Renderer_2D_Textured::Renderer_2D_Textured() :
 prog(NULL),
@@ -72,5 +71,3 @@ void Renderer_2D_Textured::render(float *ortho_mtx) {
 
 	vao_bind(0);
 }
-
-

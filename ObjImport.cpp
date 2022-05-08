@@ -1,12 +1,4 @@
-//
-//  ObjImport.c
-//  OpenGL3.2-ObjParsing
-//
-//  Created by Ben on 14/10/2013.
-//  Copyright (c) 2013 Ben. All rights reserved.
-//
-
-#include "ObjImport.h"
+#include "ObjImport.hpp"
 #include <string>
 #include <vector>
 #include <sstream>
@@ -52,8 +44,10 @@ struct Triple {
 	bool operator< (const Triple& t) const {            // Will cope with values up to 2^20 (about 1 million)
 		unsigned long x1 = a,   y1 = b,   z1 = c;       // in each field
 		unsigned long x2 = t.a, y2 = t.b, z2 = t.c;
-		x1 <<= 40, x2 <<= 40;
-		y1 <<= 20, y2 <<= 20;
+		x1 <<= 40;
+		x2 <<= 40;
+		y1 <<= 20;
+		y2 <<= 20;
 		return (x1+y1+z1 < x2+y2+z2);
 	}
 	bool operator== (const Triple& t) {

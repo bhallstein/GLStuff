@@ -1,13 +1,12 @@
-#include "Renderer_Text.h"
-#include "GLProg.h"
 #include <OpenGL/gl3.h>
-
-#include "CoordinateTypes.h"
-#include "Primitives.h"
-#include "GLHelpers.h"
-#include "FilePaths_CPP.h"
-#include "TextTex.h"
-#include "glm_include.h"
+#include "Renderer_Text.hpp"
+#include "GLProg.hpp"
+#include "CoordinateTypes.hpp"
+#include "Primitives.hpp"
+#include "GLHelpers.hpp"
+#include "FilePaths_CPP.hpp"
+#include "TextTex.hpp"
+#include "glm_include.hpp"
 
 Renderer_Text::Renderer_Text() : sprite_added(false)
 {
@@ -74,4 +73,3 @@ void Renderer_Text::regen(const char *s, float containerW, float containerH, flo
 	}
 	sprite_added = true;
 }
-

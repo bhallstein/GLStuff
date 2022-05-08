@@ -1,12 +1,10 @@
-#include "Renderer_3D_1L_Textured.h"
-#include "GLProg.h"
-#include "ObjImport.h"
-
+#include "Renderer_3D_1L_Textured.hpp"
+#include "GLProg.hpp"
+#include "ObjImport.hpp"
 #include <OpenGL/gl3.h>
-#include "Camera.h"
-#include "Lights.h"
-#include "FilePaths_CPP.h"
-
+#include "Camera.hpp"
+#include "Lights.hpp"
+#include "FilePaths_CPP.hpp"
 
 Renderer_3D_1L_Textured::Renderer_3D_1L_Textured() :
 prog(NULL),
@@ -133,5 +131,3 @@ void Renderer_3D_1L_Textured::render(Camera cam, DirectionalLight *light, glm::m
 
 	//	glDrawArrays(GL_TRIANGLES, 0, n_elements);
 }
-
-

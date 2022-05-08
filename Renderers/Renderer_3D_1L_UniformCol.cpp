@@ -1,13 +1,11 @@
-#include "Renderer_3D_1L_UniformCol.h"
-
+#include "Renderer_3D_1L_UniformCol.hpp"
 #include <OpenGL/gl3.h>
-#include "GLHelpers.h"
-#include "GLProg.h"
-#include "Camera.h"
-#include "Lights.h"
-#include "Primitives.h"
-#include "FilePaths_CPP.h"
-
+#include "GLHelpers.hpp"
+#include "GLProg.hpp"
+#include "Camera.hpp"
+#include "Lights.hpp"
+#include "Primitives.hpp"
+#include "FilePaths_CPP.hpp"
 
 Renderer_3D_1L_UniformCol::Renderer_3D_1L_UniformCol() :
 prog(NULL),
@@ -108,5 +106,3 @@ void Renderer_3D_1L_UniformCol::render(Camera cam, DirectionalLight *light, glm:
 
 	vao_bind(0);
 }
-
-

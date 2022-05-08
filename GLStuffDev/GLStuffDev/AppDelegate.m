@@ -1,34 +1,29 @@
 #import "AppDelegate.h"
 #import "OGLW/W.h"
 #import <OpenGL/gl.h>
-
-#import "Camera.h"
-#import "Lights.h"
-
-#include "glm_include.h"
-#include "CoordinateTypes.h"
-#include "Primitives.h"
-
-#include "Renderer_2D_ColourIndexed.h"
-#include "Renderer_LinearGradient.h"
-#include "Renderer_2D_Textured.h"
-#include "Renderer_3D_1L_UniformCol.h"
-#include "Renderer_3D_1L_UniformCol_Instanced.h"
-#include "Renderer_3D_1L_ColourIndexed.h"
-#include "Renderer_3D_1L_ColourIndexed_Instanced.h"
-#include "Renderer_3D_1L_Textured.h"
-#include "Renderer_3D_1L_Textured_Instanced.h"
-#include "Renderer_3D_1L_ReflectionMapped.h"
-#include "Renderer_PixelPerfect.h"
-#include "Renderer_PixelCol.h"
-#include "Renderer_Text.h"
-
-#include "FilePaths_CPP.h"
-#include "TexImage.h"
-#include "ObjImport.h"
-
-#include "GLProg.h"
-#include "TextTex.h"
+#include "glm_include.hpp"
+#include "Camera.hpp"
+#include "Lights.hpp"
+#include "CoordinateTypes.hpp"
+#include "Primitives.hpp"
+#include "FilePaths_CPP.hpp"
+#include "TexImage.hpp"
+#include "ObjImport.hpp"
+#include "GLProg.hpp"
+#include "TextTex.hpp"
+#include "Renderer_2D_ColourIndexed.hpp"
+#include "Renderer_LinearGradient.hpp"
+#include "Renderer_2D_Textured.hpp"
+#include "Renderer_3D_1L_UniformCol.hpp"
+#include "Renderer_3D_1L_UniformCol_Instanced.hpp"
+#include "Renderer_3D_1L_ColourIndexed.hpp"
+#include "Renderer_3D_1L_ColourIndexed_Instanced.hpp"
+#include "Renderer_3D_1L_Textured.hpp"
+#include "Renderer_3D_1L_Textured_Instanced.hpp"
+#include "Renderer_3D_1L_ReflectionMapped.hpp"
+#include "Renderer_PixelPerfect.hpp"
+#include "Renderer_PixelCol.hpp"
+#include "Renderer_Text.hpp"
 
 #define PROBABILITY(x) \
 if (rand() / (float)RAND_MAX < x)
@@ -73,7 +68,7 @@ else
   unsigned int spr_heart;
 
   int i;
-    //  float counter;
+  // float counter;
 }
 @property NSTimer *gameTimer;
 
@@ -87,21 +82,21 @@ else
 -(IBAction) setB:(NSSlider*)sender { /*rend_3D_1L_UniformCol->setB(sender.floatValue);*/ }
 -(IBAction) setRatio:(NSSlider*)sender { /*rend_3D_1L_UniformCol->setRatio(sender.floatValue);*/ }
 
-float getCamAngleForHeight(float y) {
-  float minAngle    = 40.0, maxAngle = 70.0;
-  float angle_scale = (y - 1.0) / 9.0;
-  float new_angle   = (maxAngle - minAngle) * angle_scale;
-  return -new_angle;
-}
+//float getCamAngleForHeight(float y) {
+//  float minAngle    = 40.0, maxAngle = 70.0;
+//  float angle_scale = (y - 1.0) / 9.0;
+//  float new_angle   = (maxAngle - minAngle) * angle_scale;
+//  return -new_angle;
+//}
 
 - (void)applicationDidFinishLaunching:(NSNotification *)aNotification {
-
-    // Init cam
+  // Init cam
   float initial_cam_height = 2.5;
-  cam_3D.setPosition({0.0, initial_cam_height, 6.25});
-  cam_3D.setOrientation(getCamAngleForHeight(initial_cam_height), {1.0, 0, 0});
+  cam_3D.pos = {0.0, initial_cam_height, 6.25};
+  cam_3D.pos_target = {0, 0, 0};
+//  setOrientation(getCamAngleForHeight(initial_cam_height), {1.0, 0, 0});
 
-    // Set up light
+  // Set up light
   float one_over_root_3 = 0.577;
   light.lightVector[0] = -one_over_root_3;
   light.lightVector[1] = -one_over_root_3;
@@ -110,15 +105,14 @@ float getCamAngleForHeight(float y) {
   light.lightProperties[1] = 0.6;
   light.lightProperties[2] = 0.6;
 
-    //  float frustW = windowW / pixelsToWorldUnits;
-    //  float frustH = windowH / pixelsToWorldUnits;
-    //  cam.setOrthographic(-frustW*0.5, frustW*0.5, -frustH*0.5, frustH*0.5, 0.01, 1000.0);
+  //  float frustW = windowW / pixelsToWorldUnits;
+  //  float frustH = windowH / pixelsToWorldUnits;
+  //  cam.setOrthographic(-frustW*0.5, frustW*0.5, -frustH*0.5, frustH*0.5, 0.01, 1000.0);
 
   float defaultWinW = 300.0;
   float defaultWinH = 240.0;
 
-    // Window & renderer setup
-
+  // Window & renderer setup
   int scrW, scrH;
   W::getScreenSize(0, &scrW, &scrH);
   W::Multisampling::T msLevel = W::Multisampling::X4;
@@ -465,29 +459,33 @@ v3 movePositionAlongVector(const v3 &pos, const v3 &vec, float dist) {
 
 -(void)timerCB:(id)sender {
   for (auto &ev : W::Event::getNewEvents()) {
-    if (ev.type == W::EventType::LMouseDown)
+    if (ev.type == W::EventType::LMouseDown) {
       printf("lmouse down at %d,%d in window %d\n",
              ev.mouseEvent.x,
              ev.mouseEvent.y,
              [self getWindowNum:ev.mouseEvent.window]);
-    else if (ev.type == W::EventType::WinClosed)
-      printf("window close event\n");
-    else if (ev.type == W::EventType::ScrollWheel) {
-      if (ev.scrollEvent.window != win_3DUniformCol)
-        continue;
-
-      float dy = ev.scrollEvent.dy;
-      v3 campos = { cam_3D.pos[0], cam_3D.pos[1], cam_3D.pos[2] };
-      v3 new_campos = movePositionAlongVector(campos, {0,1,1}, dy * 0.2);
-
-      float new_angle = getCamAngleForHeight(new_campos.y);
-      cam_3D.setOrientation(new_angle, {1.0, 0.0, 0.0});
-
-      if (new_campos.y >= 0.2 && new_campos.y <= 12.0)
-        cam_3D.setPosition(new_campos);
     }
-    else if (ev.type == W::EventType::KeyDown)
+    else if (ev.type == W::EventType::WinClosed) {
+      printf("window close event\n");
+    }
+    else if (ev.type == W::EventType::ScrollWheel) {
+      if (ev.scrollEvent.window != win_3DUniformCol) {
+        continue;
+      }
+
+//      float dy = ev.scrollEvent.dy;
+//      v3 campos = { cam_3D.pos[0], cam_3D.pos[1], cam_3D.pos[2] };
+//      v3 new_campos = movePositionAlongVector(campos, {0,1,1}, dy * 0.2);
+
+//      float new_angle = getCamAngleForHeight(new_campos.y);
+//      cam_3D.setOrientation(new_angle, {1.0, 0.0, 0.0});
+
+//      if (new_campos.y >= 0.2 && new_campos.y <= 12.0)
+//        cam_3D.setPosition(new_campos);
+    }
+    else if (ev.type == W::EventType::KeyDown) {
       printf("Key down!\n");
+    }
   }
 
   float fov = 67;
@@ -546,7 +544,7 @@ v3 movePositionAlongVector(const v3 &pos, const v3 &vec, float dist) {
   glViewport(0, 0, winw, winh);
   glClearColor(0.0, 0.75, 0.95, 1.0);
   glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-  rend_3D_UniformCol->render(&cam_3D, &light, mtx_identity);
+  rend_3D_UniformCol->render(cam_3D, &light, mtx_identity);
   win_3DUniformCol->flushBuffer();
   win_3DUniformCol->clearCurrentContext();
 
@@ -558,7 +556,7 @@ v3 movePositionAlongVector(const v3 &pos, const v3 &vec, float dist) {
   glViewport(0, 0, winw, winh);
   glClearColor(0.0, 0.75, 0.95, 1.0);
   glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-  rend_3D_UniformCol_Inst->render(&cam_3D, &light, mtx_identity_3d);
+  rend_3D_UniformCol_Inst->render(cam_3D, &light, mtx_identity_3d);
   win_3DUniformCol_Inst->flushBuffer();
   win_3DUniformCol_Inst->clearCurrentContext();
 
@@ -570,7 +568,7 @@ v3 movePositionAlongVector(const v3 &pos, const v3 &vec, float dist) {
   glViewport(0, 0, winw, winh);
   glClearColor(0.0, 0.75, 0.95, 1.0);
   glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-  rend_3D_CI->render(&cam_3D, &light, mtx_identity);
+  rend_3D_CI->render(cam_3D, &light, mtx_identity);
   win_3DCI->flushBuffer();
   win_3DCI->clearCurrentContext();
 
@@ -582,7 +580,7 @@ v3 movePositionAlongVector(const v3 &pos, const v3 &vec, float dist) {
   glViewport(0, 0, winw, winh);
   glClearColor(0.0, 0.75, 0.95, 1.0);
   glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-  rend_3D_CI_Inst->render(&cam_3D, &light, mtx_identity_3d);
+  rend_3D_CI_Inst->render(cam_3D, &light, mtx_identity_3d);
   win_3DCI_Inst->flushBuffer();
   win_3DCI_Inst->clearCurrentContext();
 
@@ -595,7 +593,7 @@ v3 movePositionAlongVector(const v3 &pos, const v3 &vec, float dist) {
   glClearColor(0.0, 0.75, 0.95, 1.0);
   glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
   glm::mat4 penguin_rot = glm::rotate(mtx_identity, RAD(180.), glm::vec3(0.0, 1.0, 0.0));
-  rend_3D_T->render(&cam_3D, &light, penguin_rot);
+  rend_3D_T->render(cam_3D, &light, penguin_rot);
   win_3D_T->flushBuffer();
   win_3D_T->clearCurrentContext();
 
@@ -608,7 +606,7 @@ v3 movePositionAlongVector(const v3 &pos, const v3 &vec, float dist) {
   glClearColor(0.0, 0.75, 0.95, 1.0);
   glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
   glm::mat3 penguin_rot_3d = glm::mat3(penguin_rot);
-  rend_3D_T_Inst->render(&cam_3D, &light, penguin_rot_3d);
+  rend_3D_T_Inst->render(cam_3D, &light, penguin_rot_3d);
   win_3D_T_Inst->flushBuffer();
   win_3D_T_Inst->clearCurrentContext();
 
@@ -620,7 +618,7 @@ v3 movePositionAlongVector(const v3 &pos, const v3 &vec, float dist) {
   glViewport(0, 0, winw, winh);
   glClearColor(0.0, 0.75, 0.95, 1.0);
   glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-  rend_3D_RM->render(&cam_3D, &light, mtx_identity);
+  rend_3D_RM->render(cam_3D, &light, mtx_identity);
   win_3D_RM->flushBuffer();
   win_3D_RM->clearCurrentContext();
 
@@ -686,4 +684,3 @@ v3 movePositionAlongVector(const v3 &pos, const v3 &vec, float dist) {
 }
 
 @end
-

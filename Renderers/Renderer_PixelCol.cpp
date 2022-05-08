@@ -1,9 +1,8 @@
-#include "Renderer_PixelCol.h"
-#include "Renderer_2D_ColourIndexed.h"
-#include "GLHelpers.h"
-#include "Primitives.h"
-#include "glm_include.h"
-
+#include "Renderer_PixelCol.hpp"
+#include "Renderer_2D_ColourIndexed.hpp"
+#include "GLHelpers.hpp"
+#include "Primitives.hpp"
+#include "glm_include.hpp"
 
 Renderer_PixelCol::Renderer_PixelCol()
 {
@@ -38,4 +37,3 @@ void Renderer_PixelCol::render(v2 win_size) {
 	glm::mat4 ortho = glm::ortho(0.f, win_size.x, win_size.y, 0.f, 1.f, -1.f);
 	rend->render(mptr(ortho));
 }
-

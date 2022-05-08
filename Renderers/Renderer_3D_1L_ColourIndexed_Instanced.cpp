@@ -1,21 +1,20 @@
-#include "Renderer_3D_1L_ColourIndexed_Instanced.h"
-#include "GLProg.h"
-#include "GLHelpers.h"
+#include "Renderer_3D_1L_ColourIndexed_Instanced.hpp"
+#include "GLProg.hpp"
+#include "GLHelpers.hpp"
 #include <OpenGL/gl3.h>
-#include "CoordinateTypes.h"
-#include "glm_include.h"
-#include "Camera.h"
-#include "Lights.h"
-#include "Primitives.h"
-#include "FilePaths_CPP.h"
-
+#include "CoordinateTypes.hpp"
+#include "glm_include.hpp"
+#include "Camera.hpp"
+#include "Lights.hpp"
+#include "Primitives.hpp"
+#include "FilePaths_CPP.hpp"
 
 Renderer_3D_1L_ColourIndexed_Instanced::Renderer_3D_1L_ColourIndexed_Instanced() :
 prog(NULL),
 vao(0),
 colToLightRatio(0.75)
 {
-	// hi
+
 }
 
 Renderer_3D_1L_ColourIndexed_Instanced::~Renderer_3D_1L_ColourIndexed_Instanced()
@@ -139,5 +138,3 @@ void Renderer_3D_1L_ColourIndexed_Instanced::render(Camera cam, DirectionalLight
 }
 
 //void Renderer_3D_1L_ColourIndexed_Instanced::setRatio(float x) { colToLightRatio = x; }
-
-

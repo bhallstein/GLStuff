@@ -1,16 +1,9 @@
-//
-//  Primitives.cpp
-//  ComponentTest
-//
-//  Created by Ben on 04/02/2015.
-//  Copyright (c) 2015 Ben. All rights reserved.
-//
-
-#include "Primitives.h"
+#include "Primitives.hpp"
 #include <cstdio>
 #include <cmath>
 
-#pragma mark Triangle
+// Triangle
+// --------------------------------------
 
 Triangle unitTriangle_Equil = {
 	 0.0,  0.433,  0.0,
@@ -26,8 +19,8 @@ Triangle2D::Triangle2D(const Triangle &t) {
 }
 
 
-
-#pragma mark - Square
+// Rectangle
+// --------------------------------------
 
 Rectangle unitSquare = {
 	-0.5,   0.5,  0.0,
@@ -107,7 +100,8 @@ Rectangle2D Rectangle2D::operator*(const v2 &r) {
 
 
 
-#pragma mark - Cube
+// Cube
+// --------------------------------------
 
 Cube unitCube_vert = {
 	-0.5, -0.5,  -0.5,
@@ -203,7 +197,8 @@ Cube unitCube_norm = {
 };
 
 
-#pragma mark - Sq Pyramid
+// Square Pyramid
+// --------------------------------------
 
 
 #define __SQPYR_BASE_LEFT_NEAR  { -0.5, 0.0, -0.5 }
@@ -307,7 +302,8 @@ SquarePyramid SquarePyramid::operator*(const v2 &x) {
 }
 
 
-#pragma mark - Jewel
+// Jewel
+// --------------------------------------
 
 Jewel unitJewel;
 

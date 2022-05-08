@@ -1,22 +1,9 @@
-//
-//  Shaders.cpp
-//  OpenGL3_2_Render_to_Tex
-//
-//  Created by Ben on 30/06/2014.
-//  Copyright (c) 2014 Ben. All rights reserved.
-//
-
-#include "GLProg.h"
-#include "FilePaths_CPP.h"
-#include "ShaderStr.h"
+#include "GLProg.hpp"
+#include "FilePaths_CPP.hpp"
+#include "ShaderStr.hpp"
 #include <string>
-#include "GLHelpers.h"
+#include "GLHelpers.hpp"
 #include <cstdlib>
-
-GLProg::~GLProg()
-{
-	if (state == State::OK) prog_delete(programID);
-}
 
 void GLProg::compile() {
 	state = GLProg::State::NotOK;
@@ -45,10 +32,12 @@ void GLProg::compile() {
 }
 
 unsigned int GLProg::uniformID(unsigned int internal_id) {
-	for (auto &u : uniforms)
-		if (u.userlandID == internal_id)
+	for (auto &u : uniforms) {
+		if (u.userlandID == internal_id) {
 			return u.glID;
-	return 0;	// hmm
+		}
+	}
+	return 0;
 }
 
 

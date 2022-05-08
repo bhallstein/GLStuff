@@ -1,12 +1,11 @@
-#include "Renderer_PixelPerfect.h"
-#include "GLProg.h"
 #include <OpenGL/gl3.h>
-
-#include "CoordinateTypes.h"
-#include "Primitives.h"
-#include "GLHelpers.h"
-#include "FilePaths_CPP.h"
-#include "glm_include.h"
+#include "Renderer_PixelPerfect.hpp"
+#include "GLProg.hpp"
+#include "CoordinateTypes.hpp"
+#include "Primitives.hpp"
+#include "GLHelpers.hpp"
+#include "FilePaths_CPP.hpp"
+#include "glm_include.hpp"
 
 Renderer_PixelPerfect::Renderer_PixelPerfect() :
 prog(NULL),
@@ -92,5 +91,3 @@ unsigned int Renderer_PixelPerfect::addSprite(Sprite s) {
 	sprites.push_back(s);
 	return (unsigned int)sprites.size() - 1;
 }
-
-

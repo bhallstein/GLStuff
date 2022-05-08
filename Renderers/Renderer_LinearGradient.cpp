@@ -1,22 +1,9 @@
-//
-//  Renderer.cpp
-//  ComponentTest
-//
-//  Created by Ben on 02/02/2015.
-//  Copyright (c) 2015 Ben. All rights reserved.
-//
-
-#include "Renderer_LinearGradient.h"
-#include "Renderer_2D_ColourIndexed.h"
-
-#include "GLProg.h"
-
-#include "glm_include.h"
-//#include <OpenGL/gl3.h>
-#include "Primitives.h"
-
-#include "FilePaths_CPP.h"
-
+#include "Renderer_LinearGradient.hpp"
+#include "Renderer_2D_ColourIndexed.hpp"
+#include "GLProg.hpp"
+#include "glm_include.hpp"
+#include "Primitives.hpp"
+#include "FilePaths_CPP.hpp"
 
 Renderer_LinearGradient::Renderer_LinearGradient(bool _dither) :
 renderer(NULL),
@@ -90,5 +77,3 @@ void Renderer_LinearGradient::render(float *mtx) {
 
 	renderer->render(mtx);
 }
-
-

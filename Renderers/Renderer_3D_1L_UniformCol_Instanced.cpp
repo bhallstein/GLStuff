@@ -1,10 +1,10 @@
-#include "Renderer_3D_1L_UniformCol_Instanced.h"
-#include "GLHelpers.h"
-#include "GLProg.h"
-#include "FilePaths_CPP.h"
-#include "Primitives.h"
-#include "Camera.h"
-#include "Lights.h"
+#include "Renderer_3D_1L_UniformCol_Instanced.hpp"
+#include "GLHelpers.hpp"
+#include "GLProg.hpp"
+#include "FilePaths_CPP.hpp"
+#include "Primitives.hpp"
+#include "Camera.hpp"
+#include "Lights.hpp"
 #include <OpengL/gl3.h>
 
 Renderer_3D_1L_UniformCol_Instanced::Renderer_3D_1L_UniformCol_Instanced() :
@@ -13,7 +13,7 @@ vao(0),
 colour{ 1.0, 0.75, 0.25 },
 colToLightRatio(0.75)
 {
-	// hi
+	
 }
 
 Renderer_3D_1L_UniformCol_Instanced::~Renderer_3D_1L_UniformCol_Instanced()
@@ -122,4 +122,3 @@ void Renderer_3D_1L_UniformCol_Instanced::render(Camera cam, DirectionalLight *l
 
 	vao_bind(0);
 }
-

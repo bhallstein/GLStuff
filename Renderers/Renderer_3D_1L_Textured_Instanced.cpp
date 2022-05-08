@@ -1,13 +1,11 @@
-#include "Renderer_3D_1L_Textured_Instanced.h"
-#include "GLProg.h"
-#include "ObjImport.h"
-
+#include "Renderer_3D_1L_Textured_Instanced.hpp"
+#include "GLProg.hpp"
+#include "ObjImport.hpp"
 #include <OpenGL/gl3.h>
-#include "Camera.h"
-#include "Lights.h"
-#include "FilePaths_CPP.h"
-#include "Primitives.h"
-
+#include "Camera.hpp"
+#include "Lights.hpp"
+#include "FilePaths_CPP.hpp"
+#include "Primitives.hpp"
 
 Renderer_3D_1L_Textured_Instanced::Renderer_3D_1L_Textured_Instanced() :
 prog(NULL),
@@ -133,5 +131,3 @@ void Renderer_3D_1L_Textured_Instanced::render(Camera cam, DirectionalLight *lig
 
 	vao_bind(0);
 }
-
-
