@@ -1,6 +1,5 @@
-// Requires Obj-C++
-#ifndef FILE_PATHS_OBJC_H
-#define FILE_PATHS_OBJC_H
+#ifndef FilePaths_Objc_h
+#define FilePaths_Objc_h
 
 #import <Foundation/Foundation.h>
 #import "FilePaths_CPP.hpp"

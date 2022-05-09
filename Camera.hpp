@@ -1,5 +1,5 @@
-#ifndef CAMERA_H
-#define CAMERA_H
+#ifndef Camera_h
+#define Camera_h
 
 #include "CoordinateTypes.hpp"
 #include "glm_include.hpp"

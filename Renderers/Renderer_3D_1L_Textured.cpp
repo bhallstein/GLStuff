@@ -69,23 +69,23 @@ bool Renderer_3D_1L_Textured::setUp() {
 }
 void Renderer_3D_1L_Textured::setObj(ObjFile *obj) {
 	// VBOs
-	int n_bytes = sizeof(v3) * obj->nVerticesImported;
-	int n_bytes_uv = sizeof(v2) * obj->nVerticesImported;
-	int n_bytes_elements = sizeof(int) * obj->nElements;
+	int n_bytes = (int) (sizeof(v3) * obj->vertices.size());
+	int n_bytes_uv = (int) (sizeof(v2) * obj->vertices.size());
+	int n_bytes_elements = (int) (sizeof(int) * obj->elements.size());
 
 	vbo_bind(buffers.vertexPos, VBOTYPE_ARRAY);
-	vbo_upload(n_bytes, obj->vertices, VBOTYPE_ARRAY, VBOHINT_STATIC);
+	vbo_upload(n_bytes, &obj->vertices[0], VBOTYPE_ARRAY, VBOHINT_STATIC);
 
 	vbo_bind(buffers.normal, VBOTYPE_ARRAY);
-	vbo_upload(n_bytes, obj->normals, VBOTYPE_ARRAY, VBOHINT_STATIC);
+	vbo_upload(n_bytes, &obj->normals[0], VBOTYPE_ARRAY, VBOHINT_STATIC);
 
 	vbo_bind(buffers.texcoord, VBOTYPE_ARRAY);
-	vbo_upload(n_bytes_uv, obj->texcoords, VBOTYPE_ARRAY, VBOHINT_STATIC);
+	vbo_upload(n_bytes_uv, &obj->texcoords[0], VBOTYPE_ARRAY, VBOHINT_STATIC);
 
 	vbo_bind(buffers.elements, VBOTYPE_ELEMENT_ARRAY);
-	vbo_upload(n_bytes_elements, obj->elements, VBOTYPE_ELEMENT_ARRAY, VBOHINT_STATIC);
+	vbo_upload(n_bytes_elements, &obj->elements[0], VBOTYPE_ELEMENT_ARRAY, VBOHINT_STATIC);
 
-	n_elements = obj->nElements;
+	n_elements = (int) obj->elements.size();
 }
 void Renderer_3D_1L_Textured::setTex(unsigned int _tex) {
 	tex = _tex;

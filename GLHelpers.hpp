@@ -1,5 +1,5 @@
-#ifndef GL_HELPERS_H
-#define GL_HELPERS_H
+#ifndef GLHelpers_h
+#define GLHelpers_h
 
 #define bufOffset(i) ((void*)(i))
 

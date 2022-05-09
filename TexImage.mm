@@ -1,8 +1,8 @@
-#include "TexImage.hpp"
-#include "GLHelpers.hpp"
 #import <Foundation/Foundation.h>
 #import <OpenGL/gl.h>
 #import <ImageIO/ImageIO.h>
+#include "TexImage.hpp"
+#include "GLHelpers.hpp"
 
 struct TexImage null_tex_image = { NULL, -1, -1 };
 

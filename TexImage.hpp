@@ -1,5 +1,5 @@
-#ifndef TEX_IMAGE_H
-#define TEX_IMAGE_H
+#ifndef TexImage_h
+#define TexImage_h
 
 struct TexImage {
 	void *data;	  // free() when done

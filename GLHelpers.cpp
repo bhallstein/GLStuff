@@ -1,9 +1,8 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include "GLHelpers.hpp"
 #include <OpenGL/gl3.h>
-
+#include "GLHelpers.hpp"
 
 // Framebuffers
 // --------------------------------------
@@ -335,4 +334,3 @@ void prog_setAttrbDivisor(unsigned int attrib_loc, unsigned int divisor) {
 void prog_disableAttrib(unsigned int attrib_loc) {
 	glDisableVertexAttribArray(attrib_loc);
 }
-

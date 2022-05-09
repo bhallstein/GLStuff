@@ -1,5 +1,5 @@
-#ifndef Vectors_hpp
-#define Vectors_hpp
+#ifndef Vectors_h
+#define Vectors_h
 
 #include "Primitives.hpp"
 #include <cmath>

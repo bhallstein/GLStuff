@@ -1,5 +1,5 @@
-#ifndef COORDINATE_TYPES_H
-#define COORDINATE_TYPES_H
+#ifndef CoordinateTypes_h
+#define CoordinateTypes_h
 
 struct v2  { float x, y; };
 struct v3  { float x, y, z; };

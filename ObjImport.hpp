@@ -1,28 +1,25 @@
 #ifndef ObjImport_h
 #define ObjImport_h
 
+#include <vector>
 #include "CoordinateTypes.hpp"
 
 typedef struct ObjFile {
-	int nLines,
-		nLinesComment,
-		nLinesVertex,
-		nLinesNormal,
-		nLinesTexcoord,
-		nLinesFace,
-		nLinesEmpty;
+	int nLines = 0;
+	int nLinesComment = 0;
+	int nLinesVertex = 0;
+	int nLinesNormal = 0;
+	int nLinesTexcoord = 0;
+	int nLinesFace = 0;
+	int nLinesEmpty = 0;
 	
-	int nVerticesImported,
-		nElements;
-	
-	v3 *vertices;		// free() these when deleting
-	v3 *normals;
-	v2 *texcoords;
-	unsigned int *elements;
+	std::vector<unsigned int> elements;
+	std::vector<v3> vertices;
+	std::vector<v3> normals;
+	std::vector<v2> texcoords;
+
+	static ObjFile load(const char *filename);
+	void printSummary(const char *filename);
 } ObjFile;
-
-
-ObjFile loadObjFile(const char *filename);
-void printObjFileSummary(ObjFile *, const char *filename);
 
 #endif

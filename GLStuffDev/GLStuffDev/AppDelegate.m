@@ -270,8 +270,8 @@ else wX += defaultWinW; \
   }
 
     // Load penguin obj
-  ObjFile obj_penguin = loadObjFile(bundledFilePath("Penguin/Penguin.obj"));
-  printObjFileSummary(&obj_penguin, "Penguin.obj");
+  ObjFile obj_penguin = ObjFile::load(bundledFilePath("Penguin/Penguin.obj"));
+  obj_penguin.printSummary("Penguin.obj");
 
     // Load penguin tex
   TexImage texIm_penguin = loadPngTexture(bundledFilePath("Penguin/penguin_box.png"));

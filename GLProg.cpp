@@ -71,4 +71,3 @@ void setAttribsToUseVBOs(const std::vector<AttribInfo> &attribs) {
 								   a.float_or_int,
 								   a.instanced);
 }
-
