@@ -1,10 +1,8 @@
 #import "AppDelegate.h"
 #import "OGLW/W.h"
-#import <OpenGL/gl.h>
-#include "glm_include.hpp"
+#include "vectors.hpp"
 #include "Camera.hpp"
 #include "Lights.hpp"
-#include "CoordinateTypes.hpp"
 #include "Primitives.hpp"
 #include "FilePaths_CPP.hpp"
 #include "TexImage.hpp"
@@ -65,7 +63,7 @@ else
   DirectionalLight light;
   Camera cam_3D;
 
-  unsigned int spr_heart;
+  size_t sprite_heart;
 
   int i;
   // float counter;
@@ -94,7 +92,7 @@ else
   float initial_cam_height = 2.5;
   cam_3D.pos = {0.0, initial_cam_height, 6.25};
   cam_3D.pos_target = {0, 0, 0};
-//  setOrientation(getCamAngleForHeight(initial_cam_height), {1.0, 0, 0});
+  //  setOrientation(getCamAngleForHeight(initial_cam_height), {1.0, 0, 0});
 
   // Set up light
   float one_over_root_3 = 0.577;
@@ -124,7 +122,7 @@ if (wX + 2*defaultWinW > scrW) wX = 0, wY += defaultWinH + 22; \
 else wX += defaultWinW; \
 } while(0)
 
-    // 2D Colour Indexed
+  // 2D Colour Indexed
   {
     win_2DCI = new W::Window(defaultWinW,
                              defaultWinH,
@@ -135,19 +133,20 @@ else wX += defaultWinW; \
                              msLevel);
     win_2DCI->setPos(wX, wY);
     win_2DCI->makeCurrentContext();
-    rend_2D_CI = new Renderer_2D_ColourIndexed(true);
+    rend_2D_CI = new Renderer_2D_ColourIndexed;
+    rend_2D_CI->dither = true;
     rend_2D_CI->setUp();
 
     TexImage texImage = get_textTex("Muffins", 200, 100, 40, {0, 0, 0, 1}, {1, 1, 1, 1});
-    unsigned int tex = tx_create();
-    tx_bind(tex);
-    tx_upload(texImage.w, texImage.h, texImage.data, TX_FILTER_LINEAR);
+    unsigned int tex = Texture::create();
+    Texture::bind(tex);
+    Texture::upload(texImage.w, texImage.h, texImage.data, Texture::FilterLinear);
     free(texImage.data);
 
     win_2DCI->clearCurrentContext();
   }
 
-    // Linear Gradient
+  // Linear Gradient
   {
     NEXT_WIN;
     win_LinGrad = new W::Window(defaultWinW,
@@ -156,14 +155,21 @@ else wX += defaultWinW; \
                                 0, false, 0, msLevel);
     win_LinGrad->setPos(wX, wY);
     win_LinGrad->makeCurrentContext();
-    rend_LinGrad = new Renderer_LinearGradient(true);
+    rend_LinGrad = new Renderer_LinearGradient;
+    rend_LinGrad->dither = true;
     rend_LinGrad->setUp();
-    rend_LinGrad->setColours({ 5./255, 117./255, 137./255, 1.0 },
-                             { 118./255, 221./255, 225./255, 1.0 });
+    v4 col_top = { 5./255, 117./255, 137./255, 1.0 };
+    v4 col_btm = { 118./255, 221./255, 225./255, 1.0 };
+    rend_LinGrad->cTL = col_top;
+    rend_LinGrad->cTR = col_top;
+    rend_LinGrad->cBL = col_btm;
+    rend_LinGrad->cBR = col_btm;
+    rend_LinGrad->needs_upload = true;
+
     win_LinGrad->clearCurrentContext();
   }
 
-    // 2D Textured
+  // 2D Textured
   {
     NEXT_WIN;
     win_2DTex = new W::Window(defaultWinW,
@@ -178,21 +184,21 @@ else wX += defaultWinW; \
     rend_2D_Tex = new Renderer_2D_Textured;
 
     TexImage texImage = loadPngTexture(bundledFilePath("Shiny-bubble.png"));
-    unsigned int tex = tx_create();
-    tx_bind(tex);
-    tx_upload(texImage.w, texImage.h, texImage.data, TX_FILTER_LINEAR);
+    unsigned int tex = Texture::create();
+    Texture::bind(tex);
+    Texture::upload(texImage.w, texImage.h, texImage.data, Texture::FilterLinear);
     free(texImage.data);
 
     rend_2D_Tex->setUp();
-    rend_2D_Tex->setTex(tex);
+    rend_2D_Tex->tex = tex;
 
-    Rectangle2D r = unitSquare * 2.0;
-    vbo_bind(rend_2D_Tex->buffers.vertexPos, VBOTYPE_ARRAY);
-    vbo_upload(sizeof(v2)*6, r.vertices, VBOTYPE_ARRAY, VBOHINT_STATIC);
+    std::vector<v2> r = to_2d_primitive(Rectangle());
+    VBO::bind(rend_2D_Tex->buffers.vertexPos, VBO::Array);
+    VBO::upload(r, VBO::Array, VBO::Static);
 
-    Rectangle2D t = unitSquare_texcoords;
-    vbo_bind(rend_2D_Tex->buffers.texCoord, VBOTYPE_ARRAY);
-    vbo_upload(sizeof(v2)*6, t.vertices, VBOTYPE_ARRAY, VBOHINT_STATIC);
+    std::vector<v2> t = to_2d_primitive(Rectangle()); // unitSquare_texcoords;
+    VBO::bind(rend_2D_Tex->buffers.texCoord, VBO::Array);
+    VBO::upload(t, VBO::Array, VBO::Static);
 
     rend_2D_Tex->n_vertices = 6;
 
@@ -201,7 +207,7 @@ else wX += defaultWinW; \
 
 
 
-    // 3D Uniform Colour
+  // 3D Uniform Colour
   {
     NEXT_WIN;
     win_3DUniformCol = new W::Window(defaultWinW,
@@ -218,7 +224,7 @@ else wX += defaultWinW; \
     win_3DUniformCol->clearCurrentContext();
   }
 
-    // 3D Uniform Colour, Instanced
+  // 3D Uniform Colour, Instanced
   {
     NEXT_WIN;
     win_3DUniformCol_Inst = new W::Window(defaultWinW,
@@ -235,7 +241,7 @@ else wX += defaultWinW; \
     win_3DUniformCol_Inst->clearCurrentContext();
   }
 
-    // 3D Colour Indexed
+  // 3D Colour Indexed
   {
     NEXT_WIN;
     win_3DCI = new W::Window(defaultWinW,
@@ -252,7 +258,7 @@ else wX += defaultWinW; \
     win_3DCI->clearCurrentContext();
   }
 
-    // 3D Colour Indexed, Instanced
+  // 3D Colour Indexed, Instanced
   {
     NEXT_WIN;
     win_3DCI_Inst = new W::Window(defaultWinW,
@@ -269,14 +275,14 @@ else wX += defaultWinW; \
     win_3DCI_Inst->clearCurrentContext();
   }
 
-    // Load penguin obj
+  // Load penguin obj
   ObjFile obj_penguin = ObjFile::load(bundledFilePath("Penguin/Penguin.obj"));
   obj_penguin.printSummary("Penguin.obj");
 
-    // Load penguin tex
+  // Load penguin tex
   TexImage texIm_penguin = loadPngTexture(bundledFilePath("Penguin/penguin_box.png"));
 
-    // 3D Textured
+  // 3D Textured
   {
     NEXT_WIN;
     win_3D_T = new W::Window(defaultWinW,
@@ -290,15 +296,15 @@ else wX += defaultWinW; \
     rend_3D_T = new Renderer_3D_1L_Textured;
     win_3D_T->makeCurrentContext();
     rend_3D_T->setUp();
-    rend_3D_T->setObj(&obj_penguin);
-    unsigned int tex_penguin = tx_create();
-    tx_bind(tex_penguin);
-    tx_upload(texIm_penguin.w, texIm_penguin.h, texIm_penguin.data, TX_FILTER_LINEAR);
-    rend_3D_T->setTex(tex_penguin);
+    rend_3D_T->setObj(obj_penguin);
+    unsigned int tex_penguin = Texture::create();
+    Texture::bind(tex_penguin);
+    Texture::upload(texIm_penguin.w, texIm_penguin.h, texIm_penguin.data, Texture::FilterLinear);
+    rend_3D_T->tex = tex_penguin;
     win_3D_T->clearCurrentContext();
   }
 
-    // 3D Textured, Instanced
+  // 3D Textured, Instanced
   {
     NEXT_WIN;
     win_3D_T_Inst = new W::Window(defaultWinW,
@@ -312,29 +318,29 @@ else wX += defaultWinW; \
     rend_3D_T_Inst = new Renderer_3D_1L_Textured_Instanced;
     win_3D_T_Inst->makeCurrentContext();
     rend_3D_T_Inst->setUp();
-    rend_3D_T_Inst->setObj(&obj_penguin);
-    unsigned int tex_penguin = tx_create();
-    tx_bind(tex_penguin);
-    tx_upload(texIm_penguin.w, texIm_penguin.h, texIm_penguin.data, TX_FILTER_LINEAR);
+    rend_3D_T_Inst->setObj(obj_penguin);
+    unsigned int tex_penguin = Texture::create();
+    Texture::bind(tex_penguin);
+    Texture::upload(texIm_penguin.w, texIm_penguin.h, texIm_penguin.data, Texture::FilterLinear);
 
-      // Upload some test instances
-    v3 t[] = { {1.0, 0.0, 0.0}, {-1.0, 0.0, 0.0 } };
-    vbo_bind(rend_3D_T_Inst->buffers.translation, VBOTYPE_ARRAY);
-    vbo_upload(sizeof(v3)*2, t, VBOTYPE_ARRAY, VBOHINT_STATIC);
+    // Upload some test instances
+    std::vector<v3> t = { {1.0, 0.0, 0.0}, {-1.0, 0.0, 0.0 } };
+    VBO::bind(rend_3D_T_Inst->buffers.translation, VBO::Array);
+    VBO::upload(t, VBO::Array, VBO::Static);
 
-    glm::quat q = glm::angleAxis(RAD(33), glm::vec3(0.0, 1.0, 0.0));
+    quat q = glm::angleAxis(RAD(33), v3{0.0, 1.0, 0.0});
     v4 qv = { q[0], q[1], q[2], q[3] };
-    v4 qs[] = { qv, qv };
-    vbo_bind(rend_3D_T_Inst->buffers.quaternion, VBOTYPE_ARRAY);
-    vbo_upload(sizeof(v4)*2, qs, VBOTYPE_ARRAY, VBOHINT_STATIC);
+    std::vector<v4> quaternions = { qv, qv };
+    VBO::bind(rend_3D_T_Inst->buffers.quaternion, VBO::Array);
+    VBO::upload(quaternions, VBO::Array, VBO::Static);
 
     rend_3D_T_Inst->n_models = 2;
 
-    rend_3D_T_Inst->setTex(tex_penguin);
+    rend_3D_T_Inst->tex = tex_penguin;
     win_3D_T_Inst->clearCurrentContext();
   }
 
-    // 3D Reflection Mapped
+  // 3D Reflection Mapped
   {
     NEXT_WIN;
     win_3D_RM = new W::Window(defaultWinW,
@@ -354,16 +360,16 @@ else wX += defaultWinW; \
       bundledFilePath("A_Skybox/bottom.png"), bundledFilePath("A_Skybox/top.png"),
       bundledFilePath("A_Skybox/front.png"),  bundledFilePath("A_Skybox/back.png")
     };
-    unsigned int rm_tex = tx_create();
+    unsigned int rm_tex = Texture::create();
     bool success = loadCubeMap(rm_tex, cubemapFilenames);
     if (!success) {
       printf("Error: couldn't load cube map for Renderer_3D_1L_ReflectionMapped");
     }
-    rend_3D_RM->setTex(rm_tex);
+    rend_3D_RM->tex = rm_tex;
     win_3D_RM->clearCurrentContext();
   }
 
-    // Pixel Perfect
+  // Pixel Perfect
   {
     NEXT_WIN;
     win_pp = new W::Window(defaultWinW,
@@ -379,12 +385,12 @@ else wX += defaultWinW; \
     rend_pp->setUp();
 
     TexImage texImage = loadPngTexture(bundledFilePath("cute_heart_icon.png"));
-    unsigned int tex_spr = tx_create();
-    tx_bind(tex_spr);
-      //    tx_upload(texImage.w, texImage.h, texImage.data, TX_FILTER_LINEAR);
+    unsigned int tex_spr = Texture::create();
+    Texture::bind(tex_spr);
+    //    tx_upload(texImage.w, texImage.h, texImage.data, TX_FILTER_LINEAR);
 
     TexImage texIm2 = get_textTex("Muffins!", 200, 200, 16, {0, 0, 0, 1}, {1, 1, 1, 1});
-    tx_upload(texIm2.w, texIm2.h, texIm2.data, TX_FILTER_LINEAR);
+    Texture::upload(texIm2.w, texIm2.h, texIm2.data, Texture::FilterLinear);
 
     free(texImage.data);
     free(texIm2.data);
@@ -396,11 +402,11 @@ else wX += defaultWinW; \
       { 0.0, 0.0 },   // position in texture
       { 1.0, 1.0 }    // sprite proportion of texture size
     };
-    spr_heart = rend_pp->addSprite(sprHeart);
+    sprite_heart = rend_pp->add_sprite(sprHeart);
     win_pp->clearCurrentContext();
   }
 
-    // Pixel Col
+  // Pixel Col
   {
     NEXT_WIN;
     win_pc = new W::Window(defaultWinW,
@@ -419,7 +425,7 @@ else wX += defaultWinW; \
     win_pc->clearCurrentContext();
   }
 
-    // Text
+  // Text
   {
     NEXT_WIN;
     win_text = new W::Window(defaultWinW,
@@ -455,7 +461,7 @@ v3 movePositionAlongVector(const v3 &pos, const v3 &vec, float dist) {
   };
 }
 
-  //#include "FBOToImage.h"
+//#include "FBOToImage.h"
 
 -(void)timerCB:(id)sender {
   for (auto &ev : W::Event::getNewEvents()) {
@@ -473,15 +479,15 @@ v3 movePositionAlongVector(const v3 &pos, const v3 &vec, float dist) {
         continue;
       }
 
-//      float dy = ev.scrollEvent.dy;
-//      v3 campos = { cam_3D.pos[0], cam_3D.pos[1], cam_3D.pos[2] };
-//      v3 new_campos = movePositionAlongVector(campos, {0,1,1}, dy * 0.2);
+      //      float dy = ev.scrollEvent.dy;
+      //      v3 campos = { cam_3D.pos[0], cam_3D.pos[1], cam_3D.pos[2] };
+      //      v3 new_campos = movePositionAlongVector(campos, {0,1,1}, dy * 0.2);
 
-//      float new_angle = getCamAngleForHeight(new_campos.y);
-//      cam_3D.setOrientation(new_angle, {1.0, 0.0, 0.0});
+      //      float new_angle = getCamAngleForHeight(new_campos.y);
+      //      cam_3D.setOrientation(new_angle, {1.0, 0.0, 0.0});
 
-//      if (new_campos.y >= 0.2 && new_campos.y <= 12.0)
-//        cam_3D.setPosition(new_campos);
+      //      if (new_campos.y >= 0.2 && new_campos.y <= 12.0)
+      //        cam_3D.setPosition(new_campos);
     }
     else if (ev.type == W::EventType::KeyDown) {
       printf("Key down!\n");
@@ -498,131 +504,132 @@ v3 movePositionAlongVector(const v3 &pos, const v3 &vec, float dist) {
   Camera cam_pixel;
   win_2DCI->getSize(&winw, &winh);
   cam_pixel.setPixel(winw, winh);
-  glm::mat4 mtx_identity = glm::mat4(1.0);
-  glm::mat3 mtx_identity_3d = glm::mat3(1.0);
+  m4 mtx_identity = m4(1.0);
+  m3 mtx_identity_3d = m3(1.0);
 
   glDisable(GL_DEPTH_TEST);
 
 
-    // 2D Colour indexed
+  // 2D Colour indexed
   win_2DCI->makeCurrentContext();
   glViewport(0, 0, winw, winh);
   glClearColor(0.0, 0.75, 0.95, 1.0);
   glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-  rend_2D_CI->render(mptr(mtx_identity));
+  rend_2D_CI->render(mtx_identity);
   win_2DCI->flushBuffer();
   win_2DCI->clearCurrentContext();
 
 
-    // 2D Linear Gradient
+  // 2D Linear Gradient
   win_LinGrad->makeCurrentContext();
   win_LinGrad->getSize(&winw, &winh);
   glViewport(0, 0, winw, winh);
   glClearColor(0.0, 0.75, 0.95, 1.0);
   glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-  rend_LinGrad->setPos(-1, -1, 2, 2);
-  rend_LinGrad->render(mptr(mtx_identity));
+  rend_LinGrad->pos = {-1, -1};
+  rend_LinGrad->size = {2, 2};
+  rend_LinGrad->render(mtx_identity);
   win_LinGrad->flushBuffer();
   win_LinGrad->clearCurrentContext();
 
 
-    // 2D Textured
+  // 2D Textured
   win_2DTex->makeCurrentContext();
   win_2DTex->getSize(&winw, &winh);
   glViewport(0, 0, winw, winh);
   glClearColor(0.0, 0.75, 0.95, 1.0);
   glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-  rend_2D_Tex->render(mptr(mtx_identity));
+  rend_2D_Tex->render(mtx_identity);
   win_2DTex->flushBuffer();
   win_2DTex->clearCurrentContext();
 
 
-    // 3D Uniform Colour
+  // 3D Uniform Colour
   win_3DUniformCol->makeCurrentContext();
   glEnable(GL_DEPTH_TEST);
   win_3DUniformCol->getSize(&winw, &winh);
   glViewport(0, 0, winw, winh);
   glClearColor(0.0, 0.75, 0.95, 1.0);
   glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-  rend_3D_UniformCol->render(cam_3D, &light, mtx_identity);
+  rend_3D_UniformCol->render(cam_3D, light, mtx_identity);
   win_3DUniformCol->flushBuffer();
   win_3DUniformCol->clearCurrentContext();
 
 
-    // 3D Uniform Colour, Instanced
+  // 3D Uniform Colour, Instanced
   win_3DUniformCol_Inst->makeCurrentContext();
   glEnable(GL_DEPTH_TEST);
   win_3DUniformCol_Inst->getSize(&winw, &winh);
   glViewport(0, 0, winw, winh);
   glClearColor(0.0, 0.75, 0.95, 1.0);
   glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-  rend_3D_UniformCol_Inst->render(cam_3D, &light, mtx_identity_3d);
+  rend_3D_UniformCol_Inst->render(cam_3D, light, mtx_identity_3d);
   win_3DUniformCol_Inst->flushBuffer();
   win_3DUniformCol_Inst->clearCurrentContext();
 
 
-    // 3D Colour Indexed
+  // 3D Colour Indexed
   win_3DCI->makeCurrentContext();
   glEnable(GL_DEPTH_TEST);
   win_3DCI->getSize(&winw, &winh);
   glViewport(0, 0, winw, winh);
   glClearColor(0.0, 0.75, 0.95, 1.0);
   glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-  rend_3D_CI->render(cam_3D, &light, mtx_identity);
+  rend_3D_CI->render(cam_3D, light, mtx_identity);
   win_3DCI->flushBuffer();
   win_3DCI->clearCurrentContext();
 
 
-    // 3D Colour Indexed, Instanced
+  // 3D Colour Indexed, Instanced
   win_3DCI_Inst->makeCurrentContext();
   glEnable(GL_DEPTH_TEST);
   win_3DCI_Inst->getSize(&winw, &winh);
   glViewport(0, 0, winw, winh);
   glClearColor(0.0, 0.75, 0.95, 1.0);
   glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-  rend_3D_CI_Inst->render(cam_3D, &light, mtx_identity_3d);
+  rend_3D_CI_Inst->render(cam_3D, light, mtx_identity_3d);
   win_3DCI_Inst->flushBuffer();
   win_3DCI_Inst->clearCurrentContext();
 
 
-    // 3D Textured
+  // 3D Textured
   win_3D_T->makeCurrentContext();
   glEnable(GL_DEPTH_TEST);
   win_3D_T->getSize(&winw, &winh);
   glViewport(0, 0, winw, winh);
   glClearColor(0.0, 0.75, 0.95, 1.0);
   glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-  glm::mat4 penguin_rot = glm::rotate(mtx_identity, RAD(180.), glm::vec3(0.0, 1.0, 0.0));
-  rend_3D_T->render(cam_3D, &light, penguin_rot);
+  m4 penguin_rot = glm::rotate(mtx_identity, RAD(180.), v3{0.0, 1.0, 0.0});
+  rend_3D_T->render(cam_3D, light, penguin_rot);
   win_3D_T->flushBuffer();
   win_3D_T->clearCurrentContext();
 
 
-    // 3D Textured, Instanced
+  // 3D Textured, Instanced
   win_3D_T_Inst->makeCurrentContext();
   glEnable(GL_DEPTH_TEST);
   win_3D_T_Inst->getSize(&winw, &winh);
   glViewport(0, 0, winw, winh);
   glClearColor(0.0, 0.75, 0.95, 1.0);
   glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-  glm::mat3 penguin_rot_3d = glm::mat3(penguin_rot);
-  rend_3D_T_Inst->render(cam_3D, &light, penguin_rot_3d);
+  m3 penguin_rot_3d = m3(penguin_rot);
+  rend_3D_T_Inst->render(cam_3D, light, penguin_rot_3d);
   win_3D_T_Inst->flushBuffer();
   win_3D_T_Inst->clearCurrentContext();
 
 
-    // 3D Reflection Mapped
+  // 3D Reflection Mapped
   win_3D_RM->makeCurrentContext();
   glEnable(GL_DEPTH_TEST);
   win_3D_RM->getSize(&winw, &winh);
   glViewport(0, 0, winw, winh);
   glClearColor(0.0, 0.75, 0.95, 1.0);
   glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-  rend_3D_RM->render(cam_3D, &light, mtx_identity);
+  rend_3D_RM->render(cam_3D, light, mtx_identity);
   win_3D_RM->flushBuffer();
   win_3D_RM->clearCurrentContext();
 
-    // Pixel Perfect
+  // Pixel Perfect
   win_pp->makeCurrentContext();
   glDisable(GL_DEPTH_TEST);
   glEnable(GL_BLEND);
@@ -631,16 +638,16 @@ v3 movePositionAlongVector(const v3 &pos, const v3 &vec, float dist) {
   glViewport(0, 0, winw, winh);
   glClearColor(0.0, 0.75, 0.95, 1.0);
   glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-  auto &s = rend_pp->getSprite(spr_heart);
+  auto &s = rend_pp->get_sprite(sprite_heart);
   s.pos = {0, 0};
-    //    (w - s.drawn_size.x) * 0.5f - (int(w)%2 == 0 ? 0.0f : 0.0f),
-    //    (h - s.drawn_size.y) * 0.5f - (int(h)%2 == 0 ? 0.0f : 0.0f),
-    //  };
+  //    (w - s.drawn_size.x) * 0.5f - (int(w)%2 == 0 ? 0.0f : 0.0f),
+  //    (h - s.drawn_size.y) * 0.5f - (int(h)%2 == 0 ? 0.0f : 0.0f),
+  //  };
   rend_pp->render({(float)winw, (float)winh});
   win_pp->flushBuffer();
   win_pp->clearCurrentContext();
 
-    // Pixel Col
+  // Pixel Col
   win_pc->makeCurrentContext();
   glDisable(GL_DEPTH_TEST);
   glEnable(GL_BLEND);
@@ -654,7 +661,7 @@ v3 movePositionAlongVector(const v3 &pos, const v3 &vec, float dist) {
   win_pc->flushBuffer();
   win_pc->clearCurrentContext();
 
-    // Text
+  // Text
   win_text->makeCurrentContext();
   glDisable(GL_DEPTH_TEST);
   glEnable(GL_BLEND);
@@ -667,16 +674,15 @@ v3 movePositionAlongVector(const v3 &pos, const v3 &vec, float dist) {
   win_text->flushBuffer();
   win_text->clearCurrentContext();
 
-    //  if (i++ == 0) {
-    //    CGImageRef imref = newCGImageFromFramebufferContents(0, win_3D_RM->w(), win_3D_RM->h());
-    //    CGImageWriteToFile(imref, @"/Users/bh/Desktop/cube.png");
-    //    CFRelease(imref);
-    //  }
-
+  //  if (i++ == 0) {
+  //    CGImageRef imref = newCGImageFromFramebufferContents(0, win_3D_RM->w(), win_3D_RM->h());
+  //    CGImageWriteToFile(imref, @"/Users/bh/Desktop/cube.png");
+  //    CFRelease(imref);
+  //  }
 }
 
 -(void)applicationWillTerminate:(NSNotification *)aNotification {
-    // Insert code here to tear down your application
+  // Insert code here to tear down your application
 }
 
 -(int)getWindowNum:(W::Window*)w {
@@ -684,3 +690,4 @@ v3 movePositionAlongVector(const v3 &pos, const v3 &vec, float dist) {
 }
 
 @end
+

@@ -5,36 +5,31 @@
 
 struct TextureInfo {
 	unsigned int texture;
-	tx_filtering filtering;
+	Texture::Filtering filtering;
 };
 
 struct FBOAttachment {
 	TextureInfo tex;
-	fbo_attachment type;
+	Framebuffer::AttachmentType type;
 };
 
 struct RenderTarget {
 	unsigned int fbo;
 	std::vector<FBOAttachment> fbo_attachments;
-	col3 clearColour = { 0.9, 0.9, 0.9 };
+	v3 clearColour = { 0.9, 0.9, 0.9 };
 	GLbitfield clear = 0;
 	
 	void attachAttachments() {
 		// Attach dest texture to FBO
-		fb_bind(fbo);
+		Framebuffer::bind(fbo);
 		for (auto &att : fbo_attachments) {
-			if (att.type == ATTACH_COLOR)
-				fb_attachTexture(att.tex.texture);
-			else if (att.type == ATTACH_DEPTH)
-				fb_attachTexture_AsDepth(att.tex.texture);
+			Framebuffer::attach(att.tex.texture, att.type);
 		}
-		// ...
-		// TODO: modify to include other attachments
+		// TODO: include other attachments
 	}
 	
 	void setUpForRender(int w, int h) {
-		fb_bind(fbo);
-		
+		Framebuffer::bind(fbo);
 		if (clear) {
 			glClearColor(clearColour.r, clearColour.g, clearColour.b, 1.0);
 			glClear(clear);

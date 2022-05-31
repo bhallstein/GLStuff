@@ -1,5 +1,4 @@
 #import <Foundation/Foundation.h>
-#import <OpenGL/gl.h>
 #import <ImageIO/ImageIO.h>
 #include "TexImage.hpp"
 #include "GLHelpers.hpp"
@@ -72,13 +71,16 @@ struct TexImage loadPngTexture(const char *filepath) {
 }
 
 
-int loadCubeMap(unsigned int tex, const char *fnames[]) {
+int loadCubeMap(unsigned int tex_id, const char *fnames[]) {
 	glActiveTexture(GL_TEXTURE0);
-	tx_bindAsCubeMap(tex);
+	Texture::bind_cube_map(tex_id);
 	for (int i=0; i < 6; ++i) {
 		struct TexImage texImage = loadPngTexture(fnames[i]);
-		if (texImage.data == NULL) return false;
-		tx_uploadCubeMapFace(texImage.w, texImage.h, texImage.data, (enum tx_cubemapface)(TX_CM_RIGHT + i));
+		if (texImage.data == NULL) {
+			return false;
+		}
+		Texture::CubeMapFace face = (Texture::CubeMapFace) (Texture::CubeMapRight + i);
+		Texture::upload_cube_map_face(texImage.w, texImage.h, texImage.data, face);
 		free(texImage.data);
 	}
 	return true;

@@ -1,36 +1,58 @@
 #ifndef ComponentTest__Renderer_LinearGradient_h
 #define ComponentTest__Renderer_LinearGradient_h
 
-#include "CoordinateTypes.hpp"
+#include "Renderer_2D_ColourIndexed.hpp"
 
-class Renderer_2D_ColourIndexed;
-
-class Renderer_LinearGradient {
-public:
-	Renderer_LinearGradient(bool dither);
-	~Renderer_LinearGradient();
-
-	bool setUp();
-
-	void render(float *mtx);
-	void setPos(float x, float y, float w, float h);
-	void setColours(v4 top, v4 btm);
-	void setColours(v4 tl, v4 tr, v4 bl, v4 br);
-
+struct Renderer_LinearGradient {
 	struct Uniforms {
 		enum { OrthoMatrix, Sampler };
 	};
 
-private:
-	Renderer_2D_ColourIndexed *renderer;
+	Renderer_2D_ColourIndexed *renderer = NULL;
+	v4 cTL = { 1.0, 0.0, 0.0, 1.0 };  // N.B. After changing any of these props, set needs_upload to true
+	v4 cTR = { 1.0, 0.0, 0.0, 1.0 };
+	v4 cBL = { 1.0, 1.0, 0.0, 1.0 };
+	v4 cBR = { 1.0, 1.0, 0.0, 1.0 };
+  v2 pos = {0., 0.};
+  v2 size = {0., 0.};
+	bool dither = false;
+	bool needs_upload = true;
 
-	v4 cTL, cTR, cBL, cBR;
-	float x, y, w, h;
-	bool dither;
-	bool needs_upload;
+	~Renderer_LinearGradient() {
+		if (renderer) {
+			delete renderer;
+		}
+	}
 
-	void reupload();
+	bool setUp() {
+		renderer = new Renderer_2D_ColourIndexed;
+		renderer->dither = dither;
+		return renderer->setUp();
+	}
 
+	void render(m4 mtx) {
+		if (needs_upload) {
+			reupload();
+		}
+		renderer->render(mtx);
+	}
+
+	void reupload() {
+    std::vector<v2> rect = (to_2d_primitive(Rectangle()) + v2{0.5, 0.5}) * size + pos;
+		std::vector<v4> colours = {
+			cBL, cTL, cTR,
+			cBL, cTR, cBR,
+		};
+
+		VBO::bind(renderer->buffers.vertexPos, VBO::Array);
+		VBO::upload(rect, VBO::Array, VBO::Static);
+
+		VBO::bind(renderer->buffers.colour, VBO::Array);
+		VBO::upload(colours, VBO::Array, VBO::Static);
+
+		VAO::bind(0);
+		needs_upload = false;
+	}
 };
 
 #endif

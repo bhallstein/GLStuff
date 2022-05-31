@@ -2,7 +2,7 @@
 #define ObjImport_h
 
 #include <vector>
-#include "CoordinateTypes.hpp"
+#include "vectors.hpp"
 
 typedef struct ObjFile {
 	int nLines = 0;

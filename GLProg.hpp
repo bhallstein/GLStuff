@@ -10,7 +10,7 @@ struct AttribInfo {
 	unsigned int glID;          // We can set attrib locs, so the GL ID
 	unsigned int vboID;         // == the userland ID
 	std::string name;
-	attrib_type float_or_int;
+	Prog::AttribType attrib_type;
 	int n_components;
 	bool instanced;
 };
@@ -45,16 +45,16 @@ struct GLProg {
 	
 	~GLProg() {
 		if (state == State::OK) {
-			prog_delete(programID);
+			Prog::destroy(programID);
 		}
 	}
 };
 
 // These are called automatically by GLProg::compile(),
 // but can also be called manually
-void setAttribLocations(unsigned int progID, const std::vector<AttribInfo> &);
-void setAttachentLocations(unsigned int progID, const std::vector<ColorAttachmentInfo> &);
+void setAttribLocations(unsigned int progID, std::vector<AttribInfo>);
+void setAttachentLocations(unsigned int progID, std::vector<ColorAttachmentInfo>);
 bool getUniformLocations(unsigned int programID, std::vector<UniformInfo> &uniforms);
-void setAttribsToUseVBOs(const std::vector<AttribInfo> &attribs);
+void setAttribsToUseVBOs(const std::vector<AttribInfo>);
 
 #endif

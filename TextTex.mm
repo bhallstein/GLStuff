@@ -4,11 +4,11 @@
 typedef NSBitmapImageRep ImRep;
 
 struct TexImage get_textTex(const char *_str,
-							float fitWidth,
-							float fitHeight,
-							float font_size,
-							struct col4 col,
-							struct col4 bg) {
+                            float fitWidth,
+                            float fitHeight,
+                            float font_size,
+                            v4 col,
+                            v4 bg) {
 	NSFont *f = [NSFont fontWithName:@"Helvetica" size:font_size];
 	
 	// Create NSImage

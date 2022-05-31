@@ -1,9 +1,11 @@
 #ifndef Lights_h
 #define Lights_h
 
+#include "vectors.hpp"
+
 struct DirectionalLight {
-	float lightVector[3];
-	float lightProperties[3];	 // amb, diff, spec
+	v3 lightVector;
+	v3 lightProperties;  // amb, diff, spec
 };
 
 // A directional light has parallel rays

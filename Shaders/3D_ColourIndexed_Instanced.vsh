@@ -15,7 +15,6 @@ out vec3 normal_world;
 out vec3 fragpos_world;
 out vec3 outColour;
 
-/* Rotate using quaternion */
 vec3 quat_rotate(vec3 v, vec4 q) {
 	return v + 2.0 * cross(q.xyz, cross(q.xyz, v) + q.w * v);
 }

@@ -1,3 +1,4 @@
+#include "vectors.hpp"
 #include "GLProg.hpp"
 #include "FilePaths_CPP.hpp"
 #include "ShaderStr.hpp"
@@ -7,7 +8,7 @@
 
 void GLProg::compile() {
 	state = GLProg::State::NotOK;
-	programID = prog_create();
+	programID = Prog::create();
 	
 	setAttribLocations(programID, attribs);
 	setAttachentLocations(programID, attachments);
@@ -15,12 +16,12 @@ void GLProg::compile() {
 	char *v_src = loadShaderString(vsh_path.c_str());
 	char *f_src = loadShaderString(fsh_path.c_str());
 	
-	int compileRes = prog_compileAndLink(programID, v_src, f_src);
+	int compileRes = Prog::compile(programID, v_src, f_src);
 	free(v_src);
 	free(f_src);
 	if (!compileRes) { return; }
 	
-	prog_use(programID);
+	Prog::use(programID);
 	
 	bool uniformRes = getUniformLocations(programID, uniforms);
 	if (!uniformRes) { return; }
@@ -28,7 +29,7 @@ void GLProg::compile() {
 	setAttribsToUseVBOs(attribs);
 	
 	state = GLProg::State::OK;
-	prog_use(0);
+	Prog::use(0);
 }
 
 unsigned int GLProg::uniformID(unsigned int internal_id) {
@@ -40,34 +41,36 @@ unsigned int GLProg::uniformID(unsigned int internal_id) {
 	return 0;
 }
 
+void setAttribLocations(unsigned int prog_id, std::vector<AttribInfo> attribs) {
+	for (auto &a : attribs) {
+		if (a.name.length() > 0) {
+			Prog::set_attrib_location(prog_id, a.glID, a.name);
+		}
+	}
+}
 
-void setAttribLocations(unsigned int programID, const std::vector<AttribInfo> &attribs) {
-	for (auto &a : attribs)
-		if (a.name.length() > 0)
-			prog_setAttribLocation(programID, a.glID, a.name.c_str());
+void setAttachentLocations(unsigned int prog_id, std::vector<ColorAttachmentInfo> attachments) {
+	for (auto &a : attachments) {
+		Prog::set_attachment_location(prog_id, a.glID, a.name);
+	}
 }
-void setAttachentLocations(unsigned int programID, const std::vector<ColorAttachmentInfo> &attachments) {
-	for (auto &a : attachments)
-		prog_setAttachmentLocation(programID, a.glID, a.name.c_str());
-}
-bool getUniformLocations(unsigned int programID, std::vector<UniformInfo> &uniforms) {
+
+bool getUniformLocations(unsigned int prog_id, std::vector<UniformInfo> &uniforms) {
 	bool success = true;
 	for (auto &u : uniforms) {
-		const char *u_name = u.name.c_str();
-		u.glID = prog_uniformLocation(programID, u_name);
+		u.glID = Prog::uniformLocation(prog_id, u.name);
 		if (u.glID == -1) {
-			printf("uniform '%s' not found in shader program\n", u_name);
+			printf("uniform '%s' not found in shader program\n", u.name.c_str());
 			success = false;
 		}
 	}
 	return success;
 }
-void setAttribsToUseVBOs(const std::vector<AttribInfo> &attribs) {
-	for (const auto &a : attribs)
-		if (a.name.length() > 0)
-			prog_setAttribToUseVBO(a.glID,
-								   a.vboID,
-								   a.n_components,
-								   a.float_or_int,
-								   a.instanced);
+
+void setAttribsToUseVBOs(std::vector<AttribInfo> attribs) {
+	for (const auto &a : attribs) {
+		if (a.name.length() > 0) {
+			Prog::set_attrib_vbo(a.glID, a.vboID, a.n_components, a.attrib_type, a.instanced);
+		}
+	}
 }
