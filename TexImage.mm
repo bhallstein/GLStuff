@@ -14,7 +14,7 @@ struct TexImage loadPngTexture(const char *filepath) {
 	
 	CGImageSourceRef imageSource = CGImageSourceCreateWithURL(texURL, NULL);
 	if (!imageSource) {
-		NSLog(@"TexImage: Invalid image path");
+		NSLog(@"TexImage: Invalid image path %s", filepath);
 		CFRelease(texURL);
 		return null_tex_image;
 	}
@@ -73,7 +73,7 @@ struct TexImage loadPngTexture(const char *filepath) {
 
 int loadCubeMap(unsigned int tex_id, const char *fnames[]) {
 	glActiveTexture(GL_TEXTURE0);
-	Texture::bind_cube_map(tex_id);
+	Texture::bind_cube_map(0, tex_id);
 	for (int i=0; i < 6; ++i) {
 		struct TexImage texImage = loadPngTexture(fnames[i]);
 		if (texImage.data == NULL) {

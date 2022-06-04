@@ -38,11 +38,8 @@ struct Renderer_LinearGradient {
 	}
 
 	void reupload() {
-    std::vector<v2> rect = (to_2d_primitive(Rectangle()) + v2{0.5, 0.5}) * size + pos;
-		std::vector<v4> colours = {
-			cBL, cTL, cTR,
-			cBL, cTR, cBR,
-		};
+    Primitive2D rect = (Rectangle2D() + v2{0.5, 0.5}) * size + pos;
+		std::vector<v4> colours = { cTR, cTL, cBL, cBL, cBR, cTR };
 
 		VBO::bind(renderer->buffers.vertexPos, VBO::Array);
 		VBO::upload(rect, VBO::Array, VBO::Static);

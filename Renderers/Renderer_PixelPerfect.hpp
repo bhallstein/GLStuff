@@ -93,17 +93,17 @@ struct Renderer_PixelPerfect {
 		unsigned int prev_tex = 0;
 		for (const auto &s : sprites) {
 			if (i++ == 0 || s.tex != prev_tex)
-				Texture::bind(s.tex);
+				Texture::bind(0, s.tex);
 			prev_tex = s.tex;
 
 			// Regenerate buffer
-      std::vector<v2> rect = to_2d_primitive(Rectangle()) * v2(0.5, -0.5) + 0.5f;
+      Primitive2D rect = Rectangle2D() * v2(0.5, -0.5) + 0.5f;
       rect = rect * s.drawn_size + s.pos;
 			VBO::bind(buffers.vertexPos, VBO::Array);
 			VBO::upload(rect, VBO::Array, VBO::Static);
 
 			VBO::bind(buffers.texCoord, VBO::Array);
-      std::vector<v2> t = to_2d_primitive(Rectangle()) * v2(0.5, 0.5) * s.size_in_tex + s.pos_in_tex;  // TODO: replace Rectangle() with unitsq_texcoords
+      Primitive2D t = Rectangle2D() * v2(0.5, 0.5) * s.size_in_tex + s.pos_in_tex;  // TODO: replace Rectangle() with unitsq_texcoords
 			VBO::upload(t, VBO::Array, VBO::Static);
 
 			n_vertices = 6;

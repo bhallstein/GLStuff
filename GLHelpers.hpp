@@ -17,6 +17,14 @@
 //   } while (0)
 // #endif
 
+// result
+// ------------------------------------
+
+struct Result {
+  bool success;
+  std::string message;
+};
+
 
 // Framebuffer
 // ------------------------------------
@@ -96,11 +104,13 @@ struct Texture {
 		glDeleteTextures(1, &tex_id);
 	}
 
-	static void bind(unsigned int tex_id) {
+	static void bind(unsigned int tex_unit, unsigned int tex_id) {
+    glActiveTexture(GL_TEXTURE0 + tex_unit);
 		glBindTexture(GL_TEXTURE_2D, tex_id);
 	}
 
-	static void bind_cube_map(unsigned int cm_id) {
+	static void bind_cube_map(unsigned int tex_unit, unsigned int cm_id) {
+    glActiveTexture(GL_TEXTURE0 + tex_unit);
 		glBindTexture(GL_TEXTURE_CUBE_MAP, cm_id);
 	}
 
@@ -185,6 +195,7 @@ struct VBO {
 		Array,
 		ElementArray,
 	};
+  
 	enum VBOHint {
 		Static,
 		Dynamic,
@@ -231,6 +242,32 @@ struct Prog {
 		Float,
 		Int,
 	};
+  
+  struct Attrib {
+    AttribType type;
+    unsigned int n_components;
+    bool instanced;
+    // Internal
+    unsigned int attrib_id;
+    unsigned int vbo;
+  };
+  
+  struct Uniform {
+    enum UniformType {
+      Float, Int,
+      V2, V3, V4,
+      I2, I3, I4,
+      M3, M4,
+      Quat,
+      Sampler2D, SamplerCube,
+    } type;
+    // Internal
+    unsigned int uniform_id;
+  };
+  
+  struct Attachment {
+    unsigned int attachment_id;
+  };
 
 	static unsigned int create() {
 		return glCreateProgram();
@@ -252,52 +289,56 @@ struct Prog {
 		glBindFragDataLocation(program, location, name.c_str());
 	}
 
-	static int compile(unsigned int prog, std::string v_src_str, std::string f_src_str) {
-		GLint log_length, compileStatus, link_status;
-		const char* v_src = v_src_str.c_str();
-		const char* f_src = f_src_str.c_str();
+	static Result compile(unsigned int prog, std::string vsrc, std::string fsrc) {
+		GLint log_length, status, link_status;
+		const char* vsrc_char = vsrc.c_str();
+		const char* fsrc_char = fsrc.c_str();
+    std::string message;
 
 		// Compile vertex shader
-		GLuint vSh = glCreateShader(GL_VERTEX_SHADER);
-		glShaderSource(vSh, 1, &v_src, NULL);
-		glCompileShader(vSh);
+		GLuint vsh = glCreateShader(GL_VERTEX_SHADER);
+		glShaderSource(vsh, 1, &vsrc_char, NULL);
+		glCompileShader(vsh);
 
 		// Check compiled
-		glGetShaderiv(vSh, GL_INFO_LOG_LENGTH, &log_length);
+		glGetShaderiv(vsh, GL_INFO_LOG_LENGTH, &log_length);
 		if (log_length > 0) {
-			GLchar* log = (GLchar*)malloc(log_length);
-			glGetShaderInfoLog(vSh, log_length, &log_length, log);
-			printf("Vertex shader compile log: %s\n", log);
+			GLchar* log = (GLchar*) malloc(log_length);
+			glGetShaderInfoLog(vsh, log_length, &log_length, log);
+      message = log;
 			free(log);
 		}
-		glGetShaderiv(vSh, GL_COMPILE_STATUS, &compileStatus);
-		if (compileStatus == 0) {
-			printf("Failed to compile vertex shader:\n%s\n", v_src);
-			return 0;
+		glGetShaderiv(vsh, GL_COMPILE_STATUS, &status);
+		if (status == 0) {
+      message += "Failed to compile vertex shader:\n";
+      message += vsrc_char;
+      return {false, message};
 		}
 
 		// Compile fragment shader
-		GLuint fSh = glCreateShader(GL_FRAGMENT_SHADER);
-		glShaderSource(fSh, 1, (const GLchar**)&f_src, NULL);
-		glCompileShader(fSh);
+		GLuint fsh = glCreateShader(GL_FRAGMENT_SHADER);
+		glShaderSource(fsh, 1, &fsrc_char, NULL);
+		glCompileShader(fsh);
 
 		// Check compiled
-		glGetShaderiv(fSh, GL_INFO_LOG_LENGTH, &log_length);
+		glGetShaderiv(fsh, GL_INFO_LOG_LENGTH, &log_length);
 		if (log_length > 0) {
 			GLchar* log = (GLchar*)malloc(log_length);
-			glGetShaderInfoLog(fSh, log_length, &log_length, log);
-			printf("Fragment shader compile log: %s\n", log);
+			glGetShaderInfoLog(fsh, log_length, &log_length, log);
+      message += "Fragment shader compile log:\n";
+      message += log;
 			free(log);
 		}
-		glGetShaderiv(fSh, GL_COMPILE_STATUS, &compileStatus);
-		if (compileStatus == 0) {
-			printf("Failed to compile fragment shader:\n%s\n", f_src);
-			return 0;
+		glGetShaderiv(fsh, GL_COMPILE_STATUS, &status);
+		if (status == 0) {
+      message += "Failed to compile fragment shader:\n";
+      message += fsrc_char;
+      return {false, message};
 		}
 
 		// Link program
-		glAttachShader(prog, vSh);
-		glAttachShader(prog, fSh);
+		glAttachShader(prog, vsh);
+		glAttachShader(prog, fsh);
 		glLinkProgram(prog);
 
 		// Check linked OK
@@ -305,14 +346,14 @@ struct Prog {
 		if (log_length > 0) {
 			GLchar* log = (GLchar*)malloc(log_length);
 			glGetProgramInfoLog(prog, log_length, &log_length, log);
-			printf("Program link log:\n%s\n", log);
+      message += "Program link log:\n";
+      message += log;
 			free(log);
 		}
 
 		glGetProgramiv(prog, GL_LINK_STATUS, &link_status);
 		if (link_status == 0) {
-			printf("Failed to link program");
-			return 0;
+      return {false, "Failed to link program"};
 		}
 
 		glValidateProgram(prog);
@@ -320,20 +361,19 @@ struct Prog {
 		if (log_length > 0) {
 			GLchar* log = (GLchar*)malloc(log_length);
 			glGetProgramInfoLog(prog, log_length, &log_length, log);
-			printf("Program validate log:\n%s\n", log);
+      message += "Program validate log:\n";
+      message += log;
 			free(log);
 		}
 
 		glGetProgramiv(prog, GL_VALIDATE_STATUS, &link_status);
 		if (link_status == 0) {
-			printf("Program failed to validate, continuing...");
-			return 0;
+      return {false, "Program failed to validate, continuing..."};
 		}
 
-		glDeleteShader(vSh);
-		glDeleteShader(fSh);
-
-		return 1;
+		glDeleteShader(vsh);
+		glDeleteShader(fsh);
+    return {true, message};
 	}
 
 	static std::string validate(unsigned int program) {
@@ -359,7 +399,7 @@ struct Prog {
 		return "success";
 	}
 
-	static int uniformLocation(unsigned int prog_id, std::string uniform_name) {
+	static int get_uniform_location(unsigned int prog_id, std::string uniform_name) {
 		return glGetUniformLocation(prog_id, uniform_name.c_str());
 	}
 
@@ -371,6 +411,10 @@ struct Prog {
 		glUniform1f(uniform_loc, value);
 	}
 
+  static void set_uniform_vec2(int uniform_loc, v2 vec) {
+    glUniform2fv(uniform_loc, 1, glm::value_ptr(vec));
+  }
+  
 	static void set_uniform_vec3(int uniform_loc, v3 vec) {
 		glUniform3fv(uniform_loc, 1, glm::value_ptr(vec));
 	}
@@ -378,7 +422,19 @@ struct Prog {
 	static void set_uniform_vec4(int uniform_loc, v4 vec) {
 		glUniform4fv(uniform_loc, 1, glm::value_ptr(vec));
 	}
-
+  
+  static void set_uniform_ivec2(int uniform_loc, i2 vec) {
+    glUniform2iv(uniform_loc, 1, glm::value_ptr(vec));
+  }
+  
+  static void set_uniform_ivec3(int uniform_loc, i3 vec) {
+    glUniform3iv(uniform_loc, 1, glm::value_ptr(vec));
+  }
+  
+  static void set_uniform_ivec4(int uniform_loc, i4 vec) {
+    glUniform4iv(uniform_loc, 1, glm::value_ptr(vec));
+  }
+  
 	static void set_uniform_mat3(int uniform_loc, m3 mat) {
 		glUniformMatrix3fv(uniform_loc, 1, GL_FALSE, glm::value_ptr(mat));
 	}
@@ -386,26 +442,27 @@ struct Prog {
 	static void set_uniform_mat4(int uniform_loc, m4 mat) {
 		glUniformMatrix4fv(uniform_loc, 1, GL_FALSE, glm::value_ptr(mat));
 	}
+  
+  static void set_uniform_quat(int uniform_loc, quat q) {
+    glUniform4fv(uniform_loc, 1, glm::value_ptr(q));
+  }
 
-	static void set_attrib_vbo(unsigned int attrib_loc,
-														 unsigned int vbo_id,
-														 int attrib_components,
-														 AttribType attr_type,
-														 int instanced) {
-		// - Bind the vbo, enable the attrib atrray & set its pointer
-		// - NB attrib array enabling is per-VAO, or global if no VAO is bound.
+	static void set_attrib_vbo(Attrib attrib) {
+		// - Bind the vbo, enable the attrib & set its pointer
+		// - NB attrib enabling is per-VAO, or global if no VAO is bound.
 		// - So when not using VAOs, you should disable it after use with disableAttrib()
-		GLenum gl_attrib_type = (attr_type == Float ? GL_FLOAT : GL_INT);
-		glBindBuffer(GL_ARRAY_BUFFER, vbo_id);
-		glEnableVertexAttribArray(attrib_loc);
-		glVertexAttribPointer(attrib_loc,           // index
-													attrib_components,    // size (components per vertex)
+    //   ...but only when not using VAOs.
+		GLenum gl_attrib_type = (attrib.type == Float ? GL_FLOAT : GL_INT);
+		glBindBuffer(GL_ARRAY_BUFFER, attrib.vbo);
+		glEnableVertexAttribArray(attrib.attrib_id);
+		glVertexAttribPointer(attrib.attrib_id,     // index
+													attrib.n_components,  // size (components per vertex)
 													gl_attrib_type,       // type
 													GL_FALSE,             // normalized
 													0,                    // stride
 													0);                   // offset/pointer
-		if (instanced) {
-			set_attrib_divisor(attrib_loc, 1);
+		if (attrib.instanced) {
+			set_attrib_divisor(attrib.attrib_id, 1);
 		}
 	}
 
@@ -416,7 +473,6 @@ struct Prog {
 	static void disable_attrib(unsigned int attrib_loc) {
 		glDisableVertexAttribArray(attrib_loc);
 	}
-	// ...but only when not using VAOs.
 };
 
 #endif

@@ -65,7 +65,7 @@ public:
 		Prog::use(prog->programID);
 		VAO::bind(vao);
 
-		Texture::bind(tex);
+		Texture::bind(0, tex);
 
 		Prog::set_uniform_mat4(prog->uniformID(Uniforms::OrthoMatrix), ortho_mtx);
 		Prog::set_uniform_int(prog->uniformID(Uniforms::Sampler), 0);

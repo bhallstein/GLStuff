@@ -5,7 +5,8 @@
 
 struct Renderer_PixelCol {
   Renderer_2D_ColourIndexed *renderer;
-  v2 _pos, _size;
+  v2 _pos;
+  v2 _size;
   v4 _col;
 
 	Renderer_PixelCol() {
@@ -22,7 +23,7 @@ struct Renderer_PixelCol {
 	}
 
 	void setRect(v2 pos, v2 size) {
-    std::vector<v2> r = (to_2d_primitive(Rectangle()) * v2(0.5, 0.5) + 0.5f) * size + pos;
+    Primitive2D r = (Rectangle2D() * v2(0.5, 0.5) + 0.5f) * size + pos;
 		VBO::bind(renderer->buffers.vertexPos, VBO::Array);
 		VBO::upload(r, VBO::Array, VBO::Static);
 		_pos = pos;

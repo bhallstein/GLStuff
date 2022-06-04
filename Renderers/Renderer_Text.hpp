@@ -49,7 +49,7 @@ struct Renderer_Text : public Renderer_PixelPerfect {
 		if (!sprite_added) {
 			tex = Texture::create();
 		}
-		Texture::bind(tex);
+		Texture::bind(0, tex);
 		Texture::upload(im.w, im.h, im.data, Texture::FilterLinear);
 		free(im.data);
 

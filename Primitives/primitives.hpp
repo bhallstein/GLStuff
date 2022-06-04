@@ -14,19 +14,13 @@ struct NormalMode {
 };
 
 
+typedef std::vector<v2> Primitive2D;
+
+
 struct Primitive3D {
   std::vector<v3> vertices;
   std::vector<v3> normals;
 };
-
-
-inline std::vector<v2> to_2d_primitive(const Primitive3D &p) {
-  std::vector<v2> out;
-  for (const v3 &point : p.vertices) {  // z coords discarded
-    out.push_back(point);
-  }
-  return out;
-}
 
 
 inline std::vector<v3> mk_flat_normals(const std::vector<v3> &vertices) {

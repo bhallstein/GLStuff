@@ -93,16 +93,16 @@ struct Renderer_3D_1L_Textured {
 		int n_bytes_elements = (int) (sizeof(int) * obj.elements.size());
 
 		VBO::bind(buffers.vertexPos, VBO::Array);
-		VBO::upload(n_bytes, &obj.vertices[0], VBO::Array, VBO::Static);
+		VBO::upload(obj.vertices, VBO::Array, VBO::Static);
 
 		VBO::bind(buffers.normal, VBO::Array);
-		VBO::upload(n_bytes, &obj.normals[0], VBO::Array, VBO::Static);
+		VBO::upload(obj.normals, VBO::Array, VBO::Static);
 
 		VBO::bind(buffers.texcoord, VBO::Array);
-		VBO::upload(n_bytes_uv, &obj.texcoords[0], VBO::Array, VBO::Static);
+		VBO::upload(obj.texcoords, VBO::Array, VBO::Static);
 
 		VBO::bind(buffers.elements, VBO::ElementArray);
-		VBO::upload(n_bytes_elements, &obj.elements[0], VBO::ElementArray, VBO::Static);
+		VBO::upload(obj.elements, VBO::ElementArray, VBO::Static);
 
 		n_elements = (int) obj.elements.size();
 	}
@@ -116,7 +116,7 @@ struct Renderer_3D_1L_Textured {
 		Prog::use(prog->programID);
 		VAO::bind(vao);
 
-		Texture::bind(tex);
+		Texture::bind(0, tex);
 
 		// Uniforms
 		m4 m_view = cam.view_matrix();

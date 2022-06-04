@@ -26,7 +26,6 @@ inline std::vector<v3> operator*(const std::vector<v3> &vertices, float scale) {
   return out;
 }
 
-
 template<class T>
 T vector_scale(T vec, T scale) {
   T out;
@@ -45,13 +44,5 @@ inline std::vector<T> operator*(const std::vector<T> &vertices, T scale) {
   }
   return out;
 }
-
-//inline std::vector<v3> operator*(const std::vector<v3> vertices, v3 scale) {
-//  std::vector<v3> out;
-//  for (const v3 &point : vertices) {
-//    out.push_back({point.x * scale.x, point.y * scale.y, point.z * scale.z});
-//  }
-//  return out;
-//}
 
 #endif

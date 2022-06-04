@@ -117,7 +117,7 @@ struct Renderer_3D_1L_Textured_Instanced {
 		Prog::use(prog->programID);
 		VAO::bind(vao);
 
-		Texture::bind(tex);
+		Texture::bind(0, tex);
 
 		// Uniforms
 

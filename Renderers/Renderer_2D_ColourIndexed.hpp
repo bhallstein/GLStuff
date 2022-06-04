@@ -53,21 +53,22 @@ struct Renderer_2D_ColourIndexed {
 		prog->uniforms = {
 			{ Uniforms::OrthoMatrix, "ortho_matrix" },
 		};
+
 		if (dither) {
 			prog->fsh_path = bundledFilePath("Shaders/2D_ColourIndexed_Dithered.fsh");
 			prog->uniforms.push_back({ Uniforms::Sampler_Dithering, "uTex" });
 
 			tex_dither = Texture::create();
-			Texture::bind(tex_dither);
+			Texture::bind(0, tex_dither);
 			Texture::set_repeat(true);
 			Texture::set_filtering(Texture::FilterNearest);
 
 			static const char pattern[] = {
-				0,  32,  8, 40,  2, 34, 10, 42,   /* 8x8 Bayer ordered dithering  */
+				0,  32,  8, 40,  2, 34, 10, 42,  /* 8x8 Bayer ordered dithering  */
 				48, 16, 56, 24, 50, 18, 58, 26,  /* pattern.  Each input pixel   */
 				12, 44,  4, 36, 14, 46,  6, 38,  /* is scaled to the 0..63 range */
 				60, 28, 52, 20, 62, 30, 54, 22,  /* before looking in this table */
-				3,  35, 11, 43,  1, 33,  9, 41,   /* to determine the action.     */
+				3,  35, 11, 43,  1, 33,  9, 41,  /* to determine the action.     */
 				51, 19, 59, 27, 49, 17, 57, 25,
 				15, 47,  7, 39, 13, 45,  5, 37,
 				63, 31, 55, 23, 61, 29, 53, 21
@@ -81,7 +82,7 @@ struct Renderer_2D_ColourIndexed {
 									 GL_RED,   // given format
 									 GL_UNSIGNED_BYTE,  // given type
 									 pattern);
-			Texture::bind(0);
+			Texture::bind(0, 0);
 		}
 
 		prog->compile();
@@ -91,10 +92,10 @@ struct Renderer_2D_ColourIndexed {
 			return false;
 		}
 
-    std::vector<v2> r = to_2d_primitive(Rectangle()) * v2{2., 2.};
+    Primitive2D r = Rectangle2D() * v2{2., 2.};
 		std::vector<v4> colours = {
 			{ 1.0, 0.0, 0.0, 1.0 }, { 0.0, 1.0, 0.0, 1.0 }, { 0.0, 0.0, 1.0, 1.0 },
-			{ 1.0, 0.0, 0.0, 1.0 }, { 0.0, 0.0, 1.0, 1.0 }, { 1.0, 1.0, 0.0, 1.0 }
+			{ 0.0, 0.0, 1.0, 1.0 }, { 1.0, 1.0, 0.0, 1.0 }, { 1.0, 0.0, 0.0, 1.0 }
 		};
 
 		VBO::bind(buffers.vertexPos, VBO::Array);
@@ -117,7 +118,7 @@ struct Renderer_2D_ColourIndexed {
 		Prog::set_uniform_mat4(prog->uniformID(Uniforms::OrthoMatrix), ortho_mtx);
 
 		if (dither) {
-			Texture::bind(tex_dither);
+			Texture::bind(0, tex_dither);
 			Prog::set_uniform_int(prog->uniformID(Uniforms::Sampler_Dithering), 0);
 		}
 
