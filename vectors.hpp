@@ -1,7 +1,8 @@
 #ifndef Vectors_h
 #define Vectors_h
 
-#include "glm_include.hpp"
+#include "glm/ext.hpp"
+#define RAD(deg) (float)((deg) * 0.01745329)
 
 typedef glm::vec2 v2;
 typedef glm::vec3 v3;

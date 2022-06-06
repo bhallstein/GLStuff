@@ -60,20 +60,18 @@ struct TopDownCamera {
 	constexpr static float top_down_cam__znear = 0.1;
 	constexpr static float top_down_cam__zfar = 1000.;
 
-	static Camera mk(float win_w, float win_h) {
+	static Camera mk() {
 		Camera cam;
 
 		cam.pos = {0,12,14};
 		cam.pos_target = {0,0,0};
 		// cam.setTilt(30./180. * M_PI);
 
-		update_projection(cam, win_w, win_h);
-
 		return cam;
 	}
 
-	static void update_projection(Camera &cam, float win_w, float win_h) {
-		cam.setPerspective(top_down_cam__fov, win_w, win_h, top_down_cam__znear, top_down_cam__zfar);
+	static void update_projection(Camera &cam, v2 win_size) {
+		cam.setPerspective(top_down_cam__fov, win_size.x, win_size.y, top_down_cam__znear, top_down_cam__zfar);
 	}
 
 	static void world_swivel(Camera &cam, i2 win_from, i2 win_to) {
